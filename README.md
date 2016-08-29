@@ -58,6 +58,13 @@ Sample code issue reports, clarification questions and contributions are welcome
 ### Mobile Development
 * [Overview](Mobile.md)
 
+### Insider extensions
+* [ExtJS](extensions/ExtJS.md)
+* [HighCharts](extensions/HighCharts.md)
+* [TypeScript Output](extensions/KendoUI.md)
+* [TypeScript Output](extensions/SenchaArchitect.md)
+* [Sencha Touch](extensions/SenchaTouch.md)
+
 ## Tutorials
 
 ### Web Development
