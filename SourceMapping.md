@@ -12,6 +12,9 @@ property to your project file.
 WebSharper itself and all publix  is built with source map embedding, so you can debug into
 WebSharper library code.
 
+Sitelets and single-page application projects are supported, offline sitelets 
+(generating static Html+JS output) is currently not.
+
 ## Outputting source maps for WebSharper web projects
 
 If you have a separate web project hosting your WebSharper application,
@@ -53,9 +56,3 @@ menu (cog icon in F12 panel).
 
 You can access the list of original sources, however breakpoints
 don't work correctly as of version 37.0.1.
-
-### Limitations
-
-* You cannot have multiple source files with the same file name in a single project.
-
-* Inlines are not mapped.

@@ -64,6 +64,18 @@ Parameter placeholders work exactly as with `Direct`.
     [Inline("$x + $y")]
     public static int Add(int x, int y) => Interop.X<int>();
 
+### Inline Helper
+
+The `JS.Inline` function parses its first parameter at compile-time as JS code and includes
+that in the result. It can contain holes, named `$0`, `$1`, ... and variable arguments will
+be passed to the inline. Examples:
+
+	using static WebSharper.JavaScipt.Pervasives
+	//...
+    var zeroDate = JS.Inline("new Date()");
+	var date = JS.Inline("new Date($0)", 1472226125177);	
+
+	
 ### Constant
 
 The `Constant` attribute takes a literal value as parameter.
