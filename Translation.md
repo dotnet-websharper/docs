@@ -86,6 +86,22 @@ For example:
     [<Name "add" >]
     let OriginalNameForAdd (x: int) (y: int) = x + y
 
+<a name="naming-abstract"></a>
+### Naming abstract members
+
+If you set a fixed translated name with the `Name` attribute on an abstract member of a class
+or interface, all inheriting and overriding members will have that exact translated name.
+If a class is overriding or implementing two abstract members that has the same fixed name,
+it will result in a compile-time error, and you have to change one of the fixed names to resolve it.
+
+Automatically, interface members have a unique long translated name generated that contains the full type name.
+This guarantees no conflicts without using the `Name` attribute.
+If you want to shorten it for readability of the JS output and making it smaller,
+you can use the `Name` attribute on the interface type to specify a short name for the interface.
+It is recommended that it is unique across your solution.
+You can also use `[<Name "">]` on the interface type to make all interface methods have the same translated name
+as their original .NET name (if not specified otherwise by a `Name` on the member).
+	
 <a name="meta"></a>
 ## Metaprogramming
 

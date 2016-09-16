@@ -211,6 +211,7 @@ implementing the `IResource` interface, you can make it configurable by using
 the function `ctx.GetSetting`, which retrieves the setting with a given key
 from the application configuration file.
 
+<a name="cdn"></a>
 ## Using CDN
 
 You can automatically point to CDN for the WebSharper core libraries. Add the following setting to your application configuration file (Web.config or App.config depending on the project type):

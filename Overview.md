@@ -99,7 +99,6 @@ compiler, server and client runtime performance improvements, breaking changes a
 to streamline APIs for cleaner use from one or both languages.
 
 ## Contributing
-WebSharper is open-source with [Apache 3.0 license](https://github.com/intellifactory/websharper/blob/master/LICENSE.md).
-WebSharper 4.0 is currently on a branch [websharper4](https://github.com/intellifactory/websharper/tree/websharper4).
+WebSharper is open-source with [Apache 3.0 license](https://github.com/intellifactory/websharper/blob/master/LICENSE.md), on [GitHub](https://github.com/intellifactory/websharper/).
 The source of these documentation pages are found in the [websharper.docs](https://github.com/intellifactory/websharper.docs/) repository.
 Issue reports and pull requests are welcome to both code and documentation.
