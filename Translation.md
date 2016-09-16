@@ -69,7 +69,7 @@ that in the result. It can contain holes, named `$0`, `$1`, ... and variable arg
 be passed to the inline. Examples:
 
     let zeroDate = JS.Inline("new Date()")
-	let date = JS.Inline("new Date($0)", 1472226125177L)
+    let date = JS.Inline("new Date($0)", 1472226125177L)
 	
 ### Constant
 

@@ -70,10 +70,10 @@ The `JS.Inline` function parses its first parameter at compile-time as JS code a
 that in the result. It can contain holes, named `$0`, `$1`, ... and variable arguments will
 be passed to the inline. Examples:
 
-	using static WebSharper.JavaScipt.Pervasives
-	//...
+    using static WebSharper.JavaScipt.Pervasives
+    //...
     var zeroDate = JS.Inline("new Date()");
-	var date = JS.Inline("new Date($0)", 1472226125177);	
+    var date = JS.Inline("new Date($0)", 1472226125177);	
 
 	
 ### Constant
