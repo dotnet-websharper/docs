@@ -41,8 +41,8 @@ To embed the Hello World example in an HTML application, follow these steps:
       following lines at the end of the example module to execute the pagelet
       by appending it to a placeholder node with ID `entrypoint` (choose freely):
 
-		[<SPAEntryPoint>]
-		let Run() = (Main ()).AppendTo "entrypoint"
+        [<SPAEntryPoint>]
+        let Run() = (Main ()).AppendTo "entrypoint"
 
       With these changes, your code should look like this (with the namespace
       matching the one you created):
