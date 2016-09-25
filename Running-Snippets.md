@@ -55,7 +55,7 @@ To embed the Hello World example in an HTML application, follow these steps:
         [<JavaScript>]
         module HelloWorld =
 
-			let Main () =
+            let Main () =
                 let welcome = P [Text "Welcome"]
                 Div [
                     welcome
@@ -64,8 +64,8 @@ To embed the Hello World example in an HTML application, follow these steps:
                         welcome.Text <- "Hello, world!")
                 ]
 
-			[<SPAEntryPoint>]
-			let Run() = (Main ()).AppendTo "entrypoint"
+        [<SPAEntryPoint>]
+        let Run() = (Main ()).AppendTo "entrypoint"
 
       Alternatively, you add the `SPAEntryPoint` attribute to `Main`, and
       modify the function to append its result to your chosen placeholder:
