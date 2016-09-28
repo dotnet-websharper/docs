@@ -48,7 +48,7 @@ a parameter named `this` can override it, and it does not work for extension mem
 which are actually static methods in translated form.)
 
     [Direct("Math.sqrt($0.x * $0.x + $0.y * $0.y)")]
-    member this.GetLength() => Interop.X<float>();
+    public float this.GetLength() => Interop.X<float>();
 
 ### Inlined JavaScript code
 
