@@ -3,7 +3,7 @@
 (This documentation is for WebSharper 4, which is currently in [open beta](#beta).)
 
 WebSharper is a framework and toolset for developing web/mobile applications and web services 
-entirely in C# or F# (of a mix of the two languages) with strongly-typed client-server 
+entirely in C# or F# (or a mix of the two languages) with strongly-typed client-server 
 communication and site navigation. 
 It provides powerful server-side capabilities *and* a compiler to JavaScript with
 a whole set of client-side functional abstractions.
