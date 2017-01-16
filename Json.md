@@ -9,6 +9,10 @@ WebSharper Sitelets provide facilities to both parse JSON from HTTP requests and
 * Parsing: [using the `[<Json>]` attribute](Sitelets.md#json-request).
 * Writing: [using Content.Json](Sitelets.md#json-response).
 
+Since WebSharper 3.6, the module `WebSharper.Json` provides the following functions:
+* `Serialize : 'T -> string` serializes a value to string.
+* `Deserialize : string -> 'T` deserializes a value from a string.
+
 ## Using JSON on the client
 
 Since WebSharper 3.3, JSON serialization is also available on the client. The module `WebSharper.Json` provides the following functions:
