@@ -51,6 +51,7 @@ To embed the Hello World example in an HTML application, follow these steps:
 
         open WebSharper
         open WebSharper.Html
+        open WebSharper.Html.Client
 
         [<JavaScript>]
         module HelloWorld =
@@ -64,8 +65,8 @@ To embed the Hello World example in an HTML application, follow these steps:
                         welcome.Text <- "Hello, world!")
                 ]
 
-        [<SPAEntryPoint>]
-        let Run() = (Main ()).AppendTo "entrypoint"
+            [<SPAEntryPoint>]
+            let Run() = (Main ()).AppendTo "entrypoint"
 
       Alternatively, you add the `SPAEntryPoint` attribute to `Main`, and
       modify the function to append its result to your chosen placeholder:
@@ -74,6 +75,7 @@ To embed the Hello World example in an HTML application, follow these steps:
 
         open WebSharper
         open WebSharper.Html
+        open WebSharper.Html.Client
 
         [<JavaScript; SPAEntryPoint>]
         module HelloWorld =
@@ -120,6 +122,7 @@ into a sitelet that generates an HTML application. Follow these steps:
 
         open WebSharper
         open WebSharper.Html
+        open WebSharper.Html.Client
 
         [<JavaScript>]
         module HelloWorld =
@@ -156,7 +159,7 @@ two pages in the master sitelet. You can safely remove these unused parts and re
 
     namespace HtmlApp1
 
-    open IntelliFactory.Html
+    open WebSharper.Html.Server
     open WebSharper
     open WebSharper.Sitelets
 
@@ -248,7 +251,7 @@ To run these more complex examples, follow these steps:
 
         namespace Website2
 
-        open IntelliFactory.Html
+        open WebSharper.Html.Server
         open WebSharper
         open WebSharper.Sitelets
 
