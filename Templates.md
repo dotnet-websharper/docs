@@ -1,5 +1,8 @@
 ﻿# HTML Templates
 
+> This document describes templates defined in the WebSharper.Html package.
+> To use HTML templates with UI.Next, see [the UI.Next documentation](https://github.com/intellifactory/websharper.ui.next/blob/master/docs/Templates.md).
+
 ## Syntax
 
 Default sitelet projects will contain a `Main.html`
