@@ -60,9 +60,9 @@ Sample code issue reports, clarification questions and contributions are welcome
 
 ### Insider extensions
 * [ExtJS](extensions/ExtJS.md)
-* [HighCharts](extensions/HighCharts.md)
-* [TypeScript Output](extensions/KendoUI.md)
-* [TypeScript Output](extensions/SenchaArchitect.md)
+* [Highcharts](extensions/Highcharts.md)
+* [KendoUI](extensions/KendoUI.md)
+* [Sencha Architect](extensions/SenchaArchitect.md)
 * [Sencha Touch](extensions/SenchaTouch.md)
 
 ## Tutorials
