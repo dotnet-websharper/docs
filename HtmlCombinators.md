@@ -202,7 +202,7 @@ Here, `MyControl` inherits from `WebSharper.Web.Control` and overrides the `Body
 
 Any WebSharper-serializable data can be passed to `MyControl`'s constructor, without the local-or-literal limitation that `ClientSide` has.
 
-Another advantage of creating your own web control class is that it can also be included in an ASP.NET page, as shown [here](aspnet).
+Another advantage of creating your own web control class is that it can also be included in an ASP.NET page, as shown [here](AspNet.md).
 
 ## Client-Side Specificities
 
