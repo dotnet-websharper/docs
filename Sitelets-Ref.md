@@ -402,7 +402,7 @@ type Action =
 <tr><td colspan="2">
 ## JSON body
 
-See the [JSON cheat sheet](json-ref) for the JSON format.
+See the [JSON cheat sheet](Json-Ref.md) for the JSON format.
 
 For union case arguments, indicated with `[<Json(argname)>]`.
 
