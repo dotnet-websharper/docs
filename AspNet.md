@@ -4,7 +4,7 @@ WebSharper is self-sufficient and can run as the single component of a web appli
 
 * Client-side WebSharper controls can be used within an ASPX or Razor page. This allows you to use C#/F#-compiled-to-JavaScript directly within an existing page, and take advantage of client-side generated markup with UI.Next and easy remote calls.
 
-* Full WebSharper [sitelets](sitelets) can run alongside an ASP.NET application, sharing the same URL space, as well as the same server state, sessions, etc.
+* Full WebSharper [sitelets](Sitelets.md) can run alongside an ASP.NET application, sharing the same URL space, as well as the same server state, sessions, etc.
 
 In any case, you need to add the following references to your ASP.NET web project:
 
