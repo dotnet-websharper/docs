@@ -115,7 +115,8 @@ type EndPoint = System.DateTime
 
 (* Accepted Request:    GET /2017-05-24-11.41.34
 
-   Parsed endpoint: *)  System.DateTime.UtcNow
+   Parsed endpoint: *)  System.DateTime(2017, 5, 24, 11, 41, 34,
+                            System.DateTimeKind.Utc)
 ```
 
 Setting the format of a DateTime union case argument with `[<DateTimeFormat(argname, format)>]`.
@@ -127,7 +128,8 @@ type EndPoint =
 
 (* Accepted Request:    GET /Article/43/2015-04-15
 
-   Parsed endpoint: *)  Article(43, System.DateTime.Now)
+   Parsed endpoint: *)  Article(43, System.DateTime(2015, 4, 15, 0, 0, 0,
+                                         System.DateTimeKind.Utc))
 ```
 
 Setting the format of a DateTime record field with `[<DateTimeFormat(format)>]`.
@@ -140,7 +142,8 @@ type EndPoint =
 
 (* Accepted Request:    GET /Article/43/2015-04-15
 
-   Parsed endpoint: *)  { id = 43; date = System.DateTime.Now }
+   Parsed endpoint: *)  { id = 43; date = System.DateTime(2015, 4, 15, 0, 0, 0,
+                                              System.DateTimeKind.Utc) }
 ```
 
 ## Wildcards
