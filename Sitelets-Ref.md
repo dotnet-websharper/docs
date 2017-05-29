@@ -9,6 +9,7 @@ Here is a quick reference for the requests parsed by the `Sitelet.Infer` family 
 <col span="1" style="width:50%" />
 </colgroup>
 <tr><td colspan="2">
+
 ## Base types
 </td></tr>
 <tr><th>Action type</th><th>Action value and corresponding request</th></tr>
@@ -61,6 +62,7 @@ And every standard .NET number type: `int8`, `uint8`, `int16`, `uint16`, `int32`
 
 </td></tr>
 <tr><td colspan="2">
+
 ## Records
 
 Encoded as successive path fragments.
@@ -102,6 +104,7 @@ and Sub =
 ```
 </td></tr>
 <tr><td colspan="2">
+
 ## Unions
 
 Encoded as an identifying path fragment, followed by the arguments.
@@ -182,6 +185,7 @@ ArticleBySlug "my-article"
 ```
 </td></tr>
 <tr><td colspan="2">
+
 ## Datetime
 
 Default format is `"yyyy-MM-dd-HH.mm.ss"`.
@@ -242,6 +246,7 @@ type Action =
 ```
 </td></tr>
 <tr><td colspan="2">
+
 ## Wildcards
 
 `[<Wildcard>]` on a union case encodes the remainder of the path in the last argument.
@@ -299,6 +304,7 @@ Articles (34, "")
 </td></tr>
 <tr><td style="height:100%"></td></tr>
 <tr><td colspan="2">
+
 ## Methods
 
 Selected with `[<EndPoint(methodAndFragment)>]` or with `[<Method(name...)>]`.
@@ -349,6 +355,7 @@ ApiPost "posted"
 </td></tr>
 <tr><td style="height:100%"></td></tr>
 <tr><td colspan="2">
+
 ## GET Query parameters
 
 For union case arguments, indicated with `[<Query(argname...)>]`.
@@ -400,6 +407,7 @@ type Action =
 </td></tr>
 <tr><td style="height:100%"></td></tr>
 <tr><td colspan="2">
+
 ## JSON body
 
 See the [JSON cheat sheet](Json-Ref.md) for the JSON format.
@@ -467,6 +475,7 @@ Article(
 </td></tr>
 <tr><td style="height:100%"></td></tr>
 <tr><td colspan="2">
+
 ## Form body
 
 Parses form data with content type `application/x-www-form-urlencoded` or `multipart/form-data`.
