@@ -96,7 +96,7 @@ In the following example two string formlets are composed:
 The value of the `ComposedFormlet` is the concatenation of the
 component formlet values.  The result looks like this:
 
-![Statically Composed Formlet](static-comp-form.png)
+![Statically Composed Formlet](images/static-comp-form.png)
 
 Formlets are closed under composition. This means that
 `ComposedFormlet` may itself be composed with other formlets.
@@ -117,7 +117,7 @@ using F# computation expressions:
 The formlet above uses the values produced by the first text-box as
 input when constructing an additional (dependent) text-box.
 
-![Dependent Formlet](dep-form.png)
+![Dependent Formlet](images/dep-form.png)
 
 ### Enhancing Formlets
 
@@ -137,7 +137,7 @@ with a label.
         let label = Text "Label"
         Controls.Enhance.WithLabel label (Control.Input "")
 
-![Labelled Formlet](label-form.png)
+![Labelled Formlet](images/label-form.png)
 
 The function `Control.Enhance.WithLegend` has a similar signature but
 instead of returning a formlet with a label, the body of the formlet
@@ -156,7 +156,7 @@ reset buttons:
         |> Enhance.WithSubmitAndResetButtons
         |> Enhance.WithFormContainer
 
-![Enhanced Formlet](enhance-form.png)
+![Enhanced Formlet](images/enhance-form.png)
 
 Note that the order in which the functions are applied is important.
 
@@ -178,7 +178,7 @@ not empty:
          |> Enhance.WithSubmitAndResetButtons
          |> Enhance.WithFormContainer
 
-![Validation Formlet](validation-form.png)
+![Validation Formlet](images/validation-form.png)
 
 ### Layout
 
@@ -265,7 +265,7 @@ type `Person`. It contains validation logic to guarantee that the
 `Name` field is not empty and the email address is of the correct
 format.
 
-![Person Formlet](person-form-ex.png)
+![Person Formlet](images/person-form-ex.png)
 
 ## Dependent Formlet
 
@@ -300,4 +300,4 @@ This formlet will interactively present either the `phone` or `email`
 form depending on the user's choice in the select box.  Each time the
 user changes the selected option, the dependent form is updated.
 
-![Dependent Form](dep-form-ex.png)
+![Dependent Form](images/dep-form-ex.png)
