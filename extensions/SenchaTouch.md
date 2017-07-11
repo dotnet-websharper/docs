@@ -93,4 +93,4 @@ for example `[<Require(typeof<Resources.SenchaTouchCss>)>]`.
 
 [touch]: http://www.sencha.com/products/touch/
 [touchdocs]: http://docs.sencha.com/touch/
-[extjsextension]: /extensions/extjs
+[extjsextension]: /extensions/ExtJS.md
