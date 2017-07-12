@@ -20,7 +20,7 @@ now see the code in action:
 
 ### With MonoDevelop / Xamarin Studio
 
-After completing [the installation](http://websharper.com/docs/install-xs), open MonoDevelop / Xamarin Studio and create a new project ("Website"):
+After completing [the installation](Install-XS.md), open MonoDevelop / Xamarin Studio and create a new project ("Website"):
 
     File > New > Solution... >
     WebSharper > UI.Next Client-Server Web Application

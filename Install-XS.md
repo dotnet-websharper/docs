@@ -16,7 +16,7 @@ Make sure that you have the **F# Language Binding** add-in installed. It comes b
 
 ## Use
 
-New Project and New Solution dialogs should have a WebSharper section with various [templates](http://websharper.com/docs/templates).
+New Project and New Solution dialogs should have a WebSharper section with various [templates](ProjectTemplates.md).
 
 ## Build
 

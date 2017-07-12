@@ -3,7 +3,7 @@
 The WebSharper Piglets library provides a high-level abstraction for
 working with web forms and constructing interactive user interfaces.
 It is closely related to the [Formlets
-library](http://websharper.com/docs/formlets) as they both provide the
+library](WS.Html.Formlets.md) as they both provide the
 capability to declaratively describe user data input such as forms,
 including data validation and feedback. The main difference comes from
 the way actual widgets are rendered: Formlets automatically generate
@@ -53,7 +53,7 @@ the elements that compose a Piglet. In addition, introductory examples
 will be presented to get the user acquainted with Piglets.
 
 We recommend to read [the Formlets
-documentation](http://websharper.com/docs/formlets) first, as some
+documentation](WS.Html.Formlets.md) first, as some
 concepts, such as the `<*>` operator or validation, will be introduced
 with less detail here.
 

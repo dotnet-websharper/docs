@@ -6,11 +6,11 @@ Sitelets allow you to:
 
 * Dynamically construct pages and serve arbitrary content.
 
-* Have full control of your URLs by specifying [custom routers](#advanced-sitelets) for linking them to content, or let the URLs be [automatically inferred](#sitelet-infer) from an endpoint type.
+* Have full control of your URLs by specifying [custom routers](Sitelets.md#advanced-sitelets) for linking them to content, or let the URLs be [automatically inferred](#sitelet-routing) from an endpoint type.
 
 * Have [safe links](#linking) for referencing other content contained within your site.
 
-* Use the type-safe HTML [templating facilities](Templates.md) that come with sitelets.
+* Use the type-safe HTML [templating facilities](https://github.com/intellifactory/websharper.ui.next/blob/master/docs/UINext-Templates.md) from UI.Next on the server side.
 
 * Automatically [parse JSON requests and generate JSON responses](Json.md) based on your types.
 

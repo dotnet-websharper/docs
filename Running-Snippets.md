@@ -1,6 +1,6 @@
 # How to run WebSharper F# examples
 
-Most often, and in particular in the [Examples](/samples) section of this site,
+Most often, and in particular in the [Examples](https://websharper.com/samples) section of this site,
 you will find WebSharper snippets and examples that define a WebSharper control
 such as:
 
@@ -20,7 +20,7 @@ type HelloWorldViewer() =
 ```
 
 This section explains how you can run and test these controls, using the
-[Hello World](/samples/HelloWorld) example as defined above.
+[Hello World](https://websharper.com/samples/HelloWorld) example as defined above.
 
 ## Testing via single-page applications (SPAs)
 
@@ -204,8 +204,8 @@ two pages in the master sitelet. You can safely remove these unused parts and re
 ## Testing via client-server applications
 
 While most of the examples on this site are "client-only", a handful of them are actually
-client-server applications, such as the [Remoting](/samples/Remoting) and
-the [Chat](/samples/Chat) examples.
+client-server applications, such as the [Remoting](https://websharper.com/samples/Remoting) and
+the [Chat](https://websharper.com/samples/Chat) examples.
 
 To run these more complex examples, follow these steps:
 
@@ -303,7 +303,7 @@ To run these more complex examples, follow these steps:
 ## Testing via ASPX markup
 
 To test via ASPX markup, in addition to the steps outlined in the
-[ASP.NET integration](/docs/aspnet) page, you need to configure your
+[ASP.NET integration](AspNet.md) page, you need to configure your
 WebSharper control to be visible as an ASP.NET server control.
 
 Assuming the `Samples` namespace as in the above code snippet, 
