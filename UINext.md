@@ -4,7 +4,7 @@
 
 UI.Next is a client-side library providing a novel, pragmatic and convenient approach to UI reactivity. It includes:
 
-* A [dataflow layer](#dataflow) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP), but differs from it in significant ways discussed [here](https://github.com/intellifactory/websharper.ui.next/blob/master/docs/FRP.md).
+* A [dataflow layer](#dataflow) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP), but differs from it in significant ways discussed [here](https://github.com/intellifactory/websharper.ui.next/blob/master/docs/UINext-FRP.md).
 * A reactive [DOM library](#dom) for displaying these time-varying values in a functional way. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the dataflow layer, rather than a single state value associated with the component.
 * A [declarative animation system](#animation) for the DOM layer.
 

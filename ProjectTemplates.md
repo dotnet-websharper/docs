@@ -4,13 +4,13 @@ The three main WebSharper application types are:
 
  1. **Client-Server Application** - a full client-server application implemented as a WebSharper [sitelet](Sitelets.md).
 
-    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](Templates.md) page for more information on dynamic templating.
+    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](WS.Html.Templates.md) page for more information on dynamic templating.
 	
     These applications exist in two kinds: a **Client-Server Web Application** runs as an ASP.NET module, while a **Self-Hosted Client-Server Web Application** runs as a self-contained executable using an OWIN self-host container.
 
  2. **HTML Application** - a multi-page HTML/JavaScript application.
 
-    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](Templates.md) to define web pages. However it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
+    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](WS.Html.Templates.md) to define web pages. However it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
 
     WebSharper mobile web applications can also be created from this template.
 
@@ -24,7 +24,7 @@ The following helper projects are also available:
 
  1. **Library** - a simple WebSharper library. Annotated code is compiled to JavaScript, and can then be used from any application project.
  
- 2. **Extension** - defines the interface to an existing JavaScript library using [a convenient declarative F# syntax](WIG.md).
+ 2. **Extension** - defines the interface to an existing JavaScript library using [a convenient declarative F# syntax](InterfaceGenerator.md).
 
 ## Capabilities
 

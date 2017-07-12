@@ -51,8 +51,8 @@ so safe and swift.
 * Use a functional and reactive programming style with
   UI.Next [C#](UINext-CSharp.md)/[F#](UINext.md) to let the data flow through your UI.
 * Write full web forms in a couple lines of code using
-  [WebSharper.Forms](Introduction.md) or
-  [WebSharper.Formlets](Formlets.md). (Currently available for F# only)
+  [WebSharper.Forms](https://github.com/intellifactory/websharper.forms/blob/master/README.md) or
+  [WebSharper.Formlets](WS.Html.Formlets.md). (Currently available for F# only)
 * Develop libraries with self-contained client and/or server functionality to reuse in multiple projects.
 * Many JavaScript libraries has typed interfaces for WebSharper available on NuGet, 
   or write your own using a concise and easily readable [F# DSL](InterfaceGenerator.md).
@@ -67,10 +67,10 @@ between the client and the server has never been easier.
 * Share code between tiers: JavaScript-compiled code is also compiled normally
   to .NET, so you can write a function once and use it directly both on the
   server and on the client.
-* Include [client-side generated controls](CS-Controls.md) directly
+* Include [client-side generated controls](WS.Html.Combinators.md) directly
   inside your page without any indirection.
 * Alternatively, you can also include WebSharper client controls inside [ASPX or
-  Razor pages (TODO)](CS-AspNet.md).
+  Razor pages (TODO)](AspNet.md).
 * Use automated remoting [C#](Remoting-CSharp.md)/[F#](Remoting.md): doing an AJAX request is as simple
   as `await`ing a call to your server-side function.
 * Perform JSON serialization on the client using the same typed format as
@@ -88,6 +88,7 @@ between the client and the server has never been easier.
 easily include JavaScript code generated at compile-time.
 
 <a name="beta"/>
+
 ## WebSharper 4 beta warning
 
 WebSharper 4 is currently released as open beta.

@@ -12,7 +12,7 @@ Sitelets allow you to:
 
 * Have [safe links](#linking) for referencing other content contained within your site.
 
-* Use the type-safe HTML [templating facilities](Templates.md) that come with sitelets.
+* Use the type-safe HTML [templating facilities](https://github.com/intellifactory/websharper.ui.next/blob/master/docs/UINext-Templates.md) from UI.Next on the server side.
 
 * Automatically [parse JSON requests and generate JSON responses](Json.md) based on your types.
 
