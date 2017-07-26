@@ -270,7 +270,7 @@ Content.Json [Blue; Red; Green]
 
 ### Classes
 
-In order to be serializable to/from JSON, a class must be annotated with the `[<System.Serializable>]` attribute. Then, it is serialized based on its fields, similarly to F# records [as mentioned above](#fs-records). Here is an example in C#:
+In order to be serializable to/from JSON on the server-side, a class must be annotated with the `[<System.Serializable>]` attribute and must have a default constructor. On the client-side, these are not checked or required. Then, it is serialized based on its fields, similarly to F# records [as mentioned above](#fs-records). Here is an example in C#:
 
 ```csharp
 [Serializable]

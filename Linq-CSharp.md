@@ -154,3 +154,5 @@ known statically:
             // Macro 'WebSharper.MacroModule+DefaultOf' requires a resolved type argument.
         }
 ```
+
+In this case, you can add the `[Inline]` attribute to the method to make its content to be inserted at every call point, with all code generation needing known types to be resolved appropriately.

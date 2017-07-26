@@ -64,6 +64,13 @@ Parameter placeholders work exactly as with `Direct`.
     [Inline("$x + $y")]
     public static int Add(int x, int y) => Interop.X<int>();
 
+## Inlines accessing global object
+
+If you want a non-cached access to the global `window` object, use the `$global` fake variable inside inline strings.
+
+For example, `[Inline("myLibrary.doSomething()")]` assumes that `myLibrary` is initialized before the current script starts running (WebSharper itself takes care of this, if you use the `Require` attribute) and will not change, so access is safe to shorten.
+On the other hand, `[Inline("$global.myLibrary.doSomething()")]` always accesses `myLibrary` as a property of `window.` 
+	
 ### Inline Helper
 
 The `WebSharper.JavaScript.Pervasives.JS.Inline` function parses its first parameter at compile-time as JS code and includes
@@ -105,6 +112,8 @@ you can use the `Name` attribute on the interface type to specify a short name f
 It is recommended that it is unique across your solution.
 You can also use `[Name("")]` on the interface type to make all interface methods have the same translated name
 as their original .NET name (if not specified otherwise by a `Name` on the member).
+
+If you use the `[JavaScipt(false)]` attribute on an interface or abstract class, its member's naming will not be tracked by the compiler, this is sometimes useful for divergent behavior of the code in .NET and in JavaScipt.
 	
 <a name="types"></a>
 ## Types for interacting with outside JavaScript code
