@@ -35,11 +35,16 @@ are listed below.
 
 There's also a special value `Ignore`, which leaves the project type explicitly unset.
 
+Please also note that if `WebSharperProject` is empty but `WebProjectOutputDir` is specified
+then this variable will implicitly have the value `Site`, which means a *Client-Server Application*
+project type.
+
 ## WebProjectOutputDir
 
-**Obligatory** (\*either this or `WebSharperProject` is needed)
+**Obligatory** (\*either this or `WebSharperProject` is needed in cases of _web projects_)
 
 Specifies the compilation output directory when no project type is specified.
+Only needed when the project type is *Client-Server Application*.
 
 ## WebSharperBundleOutputDir
 
@@ -72,6 +77,9 @@ about setting up Source Mapping in
 
 If the variable is set to `True`, turns on TypeScript definition file output which
 allows TypeScript users to link against WebSharper-generated code.
+
+**Note:** This feature is currently not available in WebSharper 4.0. The value of the project
+variable will be ignored.
 
 ## WebSharperErrorsAsWarnings
 
