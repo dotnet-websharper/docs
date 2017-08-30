@@ -34,6 +34,7 @@ You can specify the JavaScript-compiled name at the interface or abstract method
 Module-bound `let` values are no more initialized on page load, but on the first access of any value in the same source file (as in .NET).
 
 ### Namespace changes
+
 Attribute types are now in `WebSharper` namespace, not `WebSharper.Pervasives` module.
 
 ### Single Page Application changes
@@ -50,6 +51,39 @@ These changes may be breaking if some of your code relies on exact JavaScript fo
 For example the `None` value is now translated to `null`.
 * Delegates are now having proper proxies, `Combine`, `Remove`, `Target` and `GetInvocationList` are usable on client-side.
 Previously delegates were a shortcut to create multiple-argument JavaScript functions (already deprecated in WebSharper 3 but not removed). 
+
+Constructing a default value for example `Unchecked.defaultof` now always uses compile-time type information.
+This can be problematic if the type is a generic parameter. For example using `match dict.TryGetValue x with ...`
+can throw an error if dict has a generic value type, as the F# compiler is implicitly creating a default value
+to pass to the out parameter of `TryGetValue`. You can get around it by wrapping the expression in the new
+helper `DefaultToUndefined` which allows translating default values inside to just `undefined`:
+`match DefaultToUndefined(dict.TryGetValue x) with ...`
+
+By default, classes (including F# records and unions) with no methods translated to JS instance methods and
+having no base class are now translated not to have a prototype. JSON serializer was fixed to handle this.
+This is a performance optimization, but disallows type checks or inheriting from a class like this. So a new
+attribute `Prototype` was added to opt-in for generating a prototype for the type in the translation. Extra
+features: `Prototype(false)` forces the type to have no prototype, converting instance methods to static in
+translation.
+
+Previously, having `[<Inline "myLibrary.doSomething()">]` and `[<Inline "$global.myLibrary.doSomething()">]`
+was working equivalently. Now access to global scope without the `$global` object is assumed to be initialized
+before the current script starts running (WebSharper itself takes care of this, if you use the `Require`
+attribute) and will not change, so it is safe to shorten. Whenever you want the exact call on the current
+global scope (window object), be sure to use `$global`.
+
+Classes have now automatic reference equality. If you have relied on classes having automatic structural equality
+in the WebSharper translation, this is now incorrect. Implement an override for `Equals` to fix it.
+
+Create an empty JavaScript plain object with `new JSObject()` / `New []`. Previously this was equivalent to `new
+object()` / `obj()`, but now the latter translates to an instance of `WebSharper.Obj` which defines its own
+`Equals` and `GetHashCode` methods.
+
+Default hash value of classes are now always -1. This should not be breaking, but if you use a class as keys
+or rely on hashing in any other way, be sure to override `GetHashCode` on your class for performance.
+
+`System.Decimal` support has been removed from WebSharper main libraries. It is now a part of
+`WebSharper.MathJS` and has correct precision.
 
 ### WebSharper Extension changes
 
@@ -70,6 +104,14 @@ As the compiler pipeline of WebSharper has been replaced, the intermediate AST r
 Macros and generators also gained new features, they get more info as input and has more options for output.
 Full API documentation will be available later.
 
+Type inference changes which were at some point introduced `FSharp.Compiler.Service` can be breaking.
+We have changed WIG Generic helper operators which can be used to construct generic types and members
+to have different character lengts based on arity: for example use `Generic -- fun t1 t2 -> ...`
+instead of just `Generic - fun t1 t2 -> ...`
+
+`MacroResult.MacroNeedsResolvedTypeArg` now needs the offending type parameter as a field. You can decide
+if a type is a type parameter of any kind by using the new `IsParameter` property.
+
 ### Macros relying on type information
 
 Some built-in macros like the client-side JSON serialization relies on compile-time type information to generate JavaScript code.
@@ -80,8 +122,10 @@ In general, tranlation that relies on type information is delayed within inlines
 ### JSON APIs
 
 Instead of using the `CompiledName` attribute to specify JSON-serialized name of an F# union case, use WebSharper's `Name` attribute.
+
+`Json.SerializeWith` and similar functions taking a custom serializer object have been removed.
  
-## Missing features in first alpha release compared to WebSharper 3 (to be added)
+## Missing features compared to WebSharper 3
 
 * TypeScript definition output
 * Clean does not remove unpacked code 
