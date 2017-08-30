@@ -8,8 +8,10 @@ Most code should compile and run without errors.
 
 ## NuGet packages
 
-Uninstall the `WebSharper` package and all extensions.
-Install `Zafir` and `Zafir.FSharp`, and `Zafir` versions of all extensions (check the `Include prerelease`). 
+As opposed to the beta period, where the packages were released under codename `Zafir`, the release packages
+will be once again called `WebSharper.*`, which means that if you are using WebSharper 3, you can simply
+update your packages in NuGet. If you were using the WebSharper 4 pre-releases, uninstall all `Zafir.*`
+packages, and install their `WebSharper.*` counterparts.
 
 ### JavaScript Attribute changes
 

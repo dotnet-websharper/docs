@@ -11,8 +11,6 @@ After completing [the installation](Install.md), open Visual Studio and create a
 
     File > New Project > Templates > Visual C# >
     WebSharper > UI.Next Client-Server Web Application
-
-* While WebSharper 4 is in beta, templates are under codename `Zafir`.
 	
 This project defines a simple website, with both server and
 client-side components.  To try it out, simply "Run" (F5) - you should
