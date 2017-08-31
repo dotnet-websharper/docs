@@ -62,8 +62,8 @@ Now comes the exciting part: we create our final `View`, `vReversed`, which
 will have the data that the server sends back. We create it by mapping an
 `async` function over our submitter's `View`. If no value has been submitted
 yet, the function simply returns an empty string. On the other hand, if the
-submitter has a value, we just as simply call a server-side function as simple
-return the empty string was! And with that, we get our `View` which always
+submitter has a value, we call a server-side function just as simply as
+returning the empty string was! And with that, we get our `View` which always
 contains the last response from the server.
 
 The rest of the code takes care of binding these reactive elements into the
@@ -71,7 +71,7 @@ DOM.
 
 ### Remoting Module
 
-This module (`Remoting.fs`) defines the `DoSomething`function that is
+This module (`Remoting.fs`) defines the `DoSomething` function that is
 executed on the server but is also available on the client. Execution
 happens by serializing arguments and return value and passing them
 over HTTP. Not all types are supported, WebSharper will warn you
