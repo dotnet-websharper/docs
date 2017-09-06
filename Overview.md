@@ -1,7 +1,5 @@
 # Overview of WebSharper
 
-(This documentation is for WebSharper 4, which is currently in [open beta](#beta).)
-
 WebSharper is a framework and toolset for developing web/mobile applications and web services 
 entirely in C# or F# (or a mix of the two languages) with strongly-typed client-server 
 communication and site navigation. 
@@ -86,18 +84,6 @@ between the client and the server has never been easier.
 * Analyzer for C#, showing WebSharper-specific translation errors as you code.
 * Metaprogramming: translate calls to specific methods with your custom logic or 
 easily include JavaScript code generated at compile-time.
-
-<a name="beta"/>
-
-## WebSharper 4 beta warning
-
-WebSharper 4 is currently released as open beta.
-We plan to change NuGet package versioning scheme for the stable release, so all preview
-NuGet packages are using the codename Zafir ("sapphire" in Hungarian).
-
-Although most planned changes for the stable release involve fixes, new and returning features,
-compiler, server and client runtime performance improvements, breaking changes are possible
-to streamline APIs for cleaner use from one or both languages.
 
 ## Contributing
 WebSharper is open-source with [Apache 3.0 license](https://github.com/intellifactory/websharper/blob/master/LICENSE.md), on [GitHub](https://github.com/intellifactory/websharper/).

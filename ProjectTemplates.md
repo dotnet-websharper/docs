@@ -4,13 +4,14 @@ The three main WebSharper application types are:
 
  1. **Client-Server Application** - a full client-server application implemented as a WebSharper [sitelet](Sitelets.md).
 
-    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](WS.Html.Templates.md) page for more information on dynamic templating.
+    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](https://raw.githubusercontent.com/intellifactory/websharper.ui.next/master/docs/UINext-Templates.md) page for more information on dynamic templating.
 	
     These applications exist in two kinds: a **Client-Server Web Application** runs as an ASP.NET module, while a **Self-Hosted Client-Server Web Application** runs as a self-contained executable using an OWIN self-host container.
 
  2. **HTML Application** - a multi-page HTML/JavaScript application.
 
-    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](WS.Html.Templates.md) to define web pages. However it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
+    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](https://raw.githubusercontent.com/intellifactory/websharper.ui.next/master/docs/UINext-Templates.md) to define web pages.
+    However, it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
 
     WebSharper mobile web applications can also be created from this template.
 
@@ -120,3 +121,5 @@ WebSharper project files must include the file `WebSharper.targets`, which defin
     * Compiles JavaScript-annotated code.
 * `InterfaceGenerator`: For Extensions.
     * Compiles the classes defined using WIG into an assembly.
+
+The other MSBuild project variables are fully documented [here](ProjectVariables.md).

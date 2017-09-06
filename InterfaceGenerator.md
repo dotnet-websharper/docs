@@ -429,11 +429,14 @@ Class nesting is allowed:
 #### Generic Types
 
 Generic types and interfaces are defined by prefixing the definition
-with the code of the form `Generic - fun t1 t2 .. tN ->`.  The
-`t1..tN` parameters can be used as types in the definition and
-represent the generic parameters.  For example:
+with the code of the form `Generic --- fun t1 t2 t3 ->`. The
+`t1..t3` parameters can be used as types in the definition and
+represent the generic parameters. The length of the operator should
+be equal to the number of parameters (up to 4).
 
-    Generic - fun t1 t2 ->
+For example:
+
+    Generic -- fun t1 t2 ->
         Interface "IDictionary"
         |+> [
             "Lookup"      => t1 ^-> t2
@@ -469,7 +472,7 @@ This code would generate the following F# signature:
 
 You can use `Generic %` to add the same generics to a list of members,
 `Generic *` to add the same generics to a `ClassMembers` value.
-Also `Generic + ["a"; "b"; ...] - ...` specifies the names of the type parameters.
+Also `Generic + ["a"; "b"; ...] --- ...` specifies the names of the type parameters.
 
 #### Type Constraints
 
@@ -517,10 +520,10 @@ However, it is often required that we pass functions defined in F# to a JavaScri
 library (for example event handlers, callbacks, functional-style libraries).
 WIG automatically converts between these function calling conventions.
 
-#### Choice
+#### Erased unions
 
 Union types (for example `T<int> + T<string>`) can create method overloads,
-but also `Choice` typed properties or method return types when the cases can be
+but also `Union` typed properties or method return types when the cases can be
 distinguished in JavaScript using the `typeof`, `Array.isArray` and the
 `arr.length` functions.
 In F# this means either at most one array case or possibly multiple tuple cases

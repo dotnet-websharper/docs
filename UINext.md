@@ -328,7 +328,7 @@ The following functions create Docs:
     // myDoc HTML equivalent is now: <i>(no value)</i>
     ```
 
-For convenience, `View.Convert*` functions are specialied for the `Doc` type, so that the resulting sequence is passed to `Doc.Concat` and `Doc.EmbedView`.
+For convenience, `View.Convert*` functions are specialized for the `Doc` type, so that the resulting sequence is passed to `Doc.Concat` and `Doc.EmbedView`.
 
 * **`Doc.Convert : ('T -> Doc) -> View<seq<'T>> -> Doc`**
 

@@ -25,7 +25,8 @@ open WebSharper.Sitelets
 
 module SampleSite =
     open WebSharper
-    open WebSharper.Html.Server
+    open WebSharper.UI.Next.Html
+    open WebSharper.UI.Next.Server
 
     type EndPoint =
         | Index
@@ -34,7 +35,7 @@ module SampleSite =
         let time = System.DateTime.Now.ToString()
         Content.Page(
             Title = "Index",
-            Body = [H1 [Text ("Current time: " + time)]]
+            Body = [h1 [text ("Current time: " + time)]]
         )
 
     [<Website>]
@@ -77,30 +78,37 @@ A number of primitives are available to create and compose Sitelets.
 The easiest way to create a Sitelet is to automatically generate URLs from the shape of your endpoint type using `Sitelet.Infer`. This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
 ```fsharp
+namespace SampleWebsite
+
 open WebSharper.Sitelets
 
-type EndPoint =
-    | Index
-    | Stats of username: string
-    | BlogArticle of id: int * slug: string
+module SampleSite =
+    open WebSharper
+    open WebSharper.UI.Next.Html
+    open WebSharper.UI.Next.Server
 
-[<Website>]
-let MyWebsite =
-    Sitelet.Infer <| fun context endpoint ->
-        match endpoint with
-        | Index ->
-             // Content of the index page
-             Content.Page(
-                 Title = "Welcome!",
-                 Body = [H1 [Text "Index page"]])
-        | Stats username ->
-             // Content of the stats page, which depends on the username
-             Content.Page(
-                Body = [Text ("Stats for " + username)])
-        | BlogArticle (id, slug) ->
-            // Content of the article page, which depends on id and slug
-            Content.Page(
-                Body = [Text (sprintf "Article id %i, slug %s" id slug)])
+    type EndPoint =
+        | Index
+        | Stats of username: string
+        | BlogArticle of id: int * slug: string
+
+    [<Website>]
+    let MyWebsite =
+        Sitelet.Infer <| fun context endpoint ->
+            match endpoint with
+            | Index ->
+                 // Content of the index page
+                 Content.Page(
+                     Title = "Welcome!",
+                     Body = [h1 [text "Index page"]])
+            | Stats username ->
+                 // Content of the stats page, which depends on the username
+                 Content.Page(
+                    Body = [text ("Stats for " + username)])
+            | BlogArticle (id, slug) ->
+                // Content of the article page, which depends on id and slug
+                Content.Page(
+                    Body = [text (sprintf "Article id %i, slug %s" id slug)])
 ```
 
 The above sitelets accepts URLs with the following shape:
@@ -497,22 +505,28 @@ By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to
 If the URL path isn't matched, then the request falls through as with `Sitelet.Infer`.
 
 ```fsharp
-type EndPoint =
+open WebSharper.Sitelets
+
+module SampleSite =
+    open WebSharper.Sitelets.ActionEncoding
+
+    type EndPoint =
     | [<Method "GET"; Query "page">] Articles of page: int
 
-let MySitelet = Sitelet.InferWithErrors <| fun context endpoint ->
-    match endpoint with
-    | Success (Articles page) ->
-        Content.Text ("serving page " + string page)
-    | InvalidMethod (_, m) ->
-        Content.Text ("Invalid method: " + m)
-        |> Content.SetStatus Http.Status.MethodNotAllowed
-    | MissingQueryParameter (_, p) ->
-        Content.Text ("Missing parameter: " + p)
-        |> Content.SetStatus (Http.Status.Custom 400 (Some "Bad Request"))
-    | _ ->
-        Content.Text "We don't have JSON or FormData, so this shouldn't happen"
-        |> Content.SetStatus Http.Status.InternalServerError
+    [<Website>]
+    let MySitelet = Sitelet.InferWithCustomErrors <| fun context endpoint ->
+        match endpoint with
+        | Success (Articles page) ->
+            Content.Text ("serving page " + string page)
+        | InvalidMethod (_, m) ->
+            Content.Text ("Invalid method: " + m)
+            |> Content.SetStatus Http.Status.MethodNotAllowed
+        | MissingQueryParameter (_, p) ->
+            Content.Text ("Missing parameter: " + p)
+            |> Content.SetStatus (Http.Status.Custom 400 (Some "Bad Request"))
+        | _ ->
+            Content.Text "We don't have JSON or FormData, so this shouldn't happen"
+            |> Content.SetStatus Http.Status.InternalServerError
 
 // Accepted Request:    GET /Articles?page=123
 // Parsed Endpoint:     Articles 123
@@ -650,7 +664,9 @@ let simpleResponse =
 You can serve files using `Content.File`.  Optionally, you can set the content type returned for the file response and whether file access is allowed outside of the web root:
 
 ```fsharp
-let fileResponse =
+type EndPoint = //. . .
+
+let fileResponse: Async<Content<EndPoint>> =
     Content.File("../Main.fs", AllowOutsideRootFolder=true, ContentType="text/plain")
 ```
 
@@ -659,11 +675,15 @@ let fileResponse =
 You can return full HTML pages, with managed dependencies using `Content.Page`. Here is a simple example:
 
 ```fsharp
-let IndexPage =
+open WebSharper.UI.Next.Html
+    
+let IndexPage : Async<Content<EndPoint>> =
     Content.Page(
         Title = "Welcome!",
-        Head = [ Link [HRef "/css/style.css"; Rel "stylesheet"] ],
-        Body = [ H1 [Text "Welcome to my site."] ]
+        Head = [ linkAttr [attr.href "/css/style.css"; attr.rel "stylesheet"] [] ],
+        Body = [
+            h1 [text "Welcome to my site."] 
+        ]
     )
 ```
 
@@ -788,17 +808,24 @@ The functions to create sitelets from content, namely `Sitelet.Infer` and `Sitel
 Since every accepted URL is uniquely mapped to a strongly typed action value, it is also possible to generate internal links from an action value. For this, you can use the function `context.Link`.
 
 ```fsharp
+open WebSharper.UI.Next.Html
+
+type EndPoint = | BlogArticle of id:int * slug:string
+
 let HomePage (context: Context<EndPoint>) =
-  Content.Page(
-      Title = "Welcome!",
-      Body = [
-          H1 [Text "Index page"]
-          A [HRef (context.Link (BlogArticle(1423, "some-article-slug")))]
-            -< [Text "Go to some article"]
-          Br []
-          A [HRef (context.ResolveUrl "~/Page2.html")] -< [Text "Go to page 2"]
-      ]
-  )
+    Content.Page(
+        Title = "Welcome!",
+        Body = [
+            h1 [text "Index page"]
+            aAttr [attr.href (context.Link (BlogArticle(1423, "some-article-slug")))] [
+                text "Go to some article"
+            ]
+            br []
+            aAttr [attr.href (context.ResolveUrl "~/Page2.html")] [
+                text "Go to page 2"
+            ]
+        ]
+    )
 ```
 
 Note how `context.Link` is used in order to resolve the URL to the `BlogArticle` action.  Action URLs are always constructed relative to the application root, whether the application is deployed as a standalone website or in a virtual folder.  `context.ResolveUrl` helps to manually construct application-relative URLs to resources that do not map to actions.
@@ -830,25 +857,26 @@ A sitelet consists of two parts; a router and a controller.  The job of the rout
 The router component of a sitelet can be constructed in a variety of ways.  The following example shows how you can create a complete customized router of type `Action`.
 
 ```fsharp
-type EndPoint = | Page1 | Page2
+open WebSharper.Sitelets
 
-let MyRouter : Router<Action> =
-    let route (req: Http.Request) =
-        if req.Uri.LocalPath = "/page1" then
-            Some Page1
-        elif req.Uri.LocalPath = "/page2" then
-            Some Page2
-        else
-            None
-    let link action =
-        match action with
-        | Action.Page1 ->
-            System.Uri("/page2", System.UriKind.Relative)
-            |> Some
-        | Action.Page2 ->
-            System.Uri("/page1", System.UriKind.Relative)
-            |> Some
-    Router.New route link
+module WebSite =
+    type EndPoint = | Page1 | Page2
+
+    let MyRouter : Router<EndPoint> =
+        let route (req: Http.Request) =
+            if req.Uri.LocalPath = "/page1" then
+                Some Page1
+            elif req.Uri.LocalPath = "/page2" then
+                Some Page2
+            else
+                None
+        let link endPoint =
+            match endPoint with
+            | EndPoint.Page1 ->
+                Some <| System.Uri("/page2", System.UriKind.Relative)
+            | EndPoint.Page2 ->
+                Some <| System.Uri("/page1", System.UriKind.Relative)
+        Router.New route link
 ```
 
 Specifying routers manually gives you full control of how to parse incoming requests and to map actions to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and actions, so that linking to an action produces a URL that is in turn routed back to the same action.
@@ -856,10 +884,10 @@ Specifying routers manually gives you full control of how to parse incoming requ
 Constructing routers manually is only required for very special cases. The above router can for example be generated using `Router.Table`:
 
 ```fsharp
-let MyRouter : Router<Action> =
+let MyRouter : Router<EndPoint> =
     [
-        Action.Page1, "/page1"
-        Action.Page2, "/page2"
+        EndPoint.Page1, "/page1"
+        EndPoint.Page2, "/page2"
     ]
     |> Router.Table
 ```
@@ -867,7 +895,7 @@ let MyRouter : Router<Action> =
 Even simpler, if you want to create the same URL shapes that would be generated by `Sitelet.Infer`, you can simply use `Router.Infer()`:
 
 ```fsharp
-let MyRouter : Router<Action> =
+let MyRouter : Router<EndPoint> =
     Router.Infer ()
 ```
 
@@ -884,31 +912,34 @@ To simplify the parsing of URLs in the Router, some active patterns are provided
 The three sets of patterns above are generally used together to create a whole parser.
 
 ```fsharp
-type EndPoint =
-    | Index
-    | Stats of username: string
-    | BlogArticle of id: int * slug: string
+    open WebSharper.Sitelets
+    open WebSharper.Sitelets.UrlHelpers
+    
+    type EndPoint =
+        | Index
+        | Stats of username: string
+        | BlogArticle of id: int * slug: string
 
-let myRouter =
-    let route request =
-        match request with
-        | GET (_, SPLIT_BY '/' []) ->
-            Some Index
-        | GET (_, SPLIT_BY '/' ["stats"; username]) ->
-            Some (Stats username)
-        | GET (_, SPLIT_BY '/' ["blog-article"; INT id; slug]) ->
-            Some (BlogArticle (id, slug))
-        | _ -> None
-    let link action =
-        match action with
-        | Index ->
-            System.Uri "/"
-        | Stats u ->
-            System.Uri ("/stats/" + u)
-        | BlogArticle (id, slug) ->
-            System.Uri (sprintf "/blog-article/%i/%s" id slug)
-        |> Some
-    Router.New route link
+    let myRouter =
+        let route request =
+            match request with
+            | GET (_, SPLIT_BY '/' []) ->
+                Some Index
+            | GET (_, SPLIT_BY '/' ["stats"; username]) ->
+                Some (Stats username)
+            | GET (_, SPLIT_BY '/' ["blog-article"; INT id; slug]) ->
+                Some (BlogArticle (id, slug))
+            | _ -> None
+        let link endPoint =
+            match endPoint with
+            | Index ->
+                System.Uri "/"
+            | Stats u ->
+                System.Uri ("/stats/" + u)
+            | BlogArticle (id, slug) ->
+                System.Uri (sprintf "/blog-article/%i/%s" id slug)
+            |> Some
+        Router.New route link
 ```
 
 ### Controllers
@@ -916,19 +947,21 @@ let myRouter =
 If an incoming request can be mapped to an action by the router, it is passed on to the controller. The job of the controller is to map actions to content. Here is an example of a controller handling actions of the `Action` type defined above.
 
 ```fsharp
-let MyController : Controller<Action> =
+type EndPoint = | Page1 | Page2
+
+let MyController : Controller<EndPoint> =
     {
-        Handle = fun action ->
-            match action with
-            | Action.Page1  -> MyContent.Page1
-            | Action.Page2  -> MyContent.Page2
+        Handle = fun endPoint ->
+            match endPoint with
+            | EndPoint.Page1  -> MyContent.Page1
+            | EndPoint.Page2  -> MyContent.Page2
     }
 ```
 
 Finally, the router and the controller components are combined into a sitelet:
 
 ```fsharp
-let MySitelet : Sitelet<Action> =
+let MySitelet : Sitelet<EndPoint> =
     {
         Router = MyRouter
         Controller = MyController
