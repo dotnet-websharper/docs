@@ -2,8 +2,8 @@
 
 Developing with WebSharper in Visual Studio currently requires:
 
-* [Visual Studio 2015 or later][vs] with Web Developer Tools installed (or Visual Studio Express for Web).
-Also Visual F# is needed to use WebSharper for F#.
+* [Visual Studio 2015 or later][vs] with Web Developer Tools installed.
+Also Visual F# Tools is needed to use WebSharper for F#.
 
 When your environment is ready, download and install the
 WebSharper `.vsix` file for one or both languages from the [WebSharper download page][downloads].

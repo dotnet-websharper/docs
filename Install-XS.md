@@ -1,5 +1,7 @@
 # monodevelop.websharper
 
+MonoDevelop/XamarinStudio installer for WebSharper 4 coming soon!
+
 [![Build Status](https://travis-ci.org/intellifactory/monodevelop.websharper.svg?branch=master)](https://travis-ci.org/intellifactory/monodevelop.websharper)
 
 [WebSharper][ws] add-in for MonoDevelop and XamarinStudio.
