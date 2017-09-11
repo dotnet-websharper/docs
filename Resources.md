@@ -1,10 +1,11 @@
 # Managing Resource Dependencies
 
-WebSharper automates the management of resource dependencies.  For the
-purposes of WebSharper, a __resource__ is any HTML code that can be
-rendered to the `<head>` section of a page, for example a CSS or a
-JavaScript reference.  Pages written with WebSharper infer their
-minimal necessary resource set and the correct resource ordering.
+WebSharper automates the management of resource dependencies. For the purposes
+of WebSharper, a __resource__ is any HTML code that can be rendered to the
+`<head>` section of a page. Most commonly, this will be a `<link>` tag pointing
+to a CSS file, or a `<script>` tag pointing to a JavaScript reference. Pages
+written with WebSharper infer their minimal necessary resource set and the
+correct resource ordering.
 
 Most resources are declared as subclasses of the `Core.Resources.BaseResource`
 class (see "Declaring Resources and Dependencies" below for the different
@@ -126,7 +127,7 @@ let C2 =
     |> RequiresExternal [typeof<Other.Library.Resources.R4>]
 ```
 
-### In WebSharper Libraries, Applications and Manual Bindings
+### In Client-side WebSharper code
 
 To declare a resource in a WebSharper library or application,
 you can simply declare a class inheriting from `BaseResource`.
@@ -170,6 +171,26 @@ let F x = ...
 
 [<assembly:Require(typeof<R3>)>]
 do()
+```
+
+### In Server-side WebSharper code
+
+Sometimes you might need to depend on a resource without having any client-side
+code; typically, a CSS file. In this case, you can add the web control
+`WebSharper.Web.Require` anywhere in your page. This control does not directly
+output any HTML at the location where you put it, but it incurs a dependency on
+the resource that you pass to it.
+
+Here is an example UI.Next page with a dependency on `R1` from above:
+
+```fsharp
+let MyPage() =
+    Content.Page(
+        div [
+            h1 [text "This page includes the script at `path.js`."]
+            Doc.WebControl(new Web.Require<R1>())
+        ]
+    )
 ```
 
 ## Resource Implementation
