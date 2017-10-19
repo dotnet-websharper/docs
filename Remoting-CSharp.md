@@ -69,10 +69,9 @@ All types occurring in method parameters and return must be one of the following
 
 * System namespace numeric types, string, bool, `DateTime` and `TimeSpan`, all enums.
 * One-dimensional arrays, `Nullable<T>`, `System.Tuple<...>`. Also F# union and record types.
+* Collection types: `System.Array<T>`, `System.Collections.Generic.List<T>`, `System.Collections.Generic.Queue<T>`, `System.Collections.Generic.Stack<T>`. Other collection types have to be converted to a supported one.
 * Serializable classes with a default constructor for which the values of all fields are themselves serializable 
 or marked with the `System.NonSerialized` attribute.
-
-To send collections through remoting, convert them to arrays.
 
 ### Security
 
@@ -81,11 +80,16 @@ Remote methods are exposed as http endpoints, so any security measures have to b
 This uses `System.Web.Security.FormsAuthentication` on the server and cookies in the browser. [See here](WebContext.md) for more information.
 
 ```csharp
+//using WebSharper.Web;
 [Remote]
-public static async Task Login(string user)
+public static async Task<bool> Login(string user, string password)
 {
     var ctx = WebSharper.Web.Remoting.GetContext();
-    await ctx.UserSession.LoginUserAsync(user);
+    if (await VerifyLogin(user, password)) {
+        await ctx.UserSession.LoginUserAsync(user);
+        return true;
+    }
+    return false;
 }
 ```
 
@@ -96,7 +100,7 @@ The syntax for this is:
 
 ```csharp
 //using static WebSharper.JavaScript.Pervasives;
-Remote<MyClass>.MyMethod(...)
+Remote<MyType>.MyMethod(...)
 ```
 
 The method invoked should be annotated with the `Remote` attribute and
@@ -106,7 +110,7 @@ follows the same convention as static methods:
 public class MyType
 {
     [<Remote>]
-    public a this.MyMethod(..) = ..
+    public a this.MyMethod(...) = //...
 }
 ```
 
@@ -118,19 +122,24 @@ WebSharper.Core.Remoting.AddHandler(typeof(MyType), new MyType());
 
 Remote annotated methods can be abstract or virtual.
 The instance that you provide by `AddHandler` can be of a subclass of the type in the first argument.
-This way you can have parts of server-side RPC functionality undefined in a library, and have them implemented in 
+This way you can have parts of server-side RPC functionality undefined in a library, and have them implemented in your web project for better separation of concerns. 
 
 ### Client-side customization
 
-You can customize how RPC methods are called from the client-side code by writing a class implementing the 
+If you want to change the URL that remoting calls target by default, set the value at the `WebSharper.Remoting.EndPoint` property at the startup of your client-side code.
+
+You can You can further customize how RPC methods are called from the client-side code by writing a class implementing the 
+ customize how RPC methods are called from the client-side code by writing a class implementing the 
 `WebSharper.Remoting.IRemotingProvider` interface, then adding a `RemotingProvider` attribute on the remote method
 with the custom remoting provider type as argument.
 
-The `IRemotingProvider` provider has 4 methods for implementing synchronous, asynchronous (Task and F# Async), and send calls.
+The `IRemotingProvider` provider has 4 methods for implementing synchronous, asynchronous (Task and F# Async), and send calls: `Sync`, `Task`, `Async`, `Send` respectively.
 You have to implement only the methods that your RPC methods will be using depending on their signatures.
 
 The `RemotingProvider` attribute can be also used on classes and assemblies, overriding client-side remote handling for
-all RPC methods found in their scope. 
+all RPC methods found in their scope.
+
+The default implementation used is `WebSharper.Remoting.AjaxRemotingProvider`.
 
 ### Communication Protocol
 
