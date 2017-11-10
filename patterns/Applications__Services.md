@@ -31,8 +31,6 @@ let Main = Application.Text (fun ctx -> "Hello World!")
 
 <!-- ID:83538 -->
 
-**Single-Page Applications**
-
 The easiest way to return HTML content is via `Content.Page` ([reference](http://developers.websharper.com/api/WebSharper.Sitelets.Content)). Here we use an SPA (note `Application.SinglePage`) to serve from:
 
 ```fsharp
