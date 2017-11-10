@@ -58,8 +58,6 @@ Content.File("countries.json", ContentType="application/json")
 
 <!-- ID:83781 -->
 
-**HTML pages**
-
 You can return HTML fragments by wrapping them in `Content.Page`:
 
 ```fsharp
