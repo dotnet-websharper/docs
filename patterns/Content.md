@@ -35,8 +35,6 @@ Content.Text("Time now is " + System.DateTime.Now.ToShortTimeString())
 
 <!-- ID:83778 -->
 
-**Files**
-
 Files are served, for security reasons, from your web root folder:
 
 ```fsharp
