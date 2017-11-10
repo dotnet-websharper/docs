@@ -56,8 +56,6 @@ let Main =
 
 <!-- ID:83540 -->
 
-**Multi-Page Applications**
-
 Multi-Page Applications (note `Application.MultiPage`) have multiple endpoints: pairs of HTTP verbs and paths, and are represented as an annotated union type we typically call `EndPoint`. These endpoints can be given various annotations that determine how they respond to requests. Links to endpoints in your application can be calculated from the serving context (note `ctx.Link`), so you will never have invalid URLs.
 
 ```fsharp
