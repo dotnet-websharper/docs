@@ -75,8 +75,6 @@ Content.Page(
 
 <!-- ID:83860 -->
 
-**JSON**
-
 You can serialize an F#/C# value to JSON using `Content.Json`:
 
 ```fsharp
