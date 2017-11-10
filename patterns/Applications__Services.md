@@ -14,8 +14,6 @@ You can read about [constructing various types of content](https://forums.websha
 
 <!-- ID:83537 -->
 
-**Hello World**
-
 The simplest sitelet serves plain text (note `Application.Text`) at the root of the application:
 
 ```fsharp
