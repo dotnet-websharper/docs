@@ -26,8 +26,6 @@ Prerequisites:
 
 <!-- ID:83777 -->
 
-**Text**
-
 ```fsharp
 Content.Text("Time now is " + System.DateTime.Now.ToShortTimeString())
 ```
