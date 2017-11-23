@@ -1,15 +1,25 @@
 /// This script updates the README.md file based on 
 /// docs.config and tutorials.config
+///
+/// How to run:
+///
+///   fsharpi genReadme.fsx [version]
 
 #r "System.Xml.Linq"
 open System.IO
 open System.Xml.Linq
 
-let getPath x = Path.Combine(__SOURCE_DIRECTORY__, x)
+let version =
+    match fsi.CommandLineArgs with
+    | [| _ |] -> "websharper41" // latest version by default
+    | [| _; v |] -> v
+    | _ -> failwith "Usage: fsharpi genReadme.fsx [version]"
+
+let getPath x = Path.Combine(__SOURCE_DIRECTORY__, version, x)
 
 let xn x = XName.Get(x)
 
-let rawLink = "https://raw.githubusercontent.com/intellifactory/websharper.docs/master/"
+let rawLink = sprintf "https://raw.githubusercontent.com/intellifactory/websharper.docs/master/%s/" version
 
 let res =
     [|
