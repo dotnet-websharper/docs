@@ -81,14 +81,16 @@ To add attributes to an element, say a `div`, we need to use the function `divAt
         formAttr [ attr.id "add-form" ] [
             inputAttr [ attr.placeholder "Add a new card" ] []
             select [
-                optionAttr [ attr.value "orangered" ] [ text "Red" ]
-                optionAttr [ attr.value "yellow" ] [ text "Yellow" ]
-                optionAttr [ attr.value "skyblue" ] [ text "Blue" ]
-                optionAttr [ attr.value "lightgreen" ] [text "Green" ]
+                Tags.optionAttr [ attr.value "orangered" ] [ text "Red" ]
+                Tags.optionAttr [ attr.value "yellow" ] [ text "Yellow" ]
+                Tags.optionAttr [ attr.value "skyblue" ] [ text "Blue" ]
+                Tags.optionAttr [ attr.value "lightgreen" ] [text "Green" ]
             ]
             button [ text "Add" ]
         ]
 ```
+
+Note that `option` is tucked away in the `Tags` module to prevent name collisions with the F# `option<'T>` type.
 
 Now we just need to insert this into the document in the `Main` function. This is done using the `Doc.Run*` family of functions. In this case we want to add our form at the end of the body, so we use `Doc.RunAppend`:
 
@@ -114,6 +116,7 @@ You can then get or set its value using the `Value` property:
 
 ```fsharp
 varText.Value <- "something!"
+
 // VarText is something!
 printfn "VarText is %s" varText.Value
 ```
@@ -149,15 +152,69 @@ type Color =
     static member All = [ Red; Yellow; Green; Blue ]
 ```
 
-Now, for the `<select>` element itself. In addition to a list of attributes and a Var, like `Doc.Input`, `Doc.Select` needs two extra arguments: the list of option values, and how to display each of them.
+Now, for the `<select>` element itself. First, let's create a Var for it:
+
+```fsharp
+let varColor = Var.Create Red
+```
+
+In addition to a list of attributes and a Var, like `Doc.Input`, `Doc.Select` needs two extra arguments: the list of option values, and how to display each of them.
 
 ```fsharp
 Doc.Select [] (fun (x: Color) -> x.Name) Color.All varColor
 ```
 
+Our form now looks like this:
+
+```fsharp
+    let addCardForm =
+        let varText = Var.Create ""
+        let varColor = Var.Create Red
+        formAttr [ attr.id "add-form" ] [
+            Doc.Input [ attr.placeholder "Add a new card" ] varText
+            Doc.Select [] (fun (x: Color) -> x.Name) Color.All varColor
+            button [ text "Add" ]
+        ]
+```
+
 <!-- TODO: screenshot -->
 
-### 
+### Reactive values: `View`
+
+As we have seen, functions like `Doc.Input` and `Doc.Select` allow us to have the UI reactively reflect changes to a variable. But we will often want to reflect dynamic changes in whatever way we decide. For example, let's give a preview of what a card will look like by having the background of the input box reflect the currently selected option.
+
+For this, we need to introduce the second main type for reactive programming: `View<'T>`. Like a Var, a View represents a value that changes over time; but unlike a Var, it is not set directly by you, but computed automatically based on other Views or Vars.
+
+The first example of a View is the one that tracks the current value of a Var. You can access it using the `.View` property on the given Var:
+
+```fsharp
+let vColor = varColor.View
+```
+
+In fact, this view is what functions like `Doc.Input` and `Doc.Select` use internally to track changes to the Var.
+
+In our case, we would like a View whose value is not exactly the current value of `varColor`, but the corresponding CSS color, represented by the `.Css` property. For this, we can construct a new View using `View.Map`:
+
+```fsharp
+let vColorCss =
+    varColor.View
+    |> View.Map (fun c -> c.Css)
+```
+
+The simplest way to include a View in a document is to create a dynamically-changing text node from a `View<string>` using `textView`:
+
+```fsharp
+let colorCss = textView vColorCss
+```
+
+But in our case, we want to dynamically set a CSS style based on a View. That is done using `Attr.DynamicStyle`:
+
+```fsharp
+Doc.Input [ 
+    attr.placeholder "Add a new card"
+    Attr.DynamicStyle "background-color" vColorCss
+] varText
+```
 
 ### Event handlers
 
