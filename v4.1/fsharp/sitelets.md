@@ -925,10 +925,21 @@ A sitelet consists of two parts; a router and a controller.  The job of the rout
 
 ### Routers
 
-The router component of a sitelet can be constructed in a variety of ways.  The following example shows how you can create a complete customized router of type `Action`.
+The router component of a sitelet can be constructed in multiple ways. The main options are: 
+
+* Sitelets has a built-in `WebSharper.Sitelets.Routing.Router` type that encapsulate a mapping from `Http.Request` to the action type, and a mapping from the action type to `System.Uri`.
+Similar operations exists for the `Router` type (on the accompanying `Router` module) for combining values as for Sitelets like `Map`, `Shift` and `Sum`.
+You can use a `Router.Infer` to get the exact router that `Sitelets.Infer` use internally. 
+* `WebSharper.UI` also contains a router abstraction, that is also able to be shared between the server and the client (translated to JavaScript), so that the client can generate links from action values too, or handle some URL changes without browser navigation (client-side routing).
+This type necessarily has less server-only concerns, so parser in `WebSharper.UI.Routing.Router` only deals with the URL string and request method and body instead of being able to access the underlying `Http.Request`.
+This router also has an `Infer` helper that shares almost all of attribute semantics described above.
+It is possible to convert it to a Sitelets router, but not the other way around. See the [WebSharper.UI documentation](ui.md#routing) for details.
+
+The following example shows how you can create a customized router of type `WebSharper.Sitelets.Routing.Router<Action>` by writing the two mappings manually:
 
 ```fsharp
 open WebSharper.Sitelets
+open WebSharper.Sitelets.Routing
 
 module WebSite =
     type EndPoint = | Page1 | Page2
@@ -969,6 +980,17 @@ Even simpler, if you want to create the same URL shapes that would be generated 
 let MyRouter : Router<EndPoint> =
     Router.Infer ()
 ```
+
+### Other Router combinators
+
+Combinators are also defined by the `Router` module inside `WebSharper.Sitelets.Routing` namespace.
+
+* `Router.Map`, `Router.Shift`, `Router.Sum`, `Router.Empty` are the routing-only combinators of the same functions for Sitelets described above.
+* `Router.InferWithErrors` is used internally by `Sitelet.InferWithErrors`, returns only the router part as a `Router<ActionEncoding.DecodeResult<'T>>`.
+* `Router.Sum` takes a sequence of `Router<'T>` values and returns a single `Router<'T>` that is capable of parsing any URL and writing actions that any of the argument router can. Attemps are made in the order of the sequence. This is what `Sitelets.Sum` uses internally.
+* `<|>` operator is the same as using `Router.Sum` on two elements.
+* `Router.FromJsonParameter` creates a router that parses the request body by the JSON format derived from the type argument. Fails to write links.
+* `Router.FromPostParameter` creates a router that parses a single named argument from the request body of a form post. Fails to write links.
 
 ### URL Parsing Helpers
 
