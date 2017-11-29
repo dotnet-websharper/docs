@@ -832,7 +832,73 @@ Note how `context.Link` is used in order to resolve the URL to the `BlogArticle`
 
 ### Managing User Sessions
 
-Since `Context<'T>` implements the interface `WebSharper.Web.IContext`, it can be used to access the currently logged in user. [See here for more information about user sessions.](WebContext.md)
+`Context<'T>` can be used to access the currently logged in user. The member `UserSession` has the following members:
+
+* `LoginUser : username: string * ?persistent: bool -> Async<unit>`  
+  `LoginUser : username: string * duration: System.TimeSpan -> Async<unit>`
+
+    Logs in the user with the given username. This sets a cookie that is uniquely associated with this username. The second parameter determines the expiration of the login:
+
+    * `LoginUser("username")` creates a cookie that expires with the user's browser session.
+    
+    * `LoginUser("username", persistent = true)` creates a cookie that lasts indefinitely.
+    
+    * `LoginUser("username", duration = d)` creates a cookie that expires after the given duration.
+    
+    Example:
+    
+    ```fsharp
+    let LoggedInPage (context: Context<EndPoint>) (username: string) =
+        async {
+            // We're assuming here that the login is successful,
+            // eg you have verified a password against a database.
+            do! context.UserSession.LoginUser(username, 
+                    duration = System.TimeSpan.FromDays(30.))
+            return! Content.Page(
+                Title = "Welcome!",
+                Body = [ text (sprintf "Welcome, %s!" username) ]
+            )
+        }
+    ```
+
+* `GetLoggedInUser : unit -> Async<string option>`
+
+    Retrieves the currently logged in user's username, or `None` if the user is not logged in.
+    
+    Example:
+    
+    ```fsharp
+    let HomePage (context: Context<EndPoint>) =
+        async {
+            let! username = context.UserSession.GetLoggedInUser()
+            return! Content.Page(
+                Title = "Welcome!",
+                Body = [
+                    text (
+                        match username with
+                        | None -> "Welcome, stranger!"
+                        | Some u -> sprintf "Welcome back, %s!" u
+                    )
+                ]
+            )
+        }
+    ```
+
+* `Logout : unit -> unit`
+
+    Logs the user out.
+    
+    Example:
+    
+    ```fsharp
+    let Logout (context: Context<EndPoint>) =
+        async {
+            do! context.UserSession.Logout()
+            return! Content.RedirectTemporary Home
+        }
+    ```
+
+The implementation of these functions relies on cookies and thus requires that the browser has enabled cookies.
 
 ### Other Context members
 
@@ -844,6 +910,11 @@ Since `Context<'T>` implements the interface `WebSharper.Web.IContext`, it can b
 
 * `context.RootFolder` returns the physical folder on the server machine from which the application is running.
 
+* `context.Environment` returns an `IDictionary<string, obj>` which depends on the host on which WebSharper is running.
+
+    * When running on ASP.NET, `context.Environment.["HttpContext"]` contains the `System.Web.HttpContextBase` for the current request.
+    
+    * When running on OWIN, `context.Environment` is the OWIN environment.
 
 <a name="advanced-sitelets"></a>
 ## Advanced Sitelets
