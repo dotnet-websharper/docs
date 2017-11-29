@@ -553,6 +553,8 @@ module SampleSite =
 
 The following functions are available to build simple sitelets or compose more complex sitelets out of simple ones:
 
+* `Sitelet.Empty` creates a Sitelet which does not recognize any URLs.
+
 * `Sitelet.Content`, as shown in the first example, builds a sitelet that accepts a single URL and maps it to a given endpoint and content.
 
 ```fsharp
@@ -598,6 +600,8 @@ Sitelet.Content "/about" About AboutContent
 // Returned Content:    (value of AboutContent : Content<EndPoint>)
 ```
 
+For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
+
 * `Sitelet.Shift` takes a Sitelet and shifts it by a path segment.
 
 ```fsharp
@@ -639,7 +643,74 @@ module Sitelet =
 val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
 ```
 
-Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](WebContext.md)
+Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
+
+* `Sitelet.Map` converts a Sitelet to a different endpoint type using mapping functions in both directions.
+
+```fsharp
+type EndPoint = Article of string
+
+let s : Sitelet<string> = Sitelet.Infer sContent
+
+let s2 : Sitelet<EndPoint> = Sitelet.Map Article (fun (Article a) -> a) s
+```
+
+* `Sitelet.Embed` similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
+
+```fsharp
+type EndPoint =
+    | Index
+    | Article of string
+
+let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+let article : Sitelet<string> = Sitelet.Infer articleContent
+let fullSitelet =
+    Sitelet.Sum [
+        index
+        article |> Sitelet.Embed Article (function Article a -> Some a | _ -> None)
+    ]
+```
+
+* `Sitelet.EmbedInUnion` is a simpler version of `Sitelet.Embed` when the mapping function is a union case constructor.
+
+```fsharp
+type EndPoint =
+    | Index
+    | Article of string
+
+let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+let article : Sitelet<string> = Sitelet.Infer articleContent
+let fullSitelet =
+    Sitelet.Sum [
+        index
+        article |> Sitelet.EmbedInUnion <@ Article @>
+    ]
+```
+
+* `Sitelet.InferPartial` is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, it the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
+
+```fsharp
+type EndPoint =
+    | Index
+    | Article of string
+
+let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+let article : Sitelet<EndPoint> =
+    Sitelet.InferPartial Article (function Article a -> Some a | _ -> None) articleContent
+let fullSitelet = Sitelet.Sum [ index; article ]
+```
+
+* `Sitelet.InferPartialInUnion` is a simpler version of `Sitelet.InferPartial` when the mapping function is a union case constructor.
+
+```fsharp
+type EndPoint =
+    | Index
+    | Article of string
+
+let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+let article : Sitelet<EndPoint> = Sitelet.InferPartialInUnion <@ Article @> articleContent
+let fullSitelet = Sitelet.Sum [ index; article ]
+```
 
 <a name="content"></a>
 ## Content
