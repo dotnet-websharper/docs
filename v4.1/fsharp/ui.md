@@ -561,7 +561,7 @@ Get the output View of the Submitter.
 
 ### ListModel
 
-### Routing
+## Routing
 
 The `WebSharper.UI.Routing` namespace contains with a `Router<T>` type, combinators, and an `Infer` function which can create a router based on type shape and custom attributes working equivalently on the server and the client. You can define your whole applications URL schema in a router that will be accessible on both client and server, so link generation works anywhere. When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
 
