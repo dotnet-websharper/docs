@@ -356,7 +356,7 @@ type EndPoint =
 
 <a name="json-request"></a>
 
-* [`[<Json "arg">]`](/api/WebSharper.JsonAttribute) on a union case indicates that the field with the given name must be parsed as JSON from the body of the request. If an endpoint type contains several `[<Json>]` fields, a compile-time error is thrown.
+* [`[<Json "arg">]`](/api/WebSharper.JsonAttribute) on a union case indicates that the field with the given name must be parsed as JSON from the body of the request. If an endpoint type contains several `[<Json>]` fields, a runtime error is thrown.
 
     [Learn more about JSON parsing.](Json.md)
 
@@ -467,12 +467,12 @@ type EndPoint =
 // Returned Content:    (determined by Sitelet.Infer)
 ```
 
-* [`[<Wildcard>]`](/api/WebSharper.WildcardAttribute) on a union case indicates that the last argument represents the remainder of the url's path. That argument can be a `list<'T>`, an `array<'T>`, or a `string`.
+* [`[<Wildcard>]`](/api/WebSharper.WildcardAttribute) on a union case indicates that the last argument represents the remainder of the url's path. That argument can be a `list<'T>`, a `'T[]`, or a `string`.
 
 ```fsharp
 type EndPoint =
     | [<Wildcard>] Articles of pageId: int * tags: list<string>
-    | [<Wildcard>] Articles2 of array<int * string>
+    | [<Wildcard>] Articles2 of (int * string)[]
     | [<Wildcard>] GetFile of path: string
 
 // Accepted Request:    GET /Articles/123/fsharp/websharper
@@ -591,13 +591,7 @@ Sitelet.Content "/index" Index IndexContent
 <|>
 Sitelet.Content "/about" About AboutContent
 
-// Accepted Request:    GET /index
-// Parsed Endpoint:     Index
-// Returned Content:    (value of IndexContent : Content<EndPoint>)
-//
-// Accepted Request:    GET /about
-// Parsed Endpoint:     About
-// Returned Content:    (value of AboutContent : Content<EndPoint>)
+// Same as above.
 ```
 
 For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
