@@ -149,77 +149,77 @@ The following types are accepted by `Sitelet.Infer`:
 
 * Numbers and strings are encoded as a single path segment.
 
-```fsharp
-type EndPoint = string
+    ```fsharp
+    type EndPoint = string
 
-// Accepted Request:    GET /abc
-// Parsed Endpoint:     "abc"
-// Returned Content:    (determined by Sitelet.Infer)
+    // Accepted Request:    GET /abc
+    // Parsed Endpoint:     "abc"
+    // Returned Content:    (determined by Sitelet.Infer)
 
-type EndPoint = int
+    type EndPoint = int
 
-// Accepted Request:    GET /1423
-// Parsed Endpoint:     1423
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /1423
+    // Parsed Endpoint:     1423
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Tuples and records are encoded as consecutive path segments.
 
-```fsharp
-type EndPoint = int * string
+    ```fsharp
+    type EndPoint = int * string
 
-// Accepted Request:    GET /1/abc
-// Parsed Endpoint:     (1, "abc")
-// Returned Content:    (determined by Sitelet.Infer)
+    // Accepted Request:    GET /1/abc
+    // Parsed Endpoint:     (1, "abc")
+    // Returned Content:    (determined by Sitelet.Infer)
 
-type EndPoint = { Number : int; Name : string }
+    type EndPoint = { Number : int; Name : string }
 
-// Accepted Request:    GET /1/abc
-// Parsed Endpoint:     { Number = 1; Name = "abc" }
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /1/abc
+    // Parsed Endpoint:     { Number = 1; Name = "abc" }
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Union types are encoded as a path segment identifying the case, followed by segments for the arguments (see the example above).
 
-```fsharp
-type EndPoint = string option
+    ```fsharp
+    type EndPoint = string option
 
-// Accepted Request:    GET /Some/abc
-// Parsed Endpoint:     Some "abc"
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /None
-// Parsed Endpoint:     None
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /Some/abc
+    // Parsed Endpoint:     Some "abc"
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /None
+    // Parsed Endpoint:     None
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Lists and arrays are encoded as a number representing the length, followed by each element. For example:
 
-```fsharp
-type EndPoint = string list
+    ```fsharp
+    type EndPoint = string list
 
-// Accepted Request:    GET /2/abc/def
-// Parsed Endpoint:     ["abc"; "def"]
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /2/abc/def
+    // Parsed Endpoint:     ["abc"; "def"]
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Enumerations are encoded as their underlying type.
 
-```fsharp
-type EndPoint = System.IO.FileAccess
-// Accepted Request:    GET /3
-// Parsed Endpoint:     System.IO.FileAccess.ReadWrite
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    ```fsharp
+    type EndPoint = System.IO.FileAccess
+    // Accepted Request:    GET /3
+    // Parsed Endpoint:     System.IO.FileAccess.ReadWrite
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * `System.DateTime` is serialized with the format `yyyy-MM-dd-HH.mm.ss`. See below to customize this format.
 
-```fsharp
-type EndPoint = System.DateTime
-// Accepted Request:    GET /2015-03-24-15.05.32
-// Parsed Endpoint:     System.DateTime(2015,3,24,15,5,32)
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    ```fsharp
+    type EndPoint = System.DateTime
+    // Accepted Request:    GET /2015-03-24-15.05.32
+    // Parsed Endpoint:     System.DateTime(2015,3,24,15,5,32)
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 ### Customizing Sitelet.Infer
 
@@ -227,132 +227,132 @@ It is possible to annotate your endpoint type with attributes to customize `Site
 
 * [`[<Method("GET", "POST", ...)>]`](/api/WebSharper.MethodAttribute) on a union case indicates which methods are parsed by this endpoint. Without this attribute, all methods are accepted.
 
-```fsharp
-type EndPoint =
-    | [<Method "POST">] PostArticle of id: int
+    ```fsharp
+    type EndPoint =
+        | [<Method "POST">] PostArticle of id: int
 
-// Accepted Request:    POST /PostArticle/12
-// Parsed Endpoint:     PostArticle 12
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /PostArticle/12
+    // Parsed Endpoint:     PostArticle 12
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * [`[<EndPoint "/string">]`](/api/WebSharper.EndPointAttribute) on a union case indicates the identifying segment.
 
-```fsharp
-type EndPoint =
-    | [<EndPoint "/blog-article">] BlogArticle of id: int * slug: string
+    ```fsharp
+    type EndPoint =
+        | [<EndPoint "/blog-article">] BlogArticle of id: int * slug: string
 
-// Accepted Request:    GET /blog-article/1423/some-article-slug
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = "some-article-slug")
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /blog-article/1423/some-article-slug
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = "some-article-slug")
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * `[<Method>]` and `[<EndPoint>]` can be combined in a single `[<EndPoint>]` attribute:
 
-```fsharp
-type EndPoint =
-    | [<EndPoint "POST /article">] PostArticle of id: int
+    ```fsharp
+    type EndPoint =
+        | [<EndPoint "POST /article">] PostArticle of id: int
 
-// Accepted Request:    POST /article/12
-// Parsed Endpoint:     PostArticle 12
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /article/12
+    // Parsed Endpoint:     PostArticle 12
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * A common trick is to use `[<EndPoint "GET /">]` on an argument-less union case to indicate the home page.
 
-```fsharp
-type EndPoint =
-    | [<EndPoint "/">] Home
+    ```fsharp
+    type EndPoint =
+        | [<EndPoint "/">] Home
 
-// Accepted Request:    GET /
-// Parsed Endpoint:     Home
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /
+    // Parsed Endpoint:     Home
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * If several cases have the same `EndPoint`, then parsing tries them in the order in which they are declared until one of them matches:
 
-```fsharp
-type EndPoint =
-  | [<EndPoint "GET /blog">] AllArticles
-  | [<EndPoint "GET /blog">] ArticleById of id: int
-  | [<EndPoint "GET /blog">] ArticleBySlug of slug: string
+    ```fsharp
+    type EndPoint =
+      | [<EndPoint "GET /blog">] AllArticles
+      | [<EndPoint "GET /blog">] ArticleById of id: int
+      | [<EndPoint "GET /blog">] ArticleBySlug of slug: string
 
-// Accepted Request:    GET /blog
-// Parsed Endpoint:     AllArticles
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /blog/123
-// Parsed Endpoint:     ArticleById 123
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /blog/my-article
-// Parsed Endpoint:     ArticleBySlug "my-article"
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /blog
+    // Parsed Endpoint:     AllArticles
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /blog/123
+    // Parsed Endpoint:     ArticleById 123
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /blog/my-article
+    // Parsed Endpoint:     ArticleBySlug "my-article"
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * The method of an endpoint can be specified in a field's type, rather than the main endpoint type itself:
 
-```fsharp
-type EndPoint =
-  | [<EndPoint "GET /">] Home
-  | [<EndPoint "/api">] Api of ApiEndPoint
+    ```fsharp
+    type EndPoint =
+      | [<EndPoint "GET /">] Home
+      | [<EndPoint "/api">] Api of ApiEndPoint
 
-and ApiEndPoint =
-  | [<EndPoint "GET /article">] GetArticle of int
-  | [<EndPoint "POST /article">] PostArticle of int
+    and ApiEndPoint =
+      | [<EndPoint "GET /article">] GetArticle of int
+      | [<EndPoint "POST /article">] PostArticle of int
 
-// Accepted Request:    GET /
-// Parsed Endpoint:     Home
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /api/article/123
-// Parsed Endpoint:     Api (GetArticle 123)
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    POST /api/article/456
-// Parsed Endpoint:     Api (PostArticle 456)
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /
+    // Parsed Endpoint:     Home
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /api/article/123
+    // Parsed Endpoint:     Api (GetArticle 123)
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    POST /api/article/456
+    // Parsed Endpoint:     Api (PostArticle 456)
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * [`[<Query("arg1", "arg2", ...)>]`](/api/WebSharper.QueryAttribute) on a union case indicates that the fields with the given names must be parsed as GET query parameters instead of path segments. The value of this field must be either a base type (number, string) or an option of a base type (in which case the parameter is optional).
 
-```fsharp
-type EndPoint =
-    | [<Query("id", "slug")>] BlogArticle of id: int * slug: string option
+    ```fsharp
+    type EndPoint =
+        | [<Query("id", "slug")>] BlogArticle of id: int * slug: string option
 
-// Accepted Request:    GET /BlogArticle?id=1423&slug=some-article-slug
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /BlogArticle?id=1423
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = None)
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /BlogArticle?id=1423&slug=some-article-slug
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /BlogArticle?id=1423
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = None)
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * You can of course mix Query and non-Query parameters.
 
-```fsharp
-type EndPoint =
-    | [<Query("slug")>] BlogArticle of id: int * slug: string option
+    ```fsharp
+    type EndPoint =
+        | [<Query("slug")>] BlogArticle of id: int * slug: string option
 
-// Accepted Request:    GET /BlogArticle/1423?slug=some-article-slug
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /BlogArticle/1423?slug=some-article-slug
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Similarly, `[<Query>]` on a record field indicates that this field must be parsed as a GET query parameter.
 
-```fsharp
-type EndPoint =
-    {
-        id : int
-        [<Query>] slug : string option
-    }
+    ```fsharp
+    type EndPoint =
+        {
+            id : int
+            [<Query>] slug : string option
+        }
 
-// Accepted Request:    GET /1423?slug=some-article-slug
-// Parsed Endpoint:     { id = 1423; slug = Some "some-article-slug" }
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /1423?slug=some-article-slug
+    // Parsed Endpoint:     { id = 1423; slug = Some "some-article-slug" }
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 <a name="json-request"></a>
 
@@ -360,133 +360,133 @@ type EndPoint =
 
     [Learn more about JSON parsing.](Json.md)
 
-```fsharp
-type EndPoint =
-    | [<Method "POST"; Json "data">] PostBlog of id: int * data: BlogData
-and BlogData =
-    {
-        slug: string
-        title: string
-    }
+    ```fsharp
+    type EndPoint =
+        | [<Method "POST"; Json "data">] PostBlog of id: int * data: BlogData
+    and BlogData =
+        {
+            slug: string
+            title: string
+        }
 
-// Accepted Request:    POST /PostBlog/1423
-//
-//                      {"slug": "some-blog-post", "title": "Some blog post!"}
-//
-// Parsed Endpoint:     PostBlog(
-//                          id = 1423,
-//                          data = { slug = "some-blog-post"
-//                                   title = "Some blog post!" })
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /PostBlog/1423
+    //
+    //                      {"slug": "some-blog-post", "title": "Some blog post!"}
+    //
+    // Parsed Endpoint:     PostBlog(
+    //                          id = 1423,
+    //                          data = { slug = "some-blog-post"
+    //                                   title = "Some blog post!" })
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Similarly, `[<Json>]` on a record field indicates that this field must be parsed as JSON from the body of the request.
 
-```fsharp
-type EndPoint =
-    | [<Method "POST">] PostBlog of BlogPostArgs
-and BlogPostArgs =
-    {
-        id: int
-        [<Json>] data: BlogData
-    }
-and BlogData =
-    {
-        slug: string
-        title: string
-    }
+    ```fsharp
+    type EndPoint =
+        | [<Method "POST">] PostBlog of BlogPostArgs
+    and BlogPostArgs =
+        {
+            id: int
+            [<Json>] data: BlogData
+        }
+    and BlogData =
+        {
+            slug: string
+            title: string
+        }
 
-// Accepted Request:    POST /PostBlog/1423
-//
-//                      {"slug": "some-blog-post", "title": "Some blog post!"}
-//
-// Parsed Endpoint:     PostBlog { id = 1423,
-//                                 data = { slug = "some-blog-post"
-//                                          title = "Some blog post!" } }
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /PostBlog/1423
+    //
+    //                      {"slug": "some-blog-post", "title": "Some blog post!"}
+    //
+    // Parsed Endpoint:     PostBlog { id = 1423,
+    //                                 data = { slug = "some-blog-post"
+    //                                          title = "Some blog post!" } }
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * [`[<FormData("arg1", "arg2", ...)>]`](/api/WebSharper.FormDataAttribute) on a union case indicates that the fields with the given names must be parsed from the body as form data (`application/x-www-form-urlencoded` or `multipart/form-data`) instead of path segments. The value of this field must be either a base type (number, string) or an option of a base type (in which case the parameter is optional).
 
-```fsharp
-type EndPoint =
-    | [<FormData("id", "slug")>] BlogArticle of id: int * slug: string option
+    ```fsharp
+    type EndPoint =
+        | [<FormData("id", "slug")>] BlogArticle of id: int * slug: string option
 
-// Accepted Request:    POST /BlogArticle
-//                      Content-Type: application/x-www-form-urlencoded
-//
-//                      id=1423&slug=some-article-slug
-//
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    POST /BlogArticle
-//                      Content-Type: application/x-www-form-urlencoded
-//
-//                      id=1423
-//
-// Parsed Endpoint:     BlogArticle(id = 1423, slug = None)
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /BlogArticle
+    //                      Content-Type: application/x-www-form-urlencoded
+    //
+    //                      id=1423&slug=some-article-slug
+    //
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = Some "some-article-slug")
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    POST /BlogArticle
+    //                      Content-Type: application/x-www-form-urlencoded
+    //
+    //                      id=1423
+    //
+    // Parsed Endpoint:     BlogArticle(id = 1423, slug = None)
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * Similarly, `[<FormData>]` on a record field indicates that this field must be parsed from the body as form data.
 
-```fsharp
-type EndPoint =
-    {
-        id : int
-        [<FormData>] slug : string option
-    }
+    ```fsharp
+    type EndPoint =
+        {
+            id : int
+            [<FormData>] slug : string option
+        }
 
-// Accepted Request:    POST /1423
-//                      Content-Type: application/x-www-form-urlencoded
-//
-//                      slug=some-article-slug
-//
-// Parsed Endpoint:     { id = 1423; slug = Some "some-article-slug" }
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    POST /1423
+    //                      Content-Type: application/x-www-form-urlencoded
+    //
+    //                      slug=some-article-slug
+    //
+    // Parsed Endpoint:     { id = 1423; slug = Some "some-article-slug" }
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * [`[<DateTimeFormat(string)>]`](/api/WebSharper.DateTimeFormatAttribute) on a record field or named union case field of type `System.DateTime` indicates the date format to use. Be careful as some characters are not valid in URLs; in particular, the ISO 8601 round-trip format (`"o"` format) cannot be used because it uses the character `:`.
 
-```fsharp
-type EndPoint =
-    {
-        [<DateTimeFormat "yyyy-MM-dd">] dateOnly: System.DateTime
-    }
+    ```fsharp
+    type EndPoint =
+        {
+            [<DateTimeFormat "yyyy-MM-dd">] dateOnly: System.DateTime
+        }
 
-// Accepted Request:    GET /2015-03-24
-// Parsed Endpoint:     System.DateTime(2015,3,24)
-// Returned Content:    (determined by Sitelet.Infer)
+    // Accepted Request:    GET /2015-03-24
+    // Parsed Endpoint:     System.DateTime(2015,3,24)
+    // Returned Content:    (determined by Sitelet.Infer)
 
-type EndPoint =
-    | [<DateTimeFormat("time", "HH.mm.ss")>] A of time: System.DateTime
+    type EndPoint =
+        | [<DateTimeFormat("time", "HH.mm.ss")>] A of time: System.DateTime
 
-// Accepted Request:    GET /A/15.05.32
-// Parsed Endpoint:     A (System.DateTime(2015,3,24,15,5,32))
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /A/15.05.32
+    // Parsed Endpoint:     A (System.DateTime(2015,3,24,15,5,32))
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 * [`[<Wildcard>]`](/api/WebSharper.WildcardAttribute) on a union case indicates that the last argument represents the remainder of the url's path. That argument can be a `list<'T>`, a `'T[]`, or a `string`.
 
-```fsharp
-type EndPoint =
-    | [<Wildcard>] Articles of pageId: int * tags: list<string>
-    | [<Wildcard>] Articles2 of (int * string)[]
-    | [<Wildcard>] GetFile of path: string
+    ```fsharp
+    type EndPoint =
+        | [<Wildcard>] Articles of pageId: int * tags: list<string>
+        | [<Wildcard>] Articles2 of (int * string)[]
+        | [<Wildcard>] GetFile of path: string
 
-// Accepted Request:    GET /Articles/123/fsharp/websharper
-// Parsed Endpoint:     Articles(123, ["fsharp"; "websharper"])
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /Articles/123/fsharp/456/websharper
-// Parsed Endpoint:     Articles2 [(123, "fsharp"); (456, "websharper")]
-// Returned Content:    (determined by Sitelet.Infer)
-//
-// Accepted Request:    GET /GetFile/css/main.css
-// Parsed Endpoint:     GetFile "css/main.css"
-// Returned Content:    (determined by Sitelet.Infer)
-```
+    // Accepted Request:    GET /Articles/123/fsharp/websharper
+    // Parsed Endpoint:     Articles(123, ["fsharp"; "websharper"])
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /Articles/123/fsharp/456/websharper
+    // Parsed Endpoint:     Articles2 [(123, "fsharp"); (456, "websharper")]
+    // Returned Content:    (determined by Sitelet.Infer)
+    //
+    // Accepted Request:    GET /GetFile/css/main.css
+    // Parsed Endpoint:     GetFile "css/main.css"
+    // Returned Content:    (determined by Sitelet.Infer)
+    ```
 
 ### Catching wrong requests with Sitelet.InferWithErrors
 
@@ -557,154 +557,154 @@ The following functions are available to build simple sitelets or compose more c
 
 * [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet.Content``1), as shown in the first example, builds a sitelet that accepts a single URL and maps it to a given endpoint and content.
 
-```fsharp
-Sitelet.Content "/index" Index IndexContent
+    ```fsharp
+    Sitelet.Content "/index" Index IndexContent
 
-// Accepted Request:    GET /index
-// Parsed Endpoint:     Index
-// Returned Content:    (value of IndexContent : Content<EndPoint>)
-```
+    // Accepted Request:    GET /index
+    // Parsed Endpoint:     Index
+    // Returned Content:    (value of IndexContent : Content<EndPoint>)
+    ```
 
 * [`Sitelet.Sum`](/api/WebSharper.Sitelets.Sitelet.Sum``1) takes a sequence of Sitelets and tries them in order until one of them accepts the URL. It is generally used to combine a list of `Sitelet.Content`s.
 
   The following sitelet accepts `/index` and `/about`:
 
-```fsharp
-Sitelet.Sum [
-    Sitelet.Content "/index" Index IndexContent
-    Sitelet.Content "/about" About AboutContent
-]
+    ```fsharp
+    Sitelet.Sum [
+        Sitelet.Content "/index" Index IndexContent
+        Sitelet.Content "/about" About AboutContent
+    ]
 
-// Accepted Request:    GET /index
-// Parsed Endpoint:     Index
-// Returned Content:    (value of IndexContent : Content<EndPoint>)
-//
-// Accepted Request:    GET /about
-// Parsed Endpoint:     About
-// Returned Content:    (value of AboutContent : Content<EndPoint>)
-```
+    // Accepted Request:    GET /index
+    // Parsed Endpoint:     Index
+    // Returned Content:    (value of IndexContent : Content<EndPoint>)
+    //
+    // Accepted Request:    GET /about
+    // Parsed Endpoint:     About
+    // Returned Content:    (value of AboutContent : Content<EndPoint>)
+    ```
 
 * [`<|>`](/api/WebSharper.Sitelets.Sitelet`1#op_LessBarGreater``1) takes two Sitelets and tries them in order. `s1 <|> s2` is equivalent to `Sitelet.Sum [s1; s2]`.
 
-```fsharp
-Sitelet.Content "/index" Index IndexContent
-<|>
-Sitelet.Content "/about" About AboutContent
+    ```fsharp
+    Sitelet.Content "/index" Index IndexContent
+    <|>
+    Sitelet.Content "/about" About AboutContent
 
-// Same as above.
-```
+    // Same as above.
+    ```
 
 For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
 
 * [`Sitelet.Shift`](/api/WebSharper.Sitelets.Sitelet#Shift``1) takes a Sitelet and shifts it by a path segment.
 
-```fsharp
-Sitelet.Content "index" Index IndexContent
-|> Sitelet.Shift "folder"
+    ```fsharp
+    Sitelet.Content "index" Index IndexContent
+    |> Sitelet.Shift "folder"
 
-// Accepted Request:    GET /folder/index
-// Parsed Endpoint:     Index
-// Returned Content:    (value of IndexContent : Content<EndPoint>)
-```
+    // Accepted Request:    GET /folder/index
+    // Parsed Endpoint:     Index
+    // Returned Content:    (value of IndexContent : Content<EndPoint>)
+    ```
 
 * [`Sitelet.Folder`](/api/WebSharper.Sitelets.Sitelet#Folder``1) takes a sequence of Sitelets and shifts them by a path segment. It is effectively a combination of `Sum` and `Shift`.
 
-```fsharp
-Sitelet.Folder "folder" [
-    Sitelet.Content "/index" Index IndexContent
-    Sitelet.Content "/about" About AboutContent
-]
+    ```fsharp
+    Sitelet.Folder "folder" [
+        Sitelet.Content "/index" Index IndexContent
+        Sitelet.Content "/about" About AboutContent
+    ]
 
-// Accepted Request:    GET /folder/index
-// Parsed Endpoint:     Index
-// Returned Content:    (value of IndexContent : Content<EndPoint>)
-//
-// Accepted Request:    GET /folder/about
-// Parsed Endpoint:     About
-// Returned Content:    (value of AboutContent : Content<EndPoint>)
-```
+    // Accepted Request:    GET /folder/index
+    // Parsed Endpoint:     Index
+    // Returned Content:    (value of IndexContent : Content<EndPoint>)
+    //
+    // Accepted Request:    GET /folder/about
+    // Parsed Endpoint:     About
+    // Returned Content:    (value of AboutContent : Content<EndPoint>)
+    ```
 
 * [`Sitelet.Protect`](/api/WebSharper.Sitelets.Sitelet#Protect``1) creates protected content, i.e.  content only available for authenticated users:
 
-```fsharp
-module Sitelet =
-    type Filter<'EndPoint> =
-        {
-            VerifyUser : string -> bool;
-            LoginRedirect : 'EndPoint -> 'EndPoint
-        }
+    ```fsharp
+    module Sitelet =
+        type Filter<'EndPoint> =
+            {
+                VerifyUser : string -> bool;
+                LoginRedirect : 'EndPoint -> 'EndPoint
+            }
 
-val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
-```
+    val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
+    ```
 
-Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
+    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
 
 * [`Sitelet.Map`](/api/WebSharper.Sitelets.Sitelet#Map``2) converts a Sitelet to a different endpoint type using mapping functions in both directions.
 
-```fsharp
-type EndPoint = Article of string
+    ```fsharp
+    type EndPoint = Article of string
 
-let s : Sitelet<string> = Sitelet.Infer sContent
+    let s : Sitelet<string> = Sitelet.Infer sContent
 
-let s2 : Sitelet<EndPoint> = Sitelet.Map Article (fun (Article a) -> a) s
-```
+    let s2 : Sitelet<EndPoint> = Sitelet.Map Article (fun (Article a) -> a) s
+    ```
 
 * [`Sitelet.Embed`](/api/WebSharper.Sitelets.Sitelet#Embed``2) similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
 
-```fsharp
-type EndPoint =
-    | Index
-    | Article of string
+    ```fsharp
+    type EndPoint =
+        | Index
+        | Article of string
 
-let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
-let article : Sitelet<string> = Sitelet.Infer articleContent
-let fullSitelet =
-    Sitelet.Sum [
-        index
-        article |> Sitelet.Embed Article (function Article a -> Some a | _ -> None)
-    ]
-```
+    let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+    let article : Sitelet<string> = Sitelet.Infer articleContent
+    let fullSitelet =
+        Sitelet.Sum [
+            index
+            article |> Sitelet.Embed Article (function Article a -> Some a | _ -> None)
+        ]
+    ```
 
 * [`Sitelet.EmbedInUnion`](/api/WebSharper.Sitelets.Sitelet#EmbedInUnion``2) is a simpler version of `Sitelet.Embed` when the mapping function is a union case constructor.
 
-```fsharp
-type EndPoint =
-    | Index
-    | Article of string
+    ```fsharp
+    type EndPoint =
+        | Index
+        | Article of string
 
-let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
-let article : Sitelet<string> = Sitelet.Infer articleContent
-let fullSitelet =
-    Sitelet.Sum [
-        index
-        article |> Sitelet.EmbedInUnion <@ Article @>
-    ]
-```
+    let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+    let article : Sitelet<string> = Sitelet.Infer articleContent
+    let fullSitelet =
+        Sitelet.Sum [
+            index
+            article |> Sitelet.EmbedInUnion <@ Article @>
+        ]
+    ```
 
 * [`Sitelet.InferPartial`](/api/WebSharper.Sitelets.Sitelet#InferPartial``2) is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, it the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
 
-```fsharp
-type EndPoint =
-    | Index
-    | Article of string
+    ```fsharp
+    type EndPoint =
+        | Index
+        | Article of string
 
-let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
-let article : Sitelet<EndPoint> =
-    Sitelet.InferPartial Article (function Article a -> Some a | _ -> None) articleContent
-let fullSitelet = Sitelet.Sum [ index; article ]
-```
+    let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+    let article : Sitelet<EndPoint> =
+        Sitelet.InferPartial Article (function Article a -> Some a | _ -> None) articleContent
+    let fullSitelet = Sitelet.Sum [ index; article ]
+    ```
 
 * [`Sitelet.InferPartialInUnion`](/api/WebSharper.Sitelets.Sitelet#InferPartialInUnion``2) is a simpler version of `Sitelet.InferPartial` when the mapping function is a union case constructor.
 
-```fsharp
-type EndPoint =
-    | Index
-    | Article of string
+    ```fsharp
+    type EndPoint =
+        | Index
+        | Article of string
 
-let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
-let article : Sitelet<EndPoint> = Sitelet.InferPartialInUnion <@ Article @> articleContent
-let fullSitelet = Sitelet.Sum [ index; article ]
-```
+    let index : Sitelet<EndPoint> = Sitelet.Content "/" Index indexContent
+    let article : Sitelet<EndPoint> = Sitelet.InferPartialInUnion <@ Article @> articleContent
+    let fullSitelet = Sitelet.Sum [ index; article ]
+    ```
 
 <a name="content"></a>
 ## Content
@@ -827,40 +827,40 @@ In addition to the four standard Content families above, the [`Content`](/api/We
 
 * Redirection:
 
-```fsharp
-module Content =
-    /// Permanently redirect to an endpoint. (HTTP status code 301)
-    val RedirectPermanent : 'EndPoint -> Async<Content<'EndPoint>>
-    /// Permanently redirect to a URL. (HTTP status code 301)
-    val RedirectPermanentToUrl : string -> Async<Content<'EndPoint>>
-    /// Temporarily redirect to an endpoint. (HTTP status code 307)
-    val RedirectTemporary : 'EndPoint -> Async<Content<'EndPoint>>
-    /// Temporarily redirect to a URL. (HTTP status code 307)
-    val RedirectTemporaryToUrl : string -> Async<Content<'EndPoint>>
-```
+    ```fsharp
+    module Content =
+        /// Permanently redirect to an endpoint. (HTTP status code 301)
+        val RedirectPermanent : 'EndPoint -> Async<Content<'EndPoint>>
+        /// Permanently redirect to a URL. (HTTP status code 301)
+        val RedirectPermanentToUrl : string -> Async<Content<'EndPoint>>
+        /// Temporarily redirect to an endpoint. (HTTP status code 307)
+        val RedirectTemporary : 'EndPoint -> Async<Content<'EndPoint>>
+        /// Temporarily redirect to a URL. (HTTP status code 307)
+        val RedirectTemporaryToUrl : string -> Async<Content<'EndPoint>>
+    ```
 
 * Response mapping: if you want to return HTML or JSON content, but further customize the HTTP response, then you can use one of the following:
 
-```fsharp
-module Content =
-    /// Set the HTTP status of a response.
-    val SetStatus : Http.Status -> Async<Content<'T>> -> Async<Content<'T>>
-    /// Add headers to a response.
-    val WithHeaders : seq<Header> -> Async<Content<'T>> -> Async<Content<'T>>
-    /// Replace the headers of a response.
-    val SetHeaders : seq<Header> -> Async<Content<'T>> -> Async<Content<'T>>
+    ```fsharp
+    module Content =
+        /// Set the HTTP status of a response.
+        val SetStatus : Http.Status -> Async<Content<'T>> -> Async<Content<'T>>
+        /// Add headers to a response.
+        val WithHeaders : seq<Header> -> Async<Content<'T>> -> Async<Content<'T>>
+        /// Replace the headers of a response.
+        val SetHeaders : seq<Header> -> Async<Content<'T>> -> Async<Content<'T>>
 
-// Example use
-let customForbidden =
-    Content.Page(
-        Title = "No entrance!",
-        Body = [Text "Oops! You're not supposed to be here."]
-    )
-    // Set the HTTP status code to 403 Forbidden:
-    |> Content.SetStatus Http.Status.Forbidden
-    // Add an HTTP header:
-    |> Content.WithHeaders [Http.Header.Custom "Content-Language" "en"]
-```
+    // Example use
+    let customForbidden =
+        Content.Page(
+            Title = "No entrance!",
+            Body = [Text "Oops! You're not supposed to be here."]
+        )
+        // Set the HTTP status code to 403 Forbidden:
+        |> Content.SetStatus Http.Status.Forbidden
+        // Add an HTTP header:
+        |> Content.WithHeaders [Http.Header.Custom "Content-Language" "en"]
+    ```
 
 <a name="context"></a>
 ## Using the Context
