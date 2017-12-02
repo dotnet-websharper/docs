@@ -709,13 +709,9 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
 <a name="content"></a>
 ## Content
 
-Content describes the response to send back to the client: HTTP status, headers and body. Content is always worked with asynchronously: all the constructors and combinators described below take and return values of type `Async<Content<'EndPoint>>`.
+Content describes the response to send back to the client: its HTTP status, headers and body. Content is always worked with asynchronously: all the constructors and combinators described below take and return values of type `Async<Content<'EndPoint>>`. You will find various functions that create different types of content: ordinary text (`Content.Text`), file content (`Content.File`), HTML (`Content.Page`), HTML based on templates (`Content.WithTemplate`), JSON (`Content.Json`), custom content (`Content.Custom`), and HTTP error codes and redirects.
 
-### Creating Content
-
-There are several functions that create different types of content, including ordinary text (`Content.Text`), file (`Content.File`), HTML page (`Content.Page`), JSON (`Content.Json`), any custom content (`Content.Custom`), and HTTP error codes and redirects.
-
-#### Content.Text
+### Content.Text
 
 The simplest response is plain text content, created by passing a string to [`Content.Text`](/api/WebSharper.Sitelets.Content#Text``1).
 
@@ -724,7 +720,7 @@ let simpleResponse =
     Content.Text "This is the response body."
 ```
 
-#### Content.File
+### Content.File
 
 You can serve files using [`Content.File`](/api/WebSharper.Sitelets.Content#File``1).  Optionally, you can set the content type returned for the file response and whether file access is allowed outside of the web root:
 
@@ -735,7 +731,7 @@ let fileResponse: Async<Content<EndPoint>> =
     Content.File("../Main.fs", AllowOutsideRootFolder=true, ContentType="text/plain")
 ```
 
-#### Content.Page
+### Content.Page
 
 You can return full HTML pages, with managed dependencies using [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page``1). Here is a simple example:
 
@@ -754,8 +750,12 @@ let IndexPage : Async<Content<EndPoint>> =
 
 The optional named arguments `Title`, `Head`, `Body` and `Doctype` set the corresponding elements of the HTML page. To learn how to create HTML elements for `Head` and `Body`, see [the HTML combinators documentation](HtmlCombinators.md).
 
+### Content.WithTemplate
+
+Very often, most of a page is constant, and only parts of it need to be generated. Templates allow you to use a static HTML file for the main structure, with placeholders for generated content. [See here for more information about templates.](Templates.md)
+
 <a name="json-response"></a>
-#### Content.Json
+### Content.Json
 
 If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to [`Content.Json`](/api/WebSharper.Sitelets.Content#Json``1), and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](Json.md)
 
@@ -787,11 +787,7 @@ let sitelet = Sitelet.Infer <| fun context endpoint ->
 // Returned Content:    {"id": 1423, "slug": "some-blog-article", "title": "Some blog article!"}
 ```
 
-#### Content.WithTemplate
-
-Very often, most of a page is constant, and only parts of it need to be generated. Templates allow you to use a static HTML file for the main structure, with placeholders for generated content. [See here for more information about templates.](Templates.md)
-
-#### Content.Custom
+### Content.Custom
 
 [`Content.Custom`](/api/WebSharper.Sitelets.Content#Custom``1) can be used to output any type of content. It takes three optional named arguments that corresponds to the aforementioned elements of the response:
 
