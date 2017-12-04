@@ -988,13 +988,8 @@ A sitelet consists of two parts; a router and a controller.  The job of the rout
 
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
-* Sitelets has a built-in [`WebSharper.Sitelets.Routing.Router`](/api/WebSharper.Sitelets.Routing.Router`1) type that encapsulate a mapping from [`Http.Request`](/api/WebSharper.Sitelets.Http.Request) to the action type, and a mapping from the action type to `System.Uri`.
-Similar operations exists for the `Router` type (on the accompanying [`Router`](/api/WebSharper.Sitelets.Routing.Router) module) for combining values as for Sitelets like [`Map`](/api/WebSharper.Sitelets.Routing.Router#Map``2), [`Shift`](/api/WebSharper.Sitelets.Routing.Router#Shift``1) and [`Sum`](/api/WebSharper.Sitelets.Routing.Router#Sum``1).
-You can use a [`Router.Infer`](/api/WebSharper.Sitelets.Routing.Router#Infer``1) to get the exact router that `Sitelets.Infer` use internally. 
-* `WebSharper.UI` also contains a router abstraction, that is also able to be shared between the server and the client (translated to JavaScript), so that the client can generate links from action values too, or handle some URL changes without browser navigation (client-side routing).
-This type necessarily has less server-only concerns, so parser in `WebSharper.UI.Routing.Router` only deals with the URL string and request method and body instead of being able to access the underlying `Http.Request`.
-This router also has an `Infer` helper that shares almost all of attribute semantics described above.
-It is possible to convert it to a Sitelets router, but not the other way around. See the [WebSharper.UI documentation](ui.md#routing) for details.
+* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[JavaScript]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
+* Manually, by using combinators to build up larger routers from elementary router values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
 
 The following example shows how you can create a customized router of type `WebSharper.Sitelets.Routing.Router<Action>` by writing the two mappings manually:
 
@@ -1006,20 +1001,16 @@ module WebSite =
     type EndPoint = | Page1 | Page2
 
     let MyRouter : Router<EndPoint> =
-        let route (req: Http.Request) =
-            if req.Uri.LocalPath = "/page1" then
-                Some Page1
-            elif req.Uri.LocalPath = "/page2" then
-                Some Page2
-            else
-                None
         let link endPoint =
             match endPoint with
-            | EndPoint.Page1 ->
-                Some <| System.Uri("/page2", System.UriKind.Relative)
-            | EndPoint.Page2 ->
-                Some <| System.Uri("/page1", System.UriKind.Relative)
-        Router.New route link
+            | Page1 -> [ "page1" ]
+            | Page2 -> [ "page2" ]
+        let route path =
+            match path with
+            | [ "page1" ] -> Some Page1
+            | [ "page2" ] -> Some Page2
+            | _ -> None
+        Router.Create link route
 ```
 
 Specifying routers manually gives you full control of how to parse incoming requests and to map actions to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and actions, so that linking to an action produces a URL that is in turn routed back to the same action.
