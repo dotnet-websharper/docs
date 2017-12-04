@@ -563,67 +563,7 @@ Get the output View of the Submitter.
 
 ## Routing
 
-The `WebSharper.UI.Routing` namespace contains with a `Router<T>` type, combinators, and an `Infer` function which can create a router based on type shape and custom attributes working equivalently on the server and the client. You can define your whole applications URL schema in a router that will be accessible on both client and server, so link generation works anywhere. When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
-
-So a router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. Warp defines a non-generic `Router` type too for routers without any data for convenience and clarity.
-
-### Router primitives
-
-The `WebSharper.UI.Routing.RouterOperators` module exposes the following basic `Router` values and construct functions:
-
-* `rRoot`: Recognizes and writes an empty path.
-* `r "path"`: Recognizes and writes a specific subpath. You can also write `r "path/subpath"` to parse two or more segments of the URL.
-* `rString`: Recognizes an URIComponent as a string and writes as URIComponent.
-* `rInt`, `rDouble`, `rBool`, `rChar`, `rGuid`: Basic types to parse from or write to the URL.
-
-### Router combinators
-
-* `/`: Parses or writes using two routers one after the other. For example `rString / rInt` will have type `Router<string * int>`. This operator has overloads for any combination of generic and non-generic routers, as well as a string on either side to add a constant URL fragment. For example `r "article" / r "id" / rInt` can be shortened to `"article/id" / rInt`.
-* `+`: Parses or writes using the first router if successful, otherwise the second.
-* `Router.Sum`: Optimized version of combining a sequence of routers with `+`. Parses or writes with the first router in the sequence that can handle the path or value.
-* `Router.Map`: A bijection (or just surjection) between representations handled by routers. For example if you have a `type Person = { Name: string; Age: int }`, then you can define a router for it by mapping from a `Router<string * int>` like so
-    ```fsharp
-    let rPerson : Router<Person> =
-        rString / rInt
-        |> Router.Map 
-            (fun (n, a) -> { Name = n; Age = a })
-            (fun p -> p.Name, p.Age)
-    ```
-    See that `Map` needs two function arguments, to convert data back and forth between representations. All values of the resulting type must be mapped back to underlying type by the second function in a way compatible with the first function to work correctly.
-* `Router.MapTo`: Maps a non-generic `Router` to a single valued `Router<T>`. For example if `Home` is a union case in your `Pages` union type describing pages on your site, you can create a router for it by:
-    ```fsharp
-    let rHome : Router<Pages> =
-        rRoot |> Router.MapTo Home
-    ```
-    This only needs a single value as argument, but the type used must be comparable, so the writer part of the newly created `Router<T>` can decide if it is indeed a `Home` value that it needs to write by the underlying router (in our case producing a root URL).
-* `Router.Embed`: An injection between representations handled by routers. For example if you have a `Router<Person>` parsing a person's details, and a `Contact of Person` union case in your `Pages` union, you can do:
-    ```fsharp
-    let rContact : Router<Pages> =
-        r "contact" / rPerson 
-        |> Router.Embed
-            Contact
-            (function Contact p -> Some p | _ -> None)
-    ```
-    See that now we have two functions again, but the second is returning an option. The first tells us that once a path is parsed (for example we are recognizing `contact/Bob/32` here), it can wrap it in a `Contact` case (`Contact` here is used as a short version of a union case constructor, a function with signature `Person -> Pages`). And if the newly created router gets a value to write, it can use the second function to map it back optionally to an underlying value.
-* `Router.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt |> Router.Filter (fun x -> x >= 0)`, which won't parse and write negative values.
-* `Router.Query`: Moves a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rPerson |> Router.Query "p"`, which will read/write query segments like `?p=Bob/32`.
-* `Router.Box`: Converts a `Router<T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `T` so it can be passed to underlying router.
-* `Router.Unbox`:  Converts a `Router<obj>` to a `Router<T>`. When parsing, it uses a type check to see if the object is of type `T` so that the parsed value can be represented in `T`.
-* `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
-* `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
-* `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
-
-#### Getting links
-
-Use `Router.Link page router` to create a (relative) link using a router.
-A useful helper to have in the file defining your router is:
-
-```fsharp
-    let Link page content =
-        aAttr [ attr.href (Router.Link page router) ] [ text content ]
-```
-
-This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
+If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
 
 #### Installing client-side route handling
 
@@ -671,20 +611,4 @@ let ContactMain() =
 ```
 
 In both cases, you can also navigate between programmatically by setting the `location` variable. You can do this with `location.Value <- newLoc`, `location |> Var.Set newLoc` or `location := newLoc` (if you have `open WebSharper.UI.Next.Notation`). 
-
-#### Using in a Sitelet
-
-Sitelets are a server-side abstraction for a router and a handler function, the easiest way to create one from a Warp router is `Router.MakeSitelet handler router`. Example:
-
-```fsharp
-    [<Website>]
-    let Main =
-        rPages |> Router.MakeSitelet (fun ctx ->
-            function 
-            | Home -> div [ text "This is the home page" ]
-            | Contact _ -> client <@ ContactMain() @>
-        )
-```
-
-Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
 
