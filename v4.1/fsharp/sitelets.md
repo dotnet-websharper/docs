@@ -35,7 +35,7 @@ module SampleSite =
         let time = System.DateTime.Now.ToString()
         Content.Page(
             Title = "Index",
-            Body = [h1 [text ("Current time: " + time)]]
+            Body = [h1 [] [text ("Current time: " + time)]]
         )
 
     [<Website>]
@@ -100,7 +100,7 @@ module SampleSite =
                  // Content of the index page
                  Content.Page(
                      Title = "Welcome!",
-                     Body = [h1 [text "Index page"]])
+                     Body = [h1 [] [text "Index page"]])
             | Stats username ->
                  // Content of the stats page, which depends on the username
                  Content.Page(
@@ -741,9 +741,9 @@ open WebSharper.UI.Next.Html
 let IndexPage : Async<Content<EndPoint>> =
     Content.Page(
         Title = "Welcome!",
-        Head = [ linkAttr [attr.href "/css/style.css"; attr.rel "stylesheet"] [] ],
+        Head = [ link [attr.href "/css/style.css"; attr.rel "stylesheet"] [] ],
         Body = [
-            h1 [text "Welcome to my site."] 
+            h1 [] [text "Welcome to my site."] 
         ]
     )
 ```
@@ -850,7 +850,7 @@ In addition to the four standard Content families above, the [`Content`](/api/We
     let customForbidden =
         Content.Page(
             Title = "No entrance!",
-            Body = [Text "Oops! You're not supposed to be here."]
+            Body = [text "Oops! You're not supposed to be here."]
         )
         // Set the HTTP status code to 403 Forbidden:
         |> Content.SetStatus Http.Status.Forbidden
@@ -877,12 +877,12 @@ let HomePage (context: Context<EndPoint>) =
     Content.Page(
         Title = "Welcome!",
         Body = [
-            h1 [text "Index page"]
-            aAttr [attr.href (context.Link (BlogArticle(1423, "some-article-slug")))] [
+            h1 [] [text "Index page"]
+            a [attr.href (context.Link (BlogArticle(1423, "some-article-slug")))] [
                 text "Go to some article"
             ]
-            br []
-            aAttr [attr.href (context.ResolveUrl "~/Page2.html")] [
+            br [] []
+            a [attr.href (context.ResolveUrl "~/Page2.html")] [
                 text "Go to page 2"
             ]
         ]
@@ -1086,7 +1086,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 A useful helper to have in the file defining your router is:
     ```fsharp
         let Link page content =
-            aAttr [ attr.href (Router.Link page router) ] [ text content ]
+            a [ attr.href (Router.Link page router) ] [ text content ]
     ```
 This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
 * `Router.MakeSitelet` is a helper for creating a Sitelet from a router. Example:
@@ -1095,7 +1095,7 @@ This works the same on both server and client-side to create basic `<a>` links t
     let Main =
         rPages |> Router.MakeSitelet (fun ctx ->
             function 
-            | Home -> div [ text "This is the home page" ]
+            | Home -> div [] [ text "This is the home page" ]
             | Contact _ -> client <@ ContactMain() @>
         )
 ```
