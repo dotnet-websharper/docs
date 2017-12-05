@@ -45,9 +45,9 @@ module SampleSite =
 
 First, a custom endpoint type is defined. It is used for linking requests to content within your sitelet. Here, you only need one endpoint, `EndPoint.Index`, corresponding to your only page.
 
-The content of the index page is defined as a [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page``1), where the body consists of a server side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
+The content of the index page is defined as a [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page\`\`1), where the body consists of a server side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
 
-The `MySampleWebsite` value has type [`Sitelet<EndPoint>`](/api/WebSharper.Sitelets.Sitelet`1). It defines a complete website: the URL scheme, the `EndPoint` value corresponding to each served URL (only one in this case), and the content to serve for each endpoint. It uses the [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet#Content``1) operator to construct a sitelet for the Index endpoint, associating it with the `/index` URL and serving `IndexContent` as a response.
+The `MySampleWebsite` value has type [`Sitelet<EndPoint>`](/api/WebSharper.Sitelets.Sitelet\`1). It defines a complete website: the URL scheme, the `EndPoint` value corresponding to each served URL (only one in this case), and the content to serve for each endpoint. It uses the [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet#Content\`\`1) operator to construct a sitelet for the Index endpoint, associating it with the `/index` URL and serving `IndexContent` as a response.
 
 `MySampleWebsite` is annotated with the attribute [`[<Website>]`](/api/WebSharper.Sitelets.WebsiteAttribute) to indicate that this is the sitelet that should be served.
 
@@ -75,7 +75,7 @@ A number of primitives are available to create and compose Sitelets.
 <a name="sitelet-infer"></a>
 ### Sitelet.Infer
 
-The easiest way to create a Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer``1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage``1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
+The easiest way to create a Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer\`\`1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage\`\`1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
 ```fsharp
 namespace SampleWebsite
@@ -490,7 +490,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
 
 ### Catching wrong requests with Sitelet.InferWithErrors
 
-By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to give potential other components (such as [ASP.NET](http://websharper.com/docs/aspnet)) a chance to respond to the request. However, if you want to send a custom response for badly-formatted requests, you can use [`Sitelet.InferWithErrors`](/api/WebSharper.Sitelets.Sitelet#InferWithErrors``1) instead. This function wraps the parsed request in the [`ActionEncoding.DecodeResult<'EndPoint>`](/api/WebSharper.Sitelets.ActionEncoding.DecodeResult`1) union. Here are the cases you can match against:
+By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to give potential other components (such as [ASP.NET](http://websharper.com/docs/aspnet)) a chance to respond to the request. However, if you want to send a custom response for badly-formatted requests, you can use [`Sitelet.InferWithErrors`](/api/WebSharper.Sitelets.Sitelet#InferWithErrors\`\`1) instead. This function wraps the parsed request in the [`ActionEncoding.DecodeResult<'EndPoint>`](/api/WebSharper.Sitelets.ActionEncoding.DecodeResult\`1) union. Here are the cases you can match against:
 
 * `ActionEncoding.Success of 'EndPoint`: The request was successfully parsed.
 
@@ -500,7 +500,7 @@ By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to
 
 * `ActionEncoding.InvalidJson of 'EndPoint`: The URL was successfully parsed but the JSON body wasn't. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the JSON-decoded value should be.
 
-* `ActionEncoding.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value ([`Unchecked.defaultof<_>`](/api/Microsoft.FSharp.Core.Operators.Unchecked#defaultof``1)) where the form body-decoded value should be.
+* `ActionEncoding.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value ([`Unchecked.defaultof<_>`](/api/Microsoft.FSharp.Core.Operators.Unchecked#defaultof\`\`1)) where the form body-decoded value should be.
 
 If the URL path isn't matched, then the request falls through as with `Sitelet.Infer`.
 
@@ -553,9 +553,9 @@ module SampleSite =
 
 The following functions are available to build simple sitelets or compose more complex sitelets out of simple ones:
 
-* [`Sitelet.Empty`](/api/WebSharper.Sitelets.Sitelet#Empty``1) creates a Sitelet which does not recognize any URLs.
+* [`Sitelet.Empty`](/api/WebSharper.Sitelets.Sitelet#Empty\`\`1) creates a Sitelet which does not recognize any URLs.
 
-* [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet.Content``1), as shown in the first example, builds a sitelet that accepts a single URL and maps it to a given endpoint and content.
+* [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet.Content\`\`1), as shown in the first example, builds a sitelet that accepts a single URL and maps it to a given endpoint and content.
 
     ```fsharp
     Sitelet.Content "/index" Index IndexContent
@@ -565,7 +565,7 @@ The following functions are available to build simple sitelets or compose more c
     // Returned Content:    (value of IndexContent : Content<EndPoint>)
     ```
 
-* [`Sitelet.Sum`](/api/WebSharper.Sitelets.Sitelet.Sum``1) takes a sequence of Sitelets and tries them in order until one of them accepts the URL. It is generally used to combine a list of `Sitelet.Content`s.
+* [`Sitelet.Sum`](/api/WebSharper.Sitelets.Sitelet.Sum\`\`1) takes a sequence of Sitelets and tries them in order until one of them accepts the URL. It is generally used to combine a list of `Sitelet.Content`s.
 
   The following sitelet accepts `/index` and `/about`:
 
@@ -584,7 +584,7 @@ The following functions are available to build simple sitelets or compose more c
     // Returned Content:    (value of AboutContent : Content<EndPoint>)
     ```
 
-* [`<|>`](/api/WebSharper.Sitelets.Sitelet`1#op_LessBarGreater``1) takes two Sitelets and tries them in order. `s1 <|> s2` is equivalent to `Sitelet.Sum [s1; s2]`.
+* [`<|>`](/api/WebSharper.Sitelets.Sitelet\`1#op_LessBarGreater\`\`1) takes two Sitelets and tries them in order. `s1 <|> s2` is equivalent to `Sitelet.Sum [s1; s2]`.
 
     ```fsharp
     Sitelet.Content "/index" Index IndexContent
@@ -596,7 +596,7 @@ The following functions are available to build simple sitelets or compose more c
 
 For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
 
-* [`Sitelet.Shift`](/api/WebSharper.Sitelets.Sitelet#Shift``1) takes a Sitelet and shifts it by a path segment.
+* [`Sitelet.Shift`](/api/WebSharper.Sitelets.Sitelet#Shift\`\`1) takes a Sitelet and shifts it by a path segment.
 
     ```fsharp
     Sitelet.Content "index" Index IndexContent
@@ -607,7 +607,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
     // Returned Content:    (value of IndexContent : Content<EndPoint>)
     ```
 
-* [`Sitelet.Folder`](/api/WebSharper.Sitelets.Sitelet#Folder``1) takes a sequence of Sitelets and shifts them by a path segment. It is effectively a combination of `Sum` and `Shift`.
+* [`Sitelet.Folder`](/api/WebSharper.Sitelets.Sitelet#Folder\`\`1) takes a sequence of Sitelets and shifts them by a path segment. It is effectively a combination of `Sum` and `Shift`.
 
     ```fsharp
     Sitelet.Folder "folder" [
@@ -624,7 +624,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
     // Returned Content:    (value of AboutContent : Content<EndPoint>)
     ```
 
-* [`Sitelet.Protect`](/api/WebSharper.Sitelets.Sitelet#Protect``1) creates protected content, i.e.  content only available for authenticated users:
+* [`Sitelet.Protect`](/api/WebSharper.Sitelets.Sitelet#Protect\`\`1) creates protected content, i.e.  content only available for authenticated users:
 
     ```fsharp
     module Sitelet =
@@ -639,7 +639,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
 
     Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
 
-* [`Sitelet.Map`](/api/WebSharper.Sitelets.Sitelet#Map``2) converts a Sitelet to a different endpoint type using mapping functions in both directions.
+* [`Sitelet.Map`](/api/WebSharper.Sitelets.Sitelet#Map\`\`2) converts a Sitelet to a different endpoint type using mapping functions in both directions.
 
     ```fsharp
     type EndPoint = Article of string
@@ -649,7 +649,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
     let s2 : Sitelet<EndPoint> = Sitelet.Map Article (fun (Article a) -> a) s
     ```
 
-* [`Sitelet.Embed`](/api/WebSharper.Sitelets.Sitelet#Embed``2) similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
+* [`Sitelet.Embed`](/api/WebSharper.Sitelets.Sitelet#Embed\`\`2) similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
 
     ```fsharp
     type EndPoint =
@@ -665,7 +665,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
         ]
     ```
 
-* [`Sitelet.EmbedInUnion`](/api/WebSharper.Sitelets.Sitelet#EmbedInUnion``2) is a simpler version of `Sitelet.Embed` when the mapping function is a union case constructor.
+* [`Sitelet.EmbedInUnion`](/api/WebSharper.Sitelets.Sitelet#EmbedInUnion\`\`2) is a simpler version of `Sitelet.Embed` when the mapping function is a union case constructor.
 
     ```fsharp
     type EndPoint =
@@ -681,7 +681,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
         ]
     ```
 
-* [`Sitelet.InferPartial`](/api/WebSharper.Sitelets.Sitelet#InferPartial``2) is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, it the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
+* [`Sitelet.InferPartial`](/api/WebSharper.Sitelets.Sitelet#InferPartial\`\`2) is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, it the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
 
     ```fsharp
     type EndPoint =
@@ -694,7 +694,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make si
     let fullSitelet = Sitelet.Sum [ index; article ]
     ```
 
-* [`Sitelet.InferPartialInUnion`](/api/WebSharper.Sitelets.Sitelet#InferPartialInUnion``2) is a simpler version of `Sitelet.InferPartial` when the mapping function is a union case constructor.
+* [`Sitelet.InferPartialInUnion`](/api/WebSharper.Sitelets.Sitelet#InferPartialInUnion\`\`2) is a simpler version of `Sitelet.InferPartial` when the mapping function is a union case constructor.
 
     ```fsharp
     type EndPoint =
@@ -713,7 +713,7 @@ Content describes the response to send back to the client: its HTTP status, head
 
 ### Content.Text
 
-The simplest response is plain text content, created by passing a string to [`Content.Text`](/api/WebSharper.Sitelets.Content#Text``1).
+The simplest response is plain text content, created by passing a string to [`Content.Text`](/api/WebSharper.Sitelets.Content#Text\`\`1).
 
 ```fsharp
 let simpleResponse =
@@ -722,7 +722,7 @@ let simpleResponse =
 
 ### Content.File
 
-You can serve files using [`Content.File`](/api/WebSharper.Sitelets.Content#File``1).  Optionally, you can set the content type returned for the file response and whether file access is allowed outside of the web root:
+You can serve files using [`Content.File`](/api/WebSharper.Sitelets.Content#File\`\`1).  Optionally, you can set the content type returned for the file response and whether file access is allowed outside of the web root:
 
 ```fsharp
 type EndPoint = //. . .
@@ -733,7 +733,7 @@ let fileResponse: Async<Content<EndPoint>> =
 
 ### Content.Page
 
-You can return full HTML pages, with managed dependencies using [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page``1). Here is a simple example:
+You can return full HTML pages, with managed dependencies using [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page\`\`1). Here is a simple example:
 
 ```fsharp
 open WebSharper.UI.Next.Html
@@ -757,7 +757,7 @@ Very often, most of a page is constant, and only parts of it need to be generate
 <a name="json-response"></a>
 ### Content.Json
 
-If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to [`Content.Json`](/api/WebSharper.Sitelets.Content#Json``1), and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](Json.md)
+If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to [`Content.Json`](/api/WebSharper.Sitelets.Content#Json\`\`1), and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](Json.md)
 
 ```fsharp
 type BlogArticleResponse =
@@ -789,7 +789,7 @@ let sitelet = Sitelet.Infer <| fun context endpoint ->
 
 ### Content.Custom
 
-[`Content.Custom`](/api/WebSharper.Sitelets.Content#Custom``1) can be used to output any type of content. It takes three optional named arguments that corresponds to the aforementioned elements of the response:
+[`Content.Custom`](/api/WebSharper.Sitelets.Content#Custom\`\`1) can be used to output any type of content. It takes three optional named arguments that corresponds to the aforementioned elements of the response:
 
 * `Status` is the HTTP status code. It can be created using the function [`Http.Status.Custom`](/api/WebSharper.Sitelets.Http.Status#Custom), or you can use one of the predefined statuses such as [`Http.Status.Forbidden`](/api/WebSharper.Sitelets.Http.Status#Forbidden).
 
@@ -861,12 +861,12 @@ In addition to the four standard Content families above, the [`Content`](/api/We
 <a name="context"></a>
 ## Using the Context
 
-The functions to create sitelets from content, namely `Sitelet.Infer` and `Sitelet.Content`, provide a context of type [`Context<'T>`](/api/WebSharper.Sitelets.Context`1). This context can be used for several purposes; the most important are creating internal links and managing user sessions.
+The functions to create sitelets from content, namely `Sitelet.Infer` and `Sitelet.Content`, provide a context of type [`Context<'T>`](/api/WebSharper.Sitelets.Context\`1). This context can be used for several purposes; the most important are creating internal links and managing user sessions.
 
 <a name="linking"></a>
 ### Creating links
 
-Since every accepted URL is uniquely mapped to a strongly typed action value, it is also possible to generate internal links from an action value. For this, you can use the method [`context.Link`](/api/WebSharper.Sitelets.Context`1#Link).
+Since every accepted URL is uniquely mapped to a strongly typed action value, it is also possible to generate internal links from an action value. For this, you can use the method [`context.Link`](/api/WebSharper.Sitelets.Context\`1#Link).
 
 ```fsharp
 open WebSharper.UI.Next.Html
@@ -889,11 +889,11 @@ let HomePage (context: Context<EndPoint>) =
     )
 ```
 
-Note how `context.Link` is used in order to resolve the URL to the `BlogArticle` action.  Action URLs are always constructed relative to the application root, whether the application is deployed as a standalone website or in a virtual folder.  [`context.ResolveUrl`](/api/WebSharper.Sitelets.Context`1#ResolveUrl) helps to manually construct application-relative URLs to resources that do not map to actions.
+Note how `context.Link` is used in order to resolve the URL to the `BlogArticle` action.  Action URLs are always constructed relative to the application root, whether the application is deployed as a standalone website or in a virtual folder.  [`context.ResolveUrl`](/api/WebSharper.Sitelets.Context\`1#ResolveUrl) helps to manually construct application-relative URLs to resources that do not map to actions.
 
 ### Managing User Sessions
 
-`Context<'T>` can be used to access the currently logged in user. The member [`UserSession`](/api/WebSharper.Sitelets.Context`1#UserSession) has the following members:
+`Context<'T>` can be used to access the currently logged in user. The member [`UserSession`](/api/WebSharper.Sitelets.Context\`1#UserSession) has the following members:
 
 * [`LoginUser : username: string * ?persistent: bool -> Async<unit>`](/api/WebSharper.Web.IUserSession#LoginUser)  
   [`LoginUser : username: string * duration: System.TimeSpan -> Async<unit>`](/api/WebSharper.Web.IUserSession#LoginUser)
@@ -1014,7 +1014,7 @@ module WebSite =
 
 Specifying routers manually gives you full control of how to parse incoming requests and to map actions to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and actions, so that linking to an action produces a URL that is in turn routed back to the same action.
 
-Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/WebSharper.Sitelets.Router#Table``1):
+Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/WebSharper.Sitelets.Router#Table\`\`1):
 
 ```fsharp
 let MyRouter : Router<EndPoint> =
@@ -1025,7 +1025,7 @@ let MyRouter : Router<EndPoint> =
     |> Router.Table
 ```
 
-Even simpler, if you want to create the same URL shapes that would be generated by `Sitelet.Infer`, you can simply use [`Router.Infer()`](/api/WebSharper.Sitelets.Router#Infer``1):
+Even simpler, if you want to create the same URL shapes that would be generated by `Sitelet.Infer`, you can simply use [`Router.Infer()`](/api/WebSharper.Sitelets.Router#Infer\`\`1):
 
 ```fsharp
 let MyRouter : Router<EndPoint> =
@@ -1077,7 +1077,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
-* [`Router.Json`](/api/WebSharper.Sitelets.Router#Json``1) creates a router that parses the request body by the JSON format derived from the type argument.
+* [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
 * [`Router.FormData`](/api/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
 
 ### Using the router

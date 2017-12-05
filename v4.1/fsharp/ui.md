@@ -652,7 +652,7 @@ type MyTemplate =
 The possible values for `clientLoad` are:
 
 * `ClientLoad.Inline` (default): The template is included in the compiled JavaScript code, and any change to `my-template.html` requires a recompilation to be reflected in the application.
-* `ClientLoad.FromDocument`: The template is loaded from the DOM. This means that `my-template.html` *must* be the document in which the code is run.
+* `ClientLoad.FromDocument`: The template is loaded from the DOM. This means that `my-template.html` *must* be the document in which the code is run: either directly served as a Single-Page Application, or passed to `Content.Page` in a Client-Server Application.
 
 The possible values for `serverLoad` are:
 
@@ -660,11 +660,292 @@ The possible values for `serverLoad` are:
 * `ServerLoad.Once`: The template file is loaded on first use and never reloaded.
 * `ServerLoad.PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
 
+### Accessing the template's model
+
+Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
+
+* In event handlers, it is available as the `Vars` property of the handler argument.
+* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars.
+
+    ```fsharp
+    // my-template.html:
+    // <div>
+    //   <input ws-var="Name" />
+    //   <div>Hi, ${Name}!</div>
+    // </div>
+
+    let myInstance = MyTemplate().Create()
+    myInstance.Vars.Name <- "John Doe"
+    let myDoc = myInstance.Doc
+
+    // result:
+    // <div>
+    //   <input value="John Doe" />
+    //   <div>Hi, John Doe!</div>
+    // </div>
+    ```
+
 ## Reactive layer
 
-The reactive layer 
+WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
 
-### Reactive HTML
+### Vars
+
+Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<'T>`](/api/WebSharper.UI.Var\`1). Vars are similar to F# `ref<'T>` in that they store a value of type `'T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
+
+The following are available from `WebSharper.UI.Client`:
+
+* [`Doc.Input`](/api/WebSharper.UI.Client.Doc#Input) creates an `<input>` element with given attributes that is bound to a `Var<string>`.
+
+    ```fsharp
+    let varText = Var.Create "initial value"
+    let myInput = Doc.Input [ attr.name "my-input" ] varText
+    ```
+    
+    With the above code, once `myInput` has been inserted in the document, getting `varText.Value` will at any point reflect what the user has entered, and setting it will edit the input.
+
+* [`Doc.IntInput`](/api/WebSharper.UI.Client.Doc#IntInput) and [`Doc.FloatInput`](/api/WebSharper.UI.Client.Doc#FloatInput) create an `<input type="number">` bound to a `Var<CheckedInput<_>>` of the corresponding type (`int` or `float`). `CheckedInput` provides access to the validity and actual user input, it is defined as follows:
+
+    ```fsharp
+    type CheckedInput<'T> =
+        | Valid of value: 'T * inputText: string
+        | Invalid of inputText: string
+        | Blank of inputText: string
+    ```
+
+* [`Doc.IntInputUnchecked`](/api/WebSharper.UI.Client.Doc#IntInputUnchecked) and [`Doc.FloatInputUnchecked`](/api/WebSharper.UI.Client.Doc#FloatInputUnchecked) create an `<input type="number">` bound to a `Var<_>` of the corresponding type (`int` or `float`). They do not check for the validity of the user's input, which can cause wonky interactions. We recommend using `Doc.IntInput` or `Doc.FloatInput` instead.
+
+* [`Doc.InputArea`](/api/WebSharper.UI.Client.Doc#InputArea) creates a `<textarea>` element bound to a `Var<string>`.
+
+* [`Doc.PasswordBox`](/api/WebSharper.UI.Client.Doc#PasswordBox) creates an `<input type="password">` element bound to a `Var<string>`.
+
+* [`Doc.CheckBox`](/api/WebSharper.UI.Client.Doc#CheckBox) creates an `<input type="checkbox">` element bound to a `Var<bool>`.
+
+* [`Doc.CheckBoxGroup`](/api/WebSharper.UI.Client.Doc#CheckBoxGroup) also creates an `<input type="checkbox">`, but instead of associating it with a simple `Var<bool>`, it associates it with a specific `'T` in a `Var<list<'T>>`. If the box is checked, then the element is added to the list, otherwise it is removed.
+
+    ```fsharp
+    type Color = Red | Green | Blue
+    
+    // Initially, Green and Blue are checked.
+    let varColor = Var.Create [ Blue; Green ]
+    
+    let mySelector =
+        div [] [
+            label [] [
+                Doc.CheckBoxGroup [] Red varColor
+                text " Select Red"
+            ]
+            label [] [
+                Doc.CheckBoxGroup [] Green varColor
+                text " Select Green"
+            ]
+            label [] [
+                Doc.CheckBoxGroup [] Blue varColor
+                text " Select Blue"
+            ]
+        ]
+        
+    // Result:
+    // <div>
+    //   <label><input type="checkbox" /> Select Red</label>
+    //   <label><input type="checkbox" checked /> Select Green</label>
+    //   <label><input type="checkbox" checked /> Select Blue</label>
+    // </div>
+    // Plus varColor is bound to contain the list of ticked checkboxes.
+    ```
+
+* [`Doc.Select`](/api/WebSharper.UI.Client.Doc#Select) creates a dropdown `<select>` given a list of values to select from. The label of every `<option>` is determined by the given print function for the associated value.
+
+    ```fsharp
+    type Color = Red | Green | Blue
+
+    // Initially, Green is checked.
+    let varColor = Var.Create Green
+
+    // Choose the text of the dropdown's options.
+    let showColor (c: Color) =
+        sprintf "%A" c
+
+    let mySelector =
+        Doc.Select [] showColor [ Red; Green; Blue ] varColor
+        
+    // Result:
+    // <select>
+    //   <option>Red</option>
+    //   <option>Green</option>
+    //   <option>Blue</option>
+    // </select>
+    // Plus varColor is bound to contain the selected color.
+    ```
+
+* [`Doc.Radio`](/api/WebSharper.UI.Client.Doc#Radio) creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
+
+    ```fsharp
+    type Color = Red | Green | Blue
+    
+    // Initially, Green is selected.
+    let varColor = Var.Create Green
+    
+    let mySelector =
+        div [] [
+            label [] [
+                Doc.Radio [] Red varColor
+                text " Select Red"
+            ]
+            label [] [
+                Doc.Radio [] Green varColor
+                text " Select Green"
+            ]
+            label [] [
+                Doc.Radio [] Blue varColor
+                text " Select Blue"
+            ]
+        ]
+        
+    // Result:
+    // <div>
+    //   <label><input type="radio" /> Select Red</label>
+    //   <label><input type="radio" checked /> Select Green</label>
+    //   <label><input type="radio" /> Select Blue</label>
+    // </div>
+    // Plus varColor is bound to contain the selected color.
+    ```
+
+More variants are available in the [`Doc` module](/api/WebSharper.UI.Client.Doc).
+
+### Views
+
+The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/WebSharper.UI.View\`1). A `View<'T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `'T`.
+
+One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`View.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying performing side-effects in functions like `View.Map`.
+
+In pseudo-code below, `[[x]]` notation is used to denote the value of the View `x` at every point in time, so that `[[x]]` = `[[y]]` means that the two views `x` and `y` are observationally equivalent.
+
+#### Creating and combining Views
+
+The first and main way to get a View is using the [`View`](/api/WebSharper.UI.Var\`1#View) property of `Var<'T>`. This retrieves a View that tracks the current value of the Var.
+
+You can create Views using the following functions and combinators from the `View` module:
+
+* [`View.Const`](/api/WebSharper.UI.View#Const\`\`1) creates a View whose value is always the same.
+
+    ```fsharp
+    let v = View.Const 42
+
+    // [[v]] = 42
+    ```
+
+* [`View.ConstAnyc`](/api/WebSharper.UI.View#ConstAsync\`\`1) is similar to `Const`, but is initialized asynchronously. Until the async returns, the resulting View is uninitialized.
+
+* <a name="view-map"></a>[`View.Map`](/api/WebSharper.UI.View#Map\`\`2) takes an existing View and maps its value through a function.
+
+    ```fsharp
+    let v1 : View<string> = // ...
+    let v2 = View.Map (fun s -> String.length s) v1
+
+    // [[v2]] = String.length [[v1]]
+    ```
+
+* [`View.Map2`](/api/WebSharper.UI.View#Map2\`\`3) takes two existing Views and map their value through a function.
+
+    ```fsharp
+    let v1 : View<int> = // ...
+    let v2 : View<int> = // ...
+    let v3 = View.Map2 (fun x y -> x + y) v1 v2
+
+    // [[v3]] = [[v1]] + [[v2]]
+    ```
+
+    Similarly, [`View.Map3`](/api/WebSharper.UI.View#Map3\`\`4) takes three existing Views and map their value through a function.
+
+* [`View.MapAsync`](/api/WebSharper.UI.View#MapAsync\`2) is similar to `View.Map` but maps through an asynchronous function.
+
+    An important property here is that this combinator saves work by abandoning requests. That is, if the input view changes faster than we can asynchronously convert it, the output view will not propagate change until it obtains a valid latest value. In such a system, intermediate results are thus discarded.
+    
+    Similarly, [`View.MapAsync2`](/api/WebSharper.UI.View#MapAsync2\`3) maps two existing Views through an asynchronous function.
+
+* [`View.Apply`](/api/WebSharper.UI.View#Apply\`2) takes a View of a function and a View of its argument type, and combines them to create a View of its return type.
+
+    While Views of functions may seem like a rare occurrence, they are actually useful together with `View.Const` in a pattern that can lift a function of any number N of arguments into an equivalent of `View.MapN`.
+
+    ```fsharp
+    // This shorthand is defined in WebSharper.UI.Notation.
+    let (<*>) vf vx = View.Apply vf vx
+    
+    // Inputs: a function of 4 arguments and 4 Views.
+    let f a b c d = // ...
+    let va = // ...
+    let vb = // ...
+    let vc = // ...
+    let vd = // ...
+    
+    // Equivalent to a hypothetical `View.Map4 f va vb vc vd`.
+    let combinedView =
+        View.Const f <*> va <*> vb <*> vc <*> vd
+    ```
+
+<a name="view-doc"></a>
+#### Inserting Views in the Doc
+
+Once you have created a View to represent your dynamic content, here are the various ways to include it in a Doc:
+
+* [`textView`](/api/WebSharper.UI.Html#textView) is a reactive counterpart to `text`, which creates a text node a `View<string>`.
+
+    ```fsharp
+    let varTxt = Var.Create ""
+    let vLength =
+        varTxt.View
+        |> View.Map String.length
+        |> View.Map (fun l -> sprintf "You entered %i characters." l)
+    div [] [
+        Doc.Input [] varName
+        textView vLength
+    ]
+    ```
+
+* [`Doc.BindView`](/api/WebSharper.UI.Doc#BindView\`\`1) maps a View into a dynamic Doc.
+
+    ```fsharp
+    let varTxt = Var.Create ""
+    let vWords =
+        varTxt.View
+        |> View.Map (fun s -> s.Split(' '))
+        |> Doc.BindView (fun words ->
+            words
+            |> Array.map (fun w -> li [] [text w] :> Doc)
+            |> Doc.Concat
+        )
+    div [] [
+        text "You entered the following words:"
+        ul [] [ vWords ]
+    ]
+    ```
+
+* `attr.*Dyn` is a reactive equivalent to the corresponding `attr.*`, creating an attribute from a `View<string>`.
+
+    For example, the following sets the background of the input element based on the user input value:
+
+    ```fsharp
+    let varTxt = Var.Create ""
+    let vStyle =
+        varTxt.View
+        |> View.Map (fun s -> "background-color: " + s)
+    Doc.Input [ attr.styleDyn vStyle ] varTxt
+    ```
+
+* `attr.*DynPred` is similar to `attr.*Dyn`, but it takes an extra `View<bool>`. When this View is true, the attribute is set (and dynamically updated as with `attr.*Dyn`), and when it is false, the attribute is removed.
+
+    ```fsharp
+    let varTxt = Var.Create ""
+    let varCheck = Var.Create true
+    let vStyle =
+        varTxt.View
+        |> View.Map (fun s -> "background-color: " + s)
+    div [] [
+        Doc.Input [ attr.styleDynPred vStyle varCheck.View ] varTxt
+        Doc.CheckBox [] varCheck
+    ]
+    ```
 
 ## Routing
 
