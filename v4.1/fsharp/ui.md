@@ -233,7 +233,9 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     // <div my-attr="my-value">...</div>
     ```
 
-<!-- TODO: event handlers -->
+#### Event handlers
+
+A special kind of attribute is event handlers. They can be created using functions from the [`on`](/api/WebSharper.UI.Html#on) submodule.
 
 ### HTML on the client
 
@@ -684,6 +686,14 @@ Templates allow you to access their "model", ie the set of all the reactive `Var
     //   <div>Hi, John Doe!</div>
     // </div>
     ```
+
+### Mixing client code in server-side templates
+
+It is possible to include some client-side functionality when creating a template on the server side.
+
+* If you use `ws-var="VarName"`, the corresponding Var will be created on the client on page startup. However, passing a Var using `.VarName(myVar)` is not possible, since it would be a server-side Var.
+
+* Event handlers (such as `ws-onclick="EventName"`) work fully if you pass an anonymous function: `.EventName(fun e -> ...)`. The body of this function will be compiled to JavaScript. You can also pass a top-level function, in this case it must be declared with `[<JavaScript>]`.
 
 ## Reactive layer
 
