@@ -72,10 +72,17 @@ Based on this, a Sitelet is a value that represents the following mappings:
 
 A number of primitives are available to create and compose Sitelets.
 
+### Trivial Sitelets
+
+Two helpers exist for creating a Sitelet with a trivial router: only handling requests on the root.
+
+* `Application.Text` takes just a `Context<_> -> string` function and creates a Sitelet that serves the result string as a text response.
+* `Application.SinglePage`takes a `Context<_> -> Async<Content<_>>` function and creates a Sitelet that serves the returned content.
+
 <a name="sitelet-infer"></a>
 ### Sitelet.Infer
 
-The easiest way to create a Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer\`\`1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage\`\`1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
+The easiest way to create a more complex Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer\`\`1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage\`\`1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
 ```fsharp
 namespace SampleWebsite
