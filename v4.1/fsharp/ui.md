@@ -4,7 +4,6 @@ WebSharper.UI is a library providing a novel, pragmatic and convenient approach 
 
 * An [HTML library](#html) usable both from the server side and from the client side, which you can use to build HTML pages either by calling F# functions to create elements, or by instantiating template HTML files.
 * A [reactive layer](#reactive) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP). This reactive system integrates with the HTML library to create reactive documents. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the reactive system, rather than a single state value associated with the component.
-* A [declarative animation system](#animation) for the client-side HTML layer.
 
 This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
 
@@ -14,6 +13,7 @@ WebSharper.UI's core type for HTML construction is [`Doc`](/api/WebSharper.UI.Do
 
 Additionally, client-side Docs can be reactive. A same Doc can consist of different elements at different moments in time, depending on user input or other variables. See [the reactive section](#reactive) to learn more about this.
 
+<a name="html"></a>
 ### Constructing HTML
 
 #### Docs
@@ -59,7 +59,7 @@ let myDropdown =
 // </select>
 ```
 
-One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides [additional APIs](#elt). This subtyping means that you will sometimes need to upcast the result of such a function with `:> Doc` to appease the compiler; you can see an example of this below in the example for `Doc.Empty`.
+One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as [`Dom`](/api/WebSharper.UI.Elt#Dom) to get the underlying `Dom.Element`. This subtyping means that you will sometimes need to upcast the result of such a function with `:> Doc` to appease the compiler; you can see an example of this below in the example for `Doc.Empty`.
 
 Additional functions in the [`Doc`](/api/WebSharper.UI.Doc) can create or combine Docs:
 
@@ -716,6 +716,7 @@ It is possible to include some client-side functionality when creating a templat
 
 * Event handlers (such as `ws-onclick="EventName"`) work fully if you pass an anonymous function: `.EventName(fun e -> ...)`. The body of this function will be compiled to JavaScript. You can also pass a top-level function, in this case it must be declared with `[<JavaScript>]`.
 
+<a name="reactive"></a>
 ## Reactive layer
 
 WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
