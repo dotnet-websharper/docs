@@ -12,7 +12,7 @@ Sitelets allow you to:
 
 * Have [safe links](#linking) for referencing other content contained within your site.
 
-* Use the type-safe HTML and templating facilities from [UI.Next](ui.md) on the server side.
+* Use the type-safe HTML and templating facilities from [UI](ui.md) on the server side.
 
 * Automatically [parse JSON requests and generate JSON responses](Json.md) based on your types.
 
@@ -25,8 +25,8 @@ open WebSharper.Sitelets
 
 module SampleSite =
     open WebSharper
-    open WebSharper.UI.Next.Html
-    open WebSharper.UI.Next.Server
+    open WebSharper.UI.Html
+    open WebSharper.UI.Server
 
     type EndPoint =
         | Index
@@ -45,7 +45,7 @@ module SampleSite =
 
 First, a custom endpoint type is defined. It is used for linking requests to content within your sitelet. Here, you only need one endpoint, `EndPoint.Index`, corresponding to your only page.
 
-The content of the index page is defined as a [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page\`\`1), where the body consists of a server side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
+The content of the index page is defined as a [`Content.Page`](/api/WebSharper.UI.Server.Content#Page\`\`1), where the body consists of a server side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
 
 The `MySampleWebsite` value has type [`Sitelet<EndPoint>`](/api/WebSharper.Sitelets.Sitelet\`1). It defines a complete website: the URL scheme, the `EndPoint` value corresponding to each served URL (only one in this case), and the content to serve for each endpoint. It uses the [`Sitelet.Content`](/api/WebSharper.Sitelets.Sitelet#Content\`\`1) operator to construct a sitelet for the Index endpoint, associating it with the `/index` URL and serving `IndexContent` as a response.
 
@@ -72,10 +72,17 @@ Based on this, a Sitelet is a value that represents the following mappings:
 
 A number of primitives are available to create and compose Sitelets.
 
+### Trivial Sitelets
+
+Two helpers exist for creating a Sitelet with a trivial router: only handling requests on the root.
+
+* `Application.Text` takes just a `Context<_> -> string` function and creates a Sitelet that serves the result string as a text response.
+* `Application.SinglePage`takes a `Context<_> -> Async<Content<_>>` function and creates a Sitelet that serves the returned content.
+
 <a name="sitelet-infer"></a>
 ### Sitelet.Infer
 
-The easiest way to create a Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer\`\`1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage\`\`1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
+The easiest way to create a more complex Sitelet is to automatically generate URLs from the shape of your endpoint type using [`Sitelet.Infer`](/api/WebSharper.Sitelets.Sitelet#Infer\`\`1), also aliased as [`Application.MultiPage`](/api/WebSharper.Application#MultiPage\`\`1). This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
 ```fsharp
 namespace SampleWebsite
@@ -84,8 +91,8 @@ open WebSharper.Sitelets
 
 module SampleSite =
     open WebSharper
-    open WebSharper.UI.Next.Html
-    open WebSharper.UI.Next.Server
+    open WebSharper.UI.Html
+    open WebSharper.UI.Server
 
     type EndPoint =
         | Index
@@ -179,7 +186,7 @@ The following types are accepted by `Sitelet.Infer`:
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-* Union types are encoded as a path segment identifying the case, followed by segments for the arguments (see the example above).
+* Union types are encoded as a path segment (or none or multiple) identifying the case, followed by segments for the arguments (see the example above).
 
     ```fsharp
     type EndPoint = string option
@@ -502,6 +509,8 @@ By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to
 
 * `ActionEncoding.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value ([`Unchecked.defaultof<_>`](/api/Microsoft.FSharp.Core.Operators.Unchecked#defaultof\`\`1)) where the form body-decoded value should be.
 
+If multiple of these kinds of errors happen, only the last one is reported.
+
 If the URL path isn't matched, then the request falls through as with `Sitelet.Infer`.
 
 ```fsharp
@@ -584,17 +593,17 @@ The following functions are available to build simple sitelets or compose more c
     // Returned Content:    (value of AboutContent : Content<EndPoint>)
     ```
 
-* [`<|>`](/api/WebSharper.Sitelets.Sitelet\`1#op_LessBarGreater\`\`1) takes two Sitelets and tries them in order. `s1 <|> s2` is equivalent to `Sitelet.Sum [s1; s2]`.
+* [`+`](/api/WebSharper.Sitelets.Sitelet\`1#op_LessBarGreater\`\`1) takes two Sitelets and tries them in order. `s1 + s2` is equivalent to `Sitelet.Sum [s1; s2]`.
 
     ```fsharp
     Sitelet.Content "/index" Index IndexContent
-    <|>
+    +
     Sitelet.Content "/about" About AboutContent
 
     // Same as above.
     ```
 
-For the mathematically enclined, the functions `Sitelet.Empty` and `<|>` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
+For the mathematically enclined, the functions `Sitelet.Empty` and `+` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
 
 * [`Sitelet.Shift`](/api/WebSharper.Sitelets.Sitelet#Shift\`\`1) takes a Sitelet and shifts it by a path segment.
 
@@ -736,7 +745,7 @@ let fileResponse: Async<Content<EndPoint>> =
 You can return full HTML pages, with managed dependencies using [`Content.Page`](/api/WebSharper.UI.Next.Server.Content#Page\`\`1). Here is a simple example:
 
 ```fsharp
-open WebSharper.UI.Next.Html
+open WebSharper.UI.Html
     
 let IndexPage : Async<Content<EndPoint>> =
     Content.Page(
@@ -869,7 +878,7 @@ The functions to create sitelets from content, namely `Sitelet.Infer` and `Sitel
 Since every accepted URL is uniquely mapped to a strongly typed action value, it is also possible to generate internal links from an action value. For this, you can use the method [`context.Link`](/api/WebSharper.Sitelets.Context\`1#Link).
 
 ```fsharp
-open WebSharper.UI.Next.Html
+open WebSharper.UI.Html
 
 type EndPoint = | BlogArticle of id:int * slug:string
 
@@ -982,7 +991,9 @@ The implementation of these functions relies on cookies and thus requires that t
 
 So far, we have constructed sitelets using built-in constructors such as `Sitelet.Infer`. But if you want finer-grained control over the exact URLs that it parses and generates, you can create sitelets by hand.
 
-A sitelet consists of two parts; a router and a controller.  The job of the router is to map actions to URLs and to map HTTP requests to actions. The controller is responsible for handling actions, by converting them into content that in turn produces the HTTP response. The overall architecture is analogous to ASP.NET/MVC, and other `Model-View-Controller` -based web frameworks.
+A sitelet consists of two parts; a router and a handler.
+The job of the router is to map actions to URLs and to map HTTP requests to actions.
+The handler is responsible for handling actions, by returning content (a synchronous or asynchronous HTTP response).
 
 ### Routers
 
@@ -1038,8 +1049,11 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 
 * `rRoot`: Recognizes and writes an empty path.
 * `r "path"`: Recognizes and writes a specific subpath. You can also write `r "path/subpath"` to parse two or more segments of the URL.
-* `rString`: Recognizes an URIComponent as a string and writes as URIComponent.
-* `rInt`, `rDouble`, `rBool`, `rChar`, `rGuid`, `rDateTime`: Basic types to parse from or write to the URL.
+* `rString`, `rChar`: Recognizes a URIComponent as a string or char and writes it as a URIComponent.
+* `rTryParse<T>`: Creates a router for any type that defines a `TryParse` static method.
+* `rInt`, `rDouble`, ...: Creates a router for numeric values.
+* `rBool`, `rGuid`: Additional primitive types to parse from or write to the URL. 
+* `rDateTime`: Parse or write a `DateTime`, takes a format string.
 
 ### Router combinators
 
@@ -1071,14 +1085,22 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
     ```
     See that now we have two functions again, but the second is returning an option. The first tells us that once a path is parsed (for example we are recognizing `contact/Bob/32` here), it can wrap it in a `Contact` case (`Contact` here is used as a short version of a union case constructor, a function with signature `Person -> Pages`). And if the newly created router gets a value to write, it can use the second function to map it back optionally to an underlying value.
 * `Router.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt |> Router.Filter (fun x -> x >= 0)`, which won't parse and write negative values.
-* `Router.Query`: Moves a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rPerson |> Router.Query "p"`, which will read/write query segments like `?p=Bob/32`.
+* `Router.Slice`: restricts a router to parse/write values only that can be mapped to a new value. Equivalent to using `Filter` first to restrict the set of values and then `Map` to convert to a type that is a better representation of the restricted values.
+* `Router.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which inclide primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
+* `Router.QueryOption`: Modifies a router to read an optional query value. Creates a `Router<option<T>`, same restrictions apply as to `Query`.
 * `Router.Box`: Converts a `Router<T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `T` so it can be passed to underlying router.
 * `Router.Unbox`:  Converts a `Router<obj>` to a `Router<T>`. When parsing, it uses a type check to see if the object is of type `T` so that the parsed value can be represented in `T`.
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
+* `Router.Option`: Creates an F# option parser/writer. Writes or reads `None` and `Some/x` segments.
+* `Router.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router. For 
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
+* `Router.Table`: Creates a router mapping between a list of static action values and paths.
+* `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
+* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
 * [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
 * [`Router.FormData`](/api/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
+* `Router.Delay` can be used to construct routers for recursive data types. Takes a `unit -> Router<'T>` function, and evaluates it firsthe t time the router is used for parsing and writing (never just when combining them).
 
 ### Using the router
 
@@ -1086,86 +1108,30 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 A useful helper to have in the file defining your router is:
     ```fsharp
         let Link page content =
-            a [ attr.href (Router.Link page router) ] [ text content ]
+            a [ attr.href (router |> Router.Link page) ] [ text content ]
     ```
 This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
-* `Router.MakeSitelet` is a helper for creating a Sitelet from a router. Example:
+* `Sitelet.New` creates a Sitelet from a router and handler. Example:
 ```fsharp
     [<Website>]
     let Main =
-        rPages |> Router.MakeSitelet (fun ctx ->
-            function 
+        Sitelet.New rPages (fun ctx action ->
+            match action with 
             | Home -> div [] [ text "This is the home page" ]
             | Contact _ -> client <@ ContactMain() @>
         )
 ```
 Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
-
-### URL Parsing Helpers
-
-To simplify the parsing of URLs in the Router, some active patterns are provided in the module [`UrlHelpers`](/api/WebSharper.Sitelets.UrlHelpers).
-
-* Method parsing: the active patterns [`GET`, `POST`](/api/WebSharper.Sitelets.UrlHelpers#|DELETE|GET|OPTIONS|POST|PUT|TRACE|SPECIAL|), etc. match a request with the given method, and return the list of parameters (from the query for `GET`, from the body for the others) and the URI.
-
-* [`SPLIT_BY`](/api/WebSharper.Sitelets.UrlHelpers#|SPLIT_BY|) then splits the path of a URI into fragments.
-
-* Finally, individual fragments can be parsed with [`EOL`](/api/WebSharper.Sitelets.UrlHelpers#|EOL|), [`SLASH`](/api/WebSharper.Sitelets.UrlHelpers#|SLASH|) [`INT`](/api/WebSharper.Sitelets.UrlHelpers#|INT|), [`FLOAT`](/api/WebSharper.Sitelets.UrlHelpers#|FLOAT|), [`ALPHA`](/api/WebSharper.Sitelets.UrlHelpers#|ALPHA|), [`ALPHA_NUM`](/api/WebSharper.Sitelets.UrlHelpers#|ALPHA_NUM) and [`REGEX`](/api/WebSharper.Sitelets.UrlHelpers#|REGEX|).
-
-The three sets of patterns above are generally used together to create a whole parser.
-
+Sitelets are only a server-side type.
+* `Router.Ajax` writes makes a request from an action value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
 ```fsharp
-    open WebSharper.Sitelets
-    open WebSharper.Sitelets.UrlHelpers
-    
-    type EndPoint =
-        | Index
-        | Stats of username: string
-        | BlogArticle of id: int * slug: string
+    // [<EndPoint "/get-data">] GetData of int
 
-    let myRouter =
-        let route request =
-            match request with
-            | GET (_, SPLIT_BY '/' []) ->
-                Some Index
-            | GET (_, SPLIT_BY '/' ["stats"; username]) ->
-                Some (Stats username)
-            | GET (_, SPLIT_BY '/' ["blog-article"; INT id; slug]) ->
-                Some (BlogArticle (id, slug))
-            | _ -> None
-        let link endPoint =
-            match endPoint with
-            | Index ->
-                System.Uri "/"
-            | Stats u ->
-                System.Uri ("/stats/" + u)
-            | BlogArticle (id, slug) ->
-                System.Uri (sprintf "/blog-article/%i/%s" id slug)
-            |> Some
-        Router.New route link
-```
-
-### Controllers
-
-If an incoming request can be mapped to an action by the router, it is passed on to the controller. The job of the controller is to map actions to content. Here is an example of a controller handling actions of the `EndPoint` type defined above.
-
-```fsharp
-type EndPoint = | Page1 | Page2
-
-let MyController : Controller<EndPoint> =
-    {
-        Handle = fun endPoint ->
-            match endPoint with
-            | EndPoint.Page1  -> MyContent.Page1
-            | EndPoint.Page2  -> MyContent.Page2
-    }
-```
-
-Finally, the router and the controller components are combined into a sitelet:
-
-```fsharp
-let MySitelet : Sitelet<EndPoint> =
-    {
-        Router = MyRouter
-        Controller = MyController
-    }
+    let GetDataAsync i =
+        async {
+            try
+                return! router |> Router.Ajax (GetData i) |> Some
+            with _ ->
+                None
+        }
 ```
