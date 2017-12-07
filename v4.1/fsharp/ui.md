@@ -237,6 +237,27 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
 
 A special kind of attribute is event handlers. They can be created using functions from the [`on`](/api/WebSharper.UI.Html#on) submodule.
 
+```fsharp
+let myButton =
+    button [ on.click (fun el ev -> JS.Alert "Hi!") ] [ text "Click me!" ]
+```
+
+The handler function takes two arguments:
+
+* The element itself, as a native `Dom.Element`;
+* The triggered event, as a native `Dom.Event`.
+
+```fsharp
+let myButton =
+    button [
+        attr.id "my-button"
+        on.click (fun el ev ->
+            JS.Alert (sprintf "You clicked %s at x = %i, y = %i." 
+                        el.Id ev.ClientX ev.ClientY)
+        )
+    ] [ text "Click me!" ]
+```
+
 ### HTML on the client
 
 To insert a Doc into the document on the client side, use the `Doc.Run*` family of functions from the module [`WebSharper.UI.Client`](/api/WebSharper.UI.Client). Each of these functions has two variants: one directly taking a DOM [`Element`](/api/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/WebSharper.JavaScript.Dom.Node), and the other suffixed with `ById` taking the id of an element as a string.
@@ -931,6 +952,8 @@ Once you have created a View to represent your dynamic content, here are the var
     ]
     ```
 
+* [`Doc.EmbedView`](/api/WebSharper.UI.Doc#EmbedView) unwraps a `View<Doc>` into a Doc. It is equivalent to `Doc.BindView id`.
+
 * `attr.*Dyn` is a reactive equivalent to the corresponding `attr.*`, creating an attribute from a `View<string>`.
 
     For example, the following sets the background of the input element based on the user input value:
@@ -956,6 +979,201 @@ Once you have created a View to represent your dynamic content, here are the var
         Doc.CheckBox [] varCheck
     ]
     ```
+
+### ListModels
+
+[`ListModel<'K, 'T>`](/api/WebSharper.UI.ListModel\`2) is a convenient type to store an observable collection of items of type `'T`. Items can be accessed using an identifier, or key, of type `'K`.
+
+ListModels are to dictionaries as Vars are to refs: a type with similar capabilities, but with the additional capability to be reactively observed, and therefore to have your UI automatically change according to changes in the stored content.
+
+#### Creating ListModels
+
+You can create ListModels with the following functions:
+
+* [`ListModel.FromSeq`](/api/WebSharper.UI.ListModel#FromSeq\`\`1) creates a ListModel where items are their own key.
+
+    ```fsharp
+    let myNameColl = ListModel.FromSeq [ "John"; "Ana" ]
+    ```
+
+* [`ListModel.Create`](/api/WebSharper.UI.ListModel#Create\`\`2) creates a ListModel using a given function to determine the key of an item.
+
+    ```fsharp
+    type Person = { Username: string; Name: string }
+    
+    let myPeopleColl =
+        ListModel.Create (fun p -> p.SSN)
+            [ { Username = "johnny87"; Name = "John" };
+              { Username = "theana12"; Name = "Ana" } ]
+    ```
+
+Every following example will assume the above `Person` type and `myPeopleColl` model.
+
+#### Modifying ListModels
+
+Once you have a ListModel, you can modify its contents like so:
+
+* [`listModel.Add`](/api/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
+
+    ```fsharp
+    myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+    // myPeopleColl now contains John, Ana and Sam.
+    
+    myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+    // myPeopleColl now contains Johnny, Ana and Sam.
+    ```
+
+* [`listModel.RemoveByKey`](/api/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
+
+    ```fsharp
+    myPeopleColl.RemoveByKey("theana12")
+    // myPeopleColl now contains John.
+    
+    myPeopleColl.RemoveByKey("chloe94")
+    // myPeopleColl now contains John.
+    ```
+
+* [`listModel.Remove`](/api/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey x)`, where `getKey` is the key function passed to `ListModel.Create` and `x` is the argument to `Remove`.
+
+    ```fsharp
+    myPeopleColl.Remove({ Username = "theana12"; Name = "Another Ana" })
+    // myPeopleColl now contains John.
+    ```
+
+* [`listModel.Set`](/api/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
+
+    ```fsharp
+    myPeopleColl.Set([ { Username = "chloe94"; Name = "Chloe" };
+                       { Username = "a13x"; Name = "Alex" } ])
+    // myPeopleColl now contains Chloe, Alex.
+    ```
+
+* [`listModel.Clear`](/api/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
+
+    ```fsharp
+    myPeopleColl.Clear()
+    // myPeopleColl now contains no items.
+    ```
+
+* [`listModel.UpdateBy`](/api/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns None or the item is not found, nothing is done.
+
+    ```fsharp
+    myPeople.UpdateBy (fun u -> Some { u with Name = "The Real Ana" }) "theana12"
+    // myPeopleColl now contains John, The Real Ana.
+    
+    myPeople.UpdateBy (fun u -> None) "johnny87"
+    // myPeopleColl now contains John, The Real Ana.
+    ```
+
+* [`listModel.UpdateAll`](/api/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns None, the corresponding item is unchanged.
+
+    ```fsharp
+    myPeople.UpdateAll (fun u -> 
+        if u.Username.Contains "ana" then
+            Some { u with Name = "The Real Ana" }
+        else
+            None)
+    // myPeopleColl now contains John, The Real Ana.
+    ```
+
+#### Reactively observing ListModels
+
+The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
+
+* [`listModel.View`](/api/WebSharper.UI.ListModel\`2#View) gives a `View<seq<'T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
+
+    ```fsharp
+    let myPeopleList =
+        myPeopleColl.View
+        |> Doc.BindView (fun people ->
+            ul [] [
+                people
+                |> Seq.map (fun p -> li [] [ text p.Name ] :> Doc)
+                |> Doc.Concat
+            ] :> Doc
+        )
+    ```
+
+* [`listModel.ViewState`](/api/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<'T>>`. Here are the differences:
+
+    * `ViewState` provides better performance.
+    * `ListModelState<'T>` implements `seq<'T>`, but it additionally provides indexing and length of the sequence.
+    * However, a `ViewState` is only valid until the next change to the model.
+    
+    As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting `seq` separately.
+
+* [`listModel.Map`](/api/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
+
+    * `Map(f: 'T -> 'V)` assumes that the item with a given key does not change.
+    
+        ```fsharp
+        let myDoc =
+            myPeopleColl.Map(fun p ->
+                Console.Log p.Username
+                p [] [ text p.Name ]
+            )
+            |> Doc.BindView Doc.Concat
+            |> Doc.RunAppend JS.Document.Body
+        // Logs johnny87, theana12
+        // Displays John, Ana
+        
+        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        // Logs mynameissam
+        // Displays John, Ana, Sam
+        
+        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        // Logs nothing, since no key has been added
+        // Displays John, Ana, Sam (unchanged)
+        ```
+
+    * `Map(f: 'K -> View<'T> -> 'V)` additionally observes changes to individual items that are updated.
+    
+        ```fsharp
+        let myDoc =
+            myPeopleColl.Map(fun k vp ->
+                Console.Log k
+                p [] [ textView (vp |> View.Map (fun p -> p.Name)) ]
+            )
+            |> Doc.BindView Doc.Concat
+            |> Doc.RunAppend JS.Document.Body
+        // Logs johnny87, theana12
+        // Displays John, Ana
+        
+        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        // Logs mynameissam
+        // Displays John, Ana, Sam
+        
+        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        // Logs nothing, since no key has been added
+        // Displays Johnny, Ana, Sam (changed!)
+        ```
+
+    Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
+
+* [`listModel.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+
+* [`listModel.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
+
+    ```fsharp
+    let showJohn =
+        myPeopleColl.TryFindByKeyAsView("johnny87")
+        |> Doc.BindView (function
+            | None -> text "He is not here."
+            | Some u -> text (sprintf "He is here, and his name is %s." u.Name)
+        )
+    ```
+
+* [`listModel.FindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
+
+* [`listModel.ContainsKeyAsView`](/api/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
+
+    ```fsharp
+    View.Map Option.isSome (listModel.TryFindByKeyAsView(k))
+    ```
+
+#### Inserting ListModels in the Doc
+
+To show the contents of a ListModel in your document, you can of course use one of the above View methods and pass it to `Doc.BindView`.
 
 ## Routing
 
