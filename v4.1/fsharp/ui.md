@@ -963,10 +963,10 @@ If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between se
 
 ### Install client-side routing
 
-There are 3 scenarios which WebSharper routing makes possible:
+There are 3 scenarios for client-side routing which WebSharper routing makes possible:
 * For creating single-page applications, when browser refresh is never wanted, `Router.Install` creates a global click handler that prevents default behavior of `<a>` links on your page pointing to a local URL.
-* If you want client-side navigation only between some part of the whole site map covered by the router, `Router.InstallPartial` creates a global click handler that now only override behavior of local links which can be mapped to the subset actions that are handled in the client. For example you can make navigating between `yoursite.com/profile/...` links happen with client-side routing, but any links that would point out of `/profile/...` are still doing browser navigation automatically.
-* If you want to have client-side routing on a sub-page that the server knows nothing about, `Router.InstallHash` subscribes to `window.location.hash` changes.
+* If you want client-side navigation only between some part of the whole site map covered by the router, you can use `Router.Slice` before `Router.Install`. This creates a global click handler that now only override behavior of local links which can be mapped to the subset actions that are handled in the client. For example you can make navigating between `yoursite.com/profile/...` links happen with client-side routing, but any links that would point out of `/profile/...` are still doing browser navigation automatically.
+* If you want to have client-side routing on a sub-page that the server knows nothing about, `Router.InstallHash` subscribes to `window.location.hash` changes only. You can use a router that is specific to that single sub-page.
 
 In all cases, the `Install` function used returns a `Var`, which you can use to map the visible content of your page from. It has a two way binding to the URL: link or forward/back navigation changes the value of the `Var`, and setting the value does a client-side navigation which also updates the URL automatically.
 
@@ -979,17 +979,20 @@ let ClientMain() =
         | Contact p -> div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
     )
 ```
-First argument (`Home`) specifies which page value to set if URL path cannot be parsed, which could be a home or an error page. 
+First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server-side correctly), which could be a home or an error page.
+
+Also, you need to make sure that your router value is `[JavaScript]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
 
 `Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#contact/Bob/32`.
 
-Example for `Router.InstallPartial`:
+Example for `Router.Slice` and `Router.Install`:
 ```fsharp
 let ContactMain() =    
     let location =
-        rPages |> Router.InstallPartial ("", 0)
+        rPages |> Router.Slice
             (function Contact p -> Some p | _ -> None)
             Contact
+        |> Router.Install ("unknown", 0)
     location.View.Doc(fun p -> 
         div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
     )

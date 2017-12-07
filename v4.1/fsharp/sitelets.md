@@ -179,7 +179,7 @@ The following types are accepted by `Sitelet.Infer`:
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-* Union types are encoded as a path segment identifying the case, followed by segments for the arguments (see the example above).
+* Union types are encoded as a path segment (or none or multiple) identifying the case, followed by segments for the arguments (see the example above).
 
     ```fsharp
     type EndPoint = string option
@@ -1039,6 +1039,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `rRoot`: Recognizes and writes an empty path.
 * `r "path"`: Recognizes and writes a specific subpath. You can also write `r "path/subpath"` to parse two or more segments of the URL.
 * `rString`: Recognizes an URIComponent as a string and writes as URIComponent.
+* `rTryParse<T>`: Creates a router for any type that defines a `TryParse` static method.
 * `rInt`, `rDouble`, `rBool`, `rChar`, `rGuid`, `rDateTime`: Basic types to parse from or write to the URL.
 
 ### Router combinators
@@ -1071,12 +1072,14 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
     ```
     See that now we have two functions again, but the second is returning an option. The first tells us that once a path is parsed (for example we are recognizing `contact/Bob/32` here), it can wrap it in a `Contact` case (`Contact` here is used as a short version of a union case constructor, a function with signature `Person -> Pages`). And if the newly created router gets a value to write, it can use the second function to map it back optionally to an underlying value.
 * `Router.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt |> Router.Filter (fun x -> x >= 0)`, which won't parse and write negative values.
-* `Router.Query`: Moves a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rPerson |> Router.Query "p"`, which will read/write query segments like `?p=Bob/32`.
+* `Router.Slice`: restricts a router to parse/write values only that can be mapped to a new value. Equivalent to using `Filter` first to restrict the set of values and then `Map` to convert to a type that is a better representation of the restricted values.
+* `Router.Query`: Moves a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`.
 * `Router.Box`: Converts a `Router<T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `T` so it can be passed to underlying router.
 * `Router.Unbox`:  Converts a `Router<obj>` to a `Router<T>`. When parsing, it uses a type check to see if the object is of type `T` so that the parsed value can be represented in `T`.
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
+* `Router.Table`: Creates a router mapping between a list of static action values and paths.
 * [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
 * [`Router.FormData`](/api/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
 
@@ -1089,11 +1092,11 @@ A useful helper to have in the file defining your router is:
             a [ attr.href (Router.Link page router) ] [ text content ]
     ```
 This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
-* `Router.MakeSitelet` is a helper for creating a Sitelet from a router. Example:
+* `Sitelet.New` is a helper for creating a Sitelet from a router. Example:
 ```fsharp
     [<Website>]
     let Main =
-        rPages |> Router.MakeSitelet (fun ctx ->
+        rPages |> Sitelet.New (fun ctx ->
             function 
             | Home -> div [] [ text "This is the home page" ]
             | Contact _ -> client <@ ContactMain() @>
