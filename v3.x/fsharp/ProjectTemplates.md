@@ -4,14 +4,13 @@ The three main WebSharper application types are:
 
  1. **Client-Server Application** - a full client-server application implemented as a WebSharper [sitelet](Sitelets.md).
 
-    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](https://raw.githubusercontent.com/intellifactory/websharper.ui.next/master/docs/UINext-Templates.md) page for more information on dynamic templating.
-	
-    These applications exist in two kinds: a **Client-Server Web Application** runs as an ASP.NET module, while a **Self-Hosted Client-Server Web Application** runs as a self-contained executable using an OWIN self-host container.
+    The sitelet uses a dynamic HTML template and placeholders that are instantiated by the sitelet. See the [HTML templates](Templates.md) page for more information on dynamic templating.
+
+    These applications exist in two flavors: a **Client-Server Web Application** runs as an ASP.NET module, while a **Self-Hosted Client-Server Web Application** runs as a self-contained executable using an OWIN self-host container.
 
  2. **HTML Application** - a multi-page HTML/JavaScript application.
 
-    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](https://raw.githubusercontent.com/intellifactory/websharper.ui.next/master/docs/UINext-Templates.md) to define web pages.
-    However, it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
+    Like the Client-Server Application, this application also uses [sitelets](Sitelets.md) and dynamic HTML [templates](Templates.md) to define web pages. However it creates a set of static HTML and JavaScript files that can be deployed in any HTML container.
 
     WebSharper mobile web applications can also be created from this template.
 
@@ -25,7 +24,7 @@ The following helper projects are also available:
 
  1. **Library** - a simple WebSharper library. Annotated code is compiled to JavaScript, and can then be used from any application project.
  
- 2. **Extension** - defines the interface to an existing JavaScript library using [a convenient declarative F# syntax](InterfaceGenerator.md).
+ 2. **Extension** - defines the interface to an existing JavaScript library using [a convenient declarative F# syntax](WIG.md).
 
 ## Capabilities
 
@@ -46,53 +45,53 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET-based or self-hosted via OWIN</span></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
             <td>HTML App</td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
             <td>Single-Page App</td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
         </tr>
         <tr class="header">
             <th colspan="6">Helpers</th>
         </tr>
         <tr>
             <td>Library</td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
             <td>Extension</td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
             <td>ASP.NET Container</td>
             <td></td>
             <td></td>
             <td></td>
-            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper.docs/master/images/ok.png" alt="X"/></td>
+            <td><img src="https://raw.githubusercontent.com/intellifactory/websharper/master/docs/images/ok.png" alt="X"/></td>
             <td></td>
         </tr>
     </tbody>
@@ -121,5 +120,3 @@ WebSharper project files must include the file `WebSharper.targets`, which defin
     * Compiles JavaScript-annotated code.
 * `InterfaceGenerator`: For Extensions.
     * Compiles the classes defined using WIG into an assembly.
-
-The other MSBuild project variables are fully documented [here](ProjectVariables.md).

@@ -183,46 +183,104 @@ follows:
 
 * The client unblocks the browser.
 
-## Handler Objects
+### Supported types
+ 
+Remote method arguments are serialized from/to JSON.
+All types occurring in method parameters and return must be one of the following:
 
-WebSharper 2.0 introduces the ability to use instance methods for
-client-server communication. The syntax for this is:
+* System namespace numeric types, string, bool, `DateTime` and `TimeSpan`, all enums.
+* One-dimensional arrays, `Nullable<_>`, `System.Tuple<...>`. Also F# union and record types.
+* Collection types: `System.Array<_>`, `System.Collections.Generic.List<_>`, `System.Collections.Generic.Queue<_>`, `System.Collections.Generic.Stack<_>`. Other collection types have to be converted to a supported one.
+* Serializable classes with a default constructor for which the values of all fields are themselves serializable 
+or marked with the `System.NonSerialized` attribute.
+
+### Security
+
+Remote methods are exposed as http endpoints, so any security measures have to be integrated into the method body itself.
+`WebSharper.Web.Remoting.GetContext().UserSession` exposes some utilities for tracking users.
+This uses `System.Web.Security.FormsAuthentication` on the server and cookies in the browser. [See here](WebContext.md) for more information.
 
 ```fsharp
-Remote<MyClass>.MyMethod(...)
+//open WebSharper.Web
+[<Remote>]
+let Login (user: string, password: string) =
+    let ctx = WebSharper.Web.Remoting.GetContext()
+    async { 
+        let! verified = VerifyLogin(user, password)
+        if verified then
+            do! ctx.UserSession.LoginUser user
+            return true
+        else return false
+    }
 ```
 
-The method invoked should be annotated with the `RpcAttribute` and
+### Server-side customization
+
+You can also use instance methods for client-server communication. 
+The syntax for this is:
+
+```fsharp
+//open WebSharper.JavaScript
+Remote<MyType>.MyMethod(...)
+```
+
+The method invoked should be annotated with the `Remote` attribute and
 follows the same convention as static methods:
 
 ```fsharp
-type MyType(..) =
+type MyType() =
     [<Remote>]
-    member this.MyMethod(..) = ..
+    member this.MyMethod(...) = //...
 ```
 
-When the server receives such a request, it obtains an instance of
-`MyClass` via an `IRpcHandlerFactory`, and invokes the instance method
-on the obtained object:
+In this case, you must provide a single instance of each type you use, preferably when the web application starts (such as in `Global.asax`).
 
 ```fsharp
-type IRpcHandlerFactory =
-    abstract member Create : Type -> option<obj>
+WebSharper.Core.Remoting.AddHandler typeof<MyType> (MyType())
 ```
 
-The default `IRpcHandlerFactory` always returns `None`, refusing to
-create instances. This can be customized by using the following method
-during the web application startup (such as in `Global.asax`):
+Remote annotated methods can be abstract.
+The instance that you provide by `AddHandler` can be of a subclass of the type in the first argument.
+This way you can have parts of server-side RPC functionality undefined in a library, and have them implemented in your web project for better separation of concerns.
+
+### Client-side customization
+
+If you want to change the URL that remoting calls target by default, set the value at the `WebSharper.Remoting.EndPoint` property at the startup of your client-side code.
+
+You can You can further customize how RPC methods are called from the client-side code by writing a class implementing the 
+ customize how RPC methods are called from the client-side code by writing a class implementing the 
+`WebSharper.Remoting.IRemotingProvider` interface, then adding a `RemotingProvider` attribute on the remote method
+with the custom remoting provider type as argument.
+
+The `IRemotingProvider` provider has 4 methods for implementing synchronous, asynchronous (Task and F# Async), and send calls: `Sync`, `Task`, `Async`, `Send` respectively.
+You have to implement only the methods that your RPC methods will be using depending on their signatures.
+
+The `RemotingProvider` attribute can be also used on classes and assemblies, overriding client-side remote handling for
+all RPC methods found in their scope.
+
+The default implementation used is `WebSharper.Remoting.AjaxRemotingProvider`.
+
+You can inherit this class for easy customization, it has an `AsyncBase` method that are used by all 3 non-blocking `IRemotingProvider` method implementations. It also has an `Endpoint` property, that looks up the global `WebSharper.Remoting.EndPoint` by default. Example:
 
 ```fsharp
-SetRpcHandlerFactory : IRpcHandlerFactory -> unit
+[<JavaScript>]
+type SafeRemotingProvider() =
+    inherit Remoting.AjaxRemotingProvider()
+
+    override this.Endpoint = "https://myserver.com"
+
+    override this.AsyncBase(handle, data) =
+        let def = base.AsyncBase(handle, data) 
+        async {
+            try return! def
+            with e ->
+                Console.Log("Remoting exception", handle, e)
+                return box None
+        }
 ```
 
-The support for handler objects makes it more natural to use
-WebSharper remote procedure calls in object-oriented server-side
-frameworks, such as ASP.NET MVC. This approach also lends itself to
-the use of Inversion of Control containers to implement
-`IRpcHandlerFactory`.
+Then all `[Remote]` methods that you also annotate with `[RemotingProvider(typeof<SafeRemotingProvider>)]` will send the request to `myserver.com` and also catch any exceptions are happening during the call and return `None` instead.
+If all your remote methods are returning `Option`s, this will be a valid value.
 
 ## Communication Protocol
 
