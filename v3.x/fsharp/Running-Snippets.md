@@ -41,8 +41,7 @@ To embed the Hello World example in an HTML application, follow these steps:
       following lines at the end of the example module to execute the pagelet
       by appending it to a placeholder node with ID `entrypoint` (choose freely):
 
-        [<SPAEntryPoint>]
-        let Run() = (Main ()).AppendTo "entrypoint"
+        let Run = (Main ()).AppendTo "entrypoint"
 
       With these changes, your code should look like this (with the namespace
       matching the one you created):
@@ -64,32 +63,11 @@ To embed the Hello World example in an HTML application, follow these steps:
                     |>! OnClick (fun e args ->
                         welcome.Text <- "Hello, world!")
                 ]
+				
+			let Run = (Main ()).AppendTo "entrypoint"
 
-            [<SPAEntryPoint>]
-            let Run() = (Main ()).AppendTo "entrypoint"
-
-      Alternatively, you add the `SPAEntryPoint` attribute to `Main`, and
-      modify the function to append its result to your chosen placeholder:
-
-        namespace Bundle1
-
-        open WebSharper
-        open WebSharper.Html
-        open WebSharper.Html.Client
-
-        [<JavaScript; SPAEntryPoint>]
-        module HelloWorld =
-
-            let Main =
-                let welcome = P [Text "Welcome"]
-                Div [
-                    welcome
-                    Button [Text "Click Me!"]
-                    |>! OnClick (fun e args ->
-                        welcome.Text <- "Hello, world!")
-                ]
-                |> fun res -> res.AppendTo "entrypoint"
-
+	  WebSharper 3 is auto-initializing all module-level values after the page loads, so the
+	  generated content will be added to the DOM.
 
    c. Add the pagelet placeholder you used, in `index.html` before the generated JavaScript include:
 

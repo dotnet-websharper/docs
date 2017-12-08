@@ -2,7 +2,7 @@
 
 ## Attributes in `WebSharper` namespace
 
-The `WebSharper` namespace contains a number of attributes that allows customizing
+The `WebSharper.Pervasives` module (auto-opening with the `WebSharper` namespace) contains a number of attributes that allows customizing
 the JavaScript compilation.
 
 Every attribute that takes a type as parameter argument also accepts it as a string
@@ -10,10 +10,9 @@ containing the assembly-qualified name for a type.
 
 ### JavaScript
 
-Marks an assembly, classes or members to be compiled to JavaScript.
-If a class is marked, it is automatically inherited to nested classes and all members.
-`[JavaScript(false)]` can exclude a class or member.
-If a class is marked with `[JavaScript(false)]`, you can re-include a member with `[JavaScript]`.
+Alias for `ReflectedDefinition`.
+Marks an classes or members to be compiled to JavaScript as WebSharper 3 is looking at reflected 
+definitions to translate.
 
 ### Constant
 
@@ -23,11 +22,11 @@ Compiles all calls to a property getter to a constant `bool`, `double`, `int` or
 
 Marks members for inline compilation to JavaScript.
 You can use this attribute with or without a string argument.
-`[Inline]` compiles the method body from C#, but compiled form of the member not appear as a separate
+`[<Inline>]` compiles the method body, but compiled form of the member not appear as a separate
 function but is applied everywhere the member is called.
 
-`Inline("...")` allows specifying a JavaScript expression or function body (statements with a `return`).
-In this case, the C# function body is ignored in the JavaScript translation.
+`Inline "..."` allows specifying a JavaScript expression or function body (statements with a `return`).
+In this case, the F# function body is ignored in the JavaScript translation.
 If you use JavaScript-specific functionality and don't intend to call the method from server-side code,
 the `WebSharper.JavaScript.Pervasives.X` helper is available to throw a `ClientSideOnly` exception.
 
@@ -41,13 +40,14 @@ Overrides and interface implementations can't be inlined.
 
 Example:
 
-    // using static WebSharper.JavaScript.Pervasives;
-    [Inline("$a + $b")]
-    public static int Add(int a, int b) => X<int>();
+    // open WebSharper
+    // open WebSharper.JavaScript
+    [<Inline "$a + $b">]
+    let add (a: int) (b: int) = X<int>
 
     // alternative:
-    [Inline("$0 + $1")]
-    public static int Add(int a, int b) => X<int>();
+    [<Inline "$0 + $1">]
+    let add (a: int) (b: int) = X<int>
 
 ### Direct
 
@@ -62,8 +62,6 @@ The `Macro` attribute takes a type (or assembly-qualified name) as argument and 
 Macros allow a custom compilation logic to be applied in every place a method or constructor is called.
 If you annotate a class, macros will execute on calls to any method or constructor of the class which does not
 have any other WebSharper transation defined.
-
-Macro documentation upcoming.
 
 ### Pure
 
@@ -132,17 +130,13 @@ Indicates the client-side remoting provider that should be used by calls to this
 See remoting documentation.
 
 ### OptionalField
-If a property has an F# option (`FSharpOption`) type, then adds automatic inlines 
-so that a missing JavaScript field is converted to `None` (`null` in C#), otherwise `Some fieldValue`.
+If a property has an F# option type, then adds automatic inlines 
+so that a missing JavaScript field is converted to `None`, otherwise `Some fieldValue`.
 
 ### DateTimeFormat
 Defines the format used to de/serialize a DateTime field or union case argument.
 The default is `"o"` (ISO 8601 round-trip format) for JSON serialization,
 and `"yyyy-MM-dd-HH.mm.ss"` for URL parsing.
-
-### SPAEntryPoint
-Marks the entry point of a Single Page Application.
-Must be a static method without arguments.
 
 ### NamedUnionCases
 This is an F# only attribute, usable for a union type to customize JSON serialization.
@@ -175,13 +169,3 @@ The value must be a primitive value, or an `FSharpOption` of it.
 ### Wildcard
 Indicates that the last field or property parses all the remaining
 path segments into an array.
-
-## Attribute interactions
-
-The effect of `Stub` and `JavaScript` attributes are inherited to nested types and members.
-`JavaScript` takes precedence, unless it is only inherited and `Stub` is defined explicitly.
-Using `Proxy` on a type also marks it for JavaScript translation.
-
-If a member has a `Macro` attribute(s) and not specifies `JavaScript` explicitly, then inherited JavaScript translation won't occur.
-(Tranlating the method itself is only necessary when all of the macros possibly returns `MacroFallback` result.)
-Specifying a method as `Remote` also removes it from the scope of JavaScript translation.

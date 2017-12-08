@@ -10,10 +10,6 @@ compiler. These parameters are the following:
 * `WebSharperHtmlDirectory`
 * `WebSharperSourceMap`
 * `WebSharperTypeScriptDeclaration`
-* `WebSharperErrorsAsWarnings`
-* `WebSharperDeadCodeElimination`
-* `WebSharperDownloadResources`
-* `WebSharperAnalyzeClosures`
 
 You can set these variables by inserting e.g. `<WebSharperSourceMap>True</WebSharperSourceMap>` into a
 `<PropertyGroup></PropertyGroup>` in your `.fsproj` project file.
@@ -80,41 +76,3 @@ allows TypeScript users to link against WebSharper-generated code.
 
 **Note:** This feature is currently not available in WebSharper 4.0. The value of the project
 variable will be ignored.
-
-## WebSharperErrorsAsWarnings
-
-**Optional**
-
-If the variable is set to `True`, WebSharper compiler errors will be treated as warnings.
-
-## WebSharperDeadCodeElimination
-
-**Optional**
-
-
-Set the variable to `False` to turn off dead code elimination (it is always on for Single Page Applications
-by default.)
-
-## WebSharperDownloadResources
-
-**Optional**
-
-Currently implemented for Sitelet projects. Set `<WebSharperDownloadResources>True</WebSharperDownloadResources>`
-in your project file to have WebSharper download all remote `js`/`css` resources defined in the current project and all
-references.
-You also need to add `<add key="UseDownloadedResources" value="True" />` to your `Web.config`'s `<appSettings>`
-so that WebSharper inserts a link to that downloaded file in your pages instead of a link to the online resource.
-
-## WebSharperAnalyzeClosures
-
-**Optional**
-
-There is an inconvenient source of memory leaks in most JavaScript engines which is
-[described here](http://point.davidglasser.net/2013/06/27/surprising-javascript-memory-leak.html).
-
-Setting the `WebSharperAnalyzeClosures` project variable gives warnings on these kinds of captures,
-helping to eliminate memory leaks.
-
-**Possible values:**
-* `True` - Turns warnings on
-* `MoveToTop` - Moves all non-capturing lambdas to top level automatically (experimental)
