@@ -16,9 +16,27 @@ when referring to being server-side code.
     - [Expect](#expect)
     - [Runner.RunTests](#runnerruntests)
 - [Assertions](#assertions): simple assertions
+    - [isTrue](#istrue)
+    - [isFalse](#isfalse)
 - [Equality checks](#equality-checks): equality/non-equality checkers
-- [Property testing](#property-testing): property testing with random values
+    - [equal](#equal)
+    - [notEqual](#notequal)
+    - [jsEqual](#jsequal)
+    - [notJsEqual](#notjsequal)
+    - [strictEqual](#strictequal)
+    - [notStrictEqual](#notstrictequal)
+    - [deepEqual](#deepequal)
+    - [notDeepEqual](#notdeepequal)
+    - [propEqual](#propequal)
+    - [notPropEqual](#notpropequal)
+    - [approxEqual](#approxequal)
+    - [notApproxEqual](#notapproxequal)
 - [Exception testing](#exception-testing): check for a raised exception
+- [Property testing](#property-testing): property testing with random values
+	- [Do](#do)
+	- [property](#property)
+	- [propertyWith](#propertywith)
+	- [propertyWithSample](#propertywithsample)
 - [Looping](#looping): registering multiple tests with a loop
 - [Asynchronous tests](#asynchronous-tests): using `Async` values inside test workflows
 
@@ -59,6 +77,13 @@ let EqualityTests() =
     }
 ```
 
+`Test "name"` is a computation expression builder, which defines many named custom operators to use for
+individual assertions.
+These all have four versions for optionally naming it and/or using it with an asynchronous argument:
+
+* operations with `Msg` also accept a name for that single assertion,
+* operations with `Async` accept a value of type `Async<'T>` as the actual value instead. Expected value is still provided as a value of `'T`.
+
 ### Runner.RunTests
 
 Takes an array of `TestCategory` values
@@ -72,8 +97,11 @@ let RunAllTests() =
     Runner.RunTests [|
         MyTests
     |]
+```
 
-// later, in server-side code, serve this on a [Sitelet](sitelets.md) endpoint:
+Later, in server-side code, serve this on a [Sitelet](sitelets.md) endpoint:
+
+```fsharp
     Content.Page(
         Title = "Unit tests",
         Body = client <@ RunAllTests() @>
@@ -82,7 +110,7 @@ let RunAllTests() =
 
 ### Expect
 
-Tells the testing framework, how many test cases are expected to be registered for this category.
+Tells the testing framework how many test cases are expected to be registered for this category.
 If the category would register no tests, `QUnit` reports it as a failed test case, unless you add `expect 0`.
 
 #### Example:
@@ -106,11 +134,9 @@ let MyTests =
 
 ## Assertions
 
-### isTrue, isTrueMsg, isTrueAsync, isTrueMsgAsync
+### isTrue
 
 Checks if a single argument expression evaluates to `true`.
-Versions with `Msg` also accept a name for that single assertion.
-Versions with `Async` accept a value of type `Async<bool>` instead and runs it as an asynchronous test.
 
 #### Example:
 
@@ -119,6 +145,156 @@ Versions with `Async` accept a value of type `Async<bool>` instead and runs it a
         isTrue (1 = 1)
         isTrueMsg (1 = 1) "One equals one"
         isTrueAsync (async { return 1 = 1 }) 
-        isTrueMsgAsync (async { return 1 = 1 }) "One equals one async version"
+        isTrueMsgAsync (async { return 1 = 1 }) "One equals one, async version"
     }
 ```
+
+### isFalse
+
+The negated versions of the above, the test passes if the expression evaluates to `false`.
+
+#### Example:
+
+```fsharp
+    Test "Equality" {
+        isFalse (1 = 2)
+        isFalseMsg (1 = 2) "One equals two is false"
+        isFalseAsync (async { return 1 = 2 }) 
+        isFalseMsgAsync (async { return 1 = 2 }) "One equals two is false, async version"
+    }
+```
+
+## Equality checks
+
+### equal
+
+Checks if the two expressions evaluate to equal values as tested with WebSharper's equality.
+This is the same as using the `=` operator from F# code, unions and records have structural equality
+and overrides on `Equals` method or implementing `IEquatable` is respected.
+
+#### Example:
+
+```fsharp
+    Test "Equality" {
+        equal (Some 1) (Some 1)
+        equalMsg (Some 1) (Some 1) "Option equality"
+        equalAsync (async { return Some 1 }) (Some 1)
+        equalMsgAsync (async { return Some 1 }) (Some 1) "Option equality, async version"
+    }
+```
+
+### notEqual
+
+The negated version of the above, fails if values are equal with WebSharper's equality.
+
+### jsEqual
+
+Checks if the two expressions evaluate to equal values as tested with JavaScript's `==` operator.
+This is the same as using the `==.` operator in F# code (available with `open WebSharper.JavaScript`),
+which is directly translated to `==` in JavaScript.
+
+```fsharp
+    Test "Equality" {
+        jsEqual 1 1
+        jsEqualMsg 1 1 "One equals one"
+        jsEqualAsync (async { return 1 }) 1
+        jsEqualMsgAsync (async { return 1 }) 1 "One equals one, async version"
+    }
+```
+
+### notJsEqual
+
+The negated version of the above, fails if values are equal with JavaScript's `==` operator.
+
+### strictEqual
+
+Checks if the two expressions evaluate to equal values as tested with JavaScript's `===` operator.
+This is the same as using the `===.` operator in F# code (available with `open WebSharper.JavaScript`),
+which is directly translated to `===` in JavaScript.
+
+### notStrictEqual
+
+The negated version of the above, fails if values are equal with JavaScript's `===` operator.
+
+### deepEqual
+
+Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `deepEqual` function
+which is a deep recursive comparison, working on primitive types, arrays, objects, regular expressions, dates and functions.
+
+### notDeepEqual
+
+The negated version of the above, uses `QUnit`'s `notDeepEqual` function instead.
+
+### propEqual
+
+Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `propEqual` function
+which compares just the direct properties on an object with strict equality (`===`).
+
+### notPropEqual
+
+The negated version of the above, uses `QUnit`'s `notPropEqual` function instead.
+
+### approxEqual
+
+Compares floating point numbers, where a difference of `< 0.0001` is accepted.
+
+### notApproxEqual
+
+The negated version of the above, fails if the difference of the two values is `< 0.0001`.
+
+## Exception testing
+
+### raises
+
+Checks that the expression argument is raising any exception, passes test if it does.
+Note that actual value arguments are always implicitly enclosed within a lambda function,
+so don't need to pass a function explicitly to make sure that the value is only evaluated
+when the test are running.
+
+#### Example:
+
+```fsharp
+    Test "Equality" {
+        raises (failwith "should fail")
+        raisesMsg (failwith "should fail") "Failure is expected"
+        raisesAsync (async { failwith "should fail" })
+        raisesMsgAsync (async { failwith "should fail" }) "Failure is expected from inside async"
+    }
+```
+
+## Property testing
+
+### Do
+
+Using `Do` is very similar to using `Test "Name"`, it is a computation expression builder, enabling the same custom operations.
+The difference is that it is not named, and also by itself does not registers tests,
+as it's intended use is to create sub-tests, that can be executed inside a named test when doing property testing.
+
+#### Example:
+
+```fsharp
+let SubTest x =
+    Do {
+        equal x x 
+    }
+```
+
+### property
+
+Auto-generates 100 random values based on a type and runs a sub-test with all of them.
+Supported types are `int`, `float`, `bool`, `string` and also tuples, lists, arrays, options made from these.
+When using a non-supported type, it results in a compile-time error.
+
+```fsharp
+    Test "Equality on ints is reflexive" {
+		property (fun (x: int) ->
+			Do {
+				equal x x 
+			}
+		)
+    }
+```
+
+### propertyWith
+
+### propertyWithSample
