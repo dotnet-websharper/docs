@@ -32,13 +32,18 @@ when referring to being server-side code.
     - [approxEqual](#approxequal)
     - [notApproxEqual](#notapproxequal)
 - [Exception testing](#exception-testing): check for a raised exception
-- [Property testing](#property-testing): property testing with random values
-	- [Do](#do)
-	- [property](#property)
-	- [propertyWith](#propertywith)
-	- [propertyWithSample](#propertywithsample)
-- [Looping](#looping): registering multiple tests with a loop
 - [Asynchronous tests](#asynchronous-tests): using `Async` values inside test workflows
+- [Property testing](#property-testing): property testing with random values
+    - [Do](#do)
+    - [property](#property)
+    - [propertyWith](#propertywith)
+    - [propertyWithSample](#propertywithsample)
+- [Looping](#looping): registering multiple tests with a loop
+    - [forEach](#foreach)
+- [Sample value generators](#sample-value-generators): compose complex test values 
+    - [Random.Sample](#randomsample)
+    - [Random generator constructors](#random-generator-constructors)
+    - [Random generator combinators](#random-generator-combinators)
 
 ## Categories and tests
 
@@ -77,7 +82,7 @@ let EqualityTests() =
     }
 ```
 
-`Test "name"` is a computation expression builder, which defines many named custom operators to use for
+`Test "name"` is a computation expression builder, which defines many named custom operations to use for
 individual assertions.
 These all have four versions for optionally naming it and/or using it with an asynchronous argument:
 
@@ -262,6 +267,22 @@ when the test are running.
     }
 ```
 
+## Asynchronous tests
+
+`Test` computation expressions also allow binding an `async` workflow at any point.
+If this is not used, and all assertions are synchronous then the entire test case will
+run synchronously for optimal performance.
+
+#### Example:
+
+```fsharp
+    Test "Equality" {
+        equal 1 1 
+        let! one = async { return 1 }
+        equal one 1
+    }
+```
+
 ## Property testing
 
 ### Do
@@ -282,19 +303,140 @@ let SubTest x =
 ### property
 
 Auto-generates 100 random values based on a type and runs a sub-test with all of them.
-Supported types are `int`, `float`, `bool`, `string` and also tuples, lists, arrays, options made from these.
+Supported types are `int`, `float`, `bool`, `string`, `unit`, `obj` and also 
+tuples, lists, arrays, options, `seq` and `ResizeArray` made from these.
+Using the `obj` type results in values from mix of various types.
 When using a non-supported type, it results in a compile-time error.
+
+#### Example:
 
 ```fsharp
     Test "Equality on ints is reflexive" {
-		property (fun (x: int) ->
-			Do {
-				equal x x 
-			}
-		)
+        property (fun (x: int) ->
+            Do {
+                equal x x 
+            }
+        )
     }
 ```
 
 ### propertyWith
 
+Similar to above, but the generator logic is not inferred from type, but passed to the operation.
+It takes as first argument a record that can hold an array of static values to always test against,
+and a function that can return additional values to be tested dynamically.
+This record is defined as such:
+
+```fsharp
+// module Random
+type Generator<'T> =
+    {
+        /// An array of values that must be tested against.
+        Base: 'T []
+        /// A function generating a new random value.
+        Next: unit -> 'T
+    }
+```
+
+There are constructor functions and combinators in the `Random` module, 
+allowing easier composition of complex testing values.
+
+#### Example:
+
+```fsharp
+    Test "Equality on ints is reflexive" {
+        propertyWith Random.Int (fun (x: int) ->
+            Do {
+                equal x x 
+            }
+        )
+    }
+```
+
 ### propertyWithSample
+
+Similar to above, but the argument is an exact sample on which the property is tested.
+See [Random.Sample](#randomsample) below.
+
+#### Example:
+
+```fsharp
+    Test "Equality on ints is reflexive" {
+        propertyWithSample (Random.Sample [| 1; 2; 3 |]) (fun (x: int) ->
+            Do {
+                equal x x 
+            }
+        )
+    }
+```
+
+## Looping
+
+### forEach
+
+You cannot use a regular `for` loop inside a `Test` computation expression, but you can emulate it with the `forEach` operation.
+Its use is similar to property testing, you can use `Do` to define the body of the loop.
+
+#### Example:
+
+```fsharp
+    Test "Equality on ints is reflexive" {
+        forEach { 1 .. 3 } (fun x -> 
+            Do {
+                equal x x
+            }
+        )
+    }
+```
+
+## Sample value generators
+
+### Random.Sample
+
+The `Random.Sample` type is a thin wrapper around an array of values, exposing multiple constructors
+to create from a given array or explicit or inferred generators. 
+
+#### Example:
+
+```fsharp
+    let sampleFromArray = Random.Saple([| 1; 2; 3 |]);
+    let sampleFromGenerator = Random.Sample(Random.Int); // creates 100 values
+    let sampleFromGenerator10 = Random.Sample(Random.Int, 10); // creates given number of values
+    let sampleInferred = Random.Sample<int>();
+    let sampleInferred10 = Random.Sample<int>(10); // creates given number of values
+```
+
+### Random generator constructors
+
+The following values and function produce simple `Random.Generator` values:
+
+* `Random.StandardUniform`: Standard uniform distribution sampler.
+* `Random.Exponential`: Exponential distribution sampler.
+* `Random.Boolean`: Generates random booleans.
+* `Random.Float`: Generates random doubles. 
+* `Random.FloatExhaustive`: Generates random doubles, including corner cases (NaN, Infinity).
+* `Random.Int`: Generates random int values.
+* `Random.Natural`: Generates random natural numbers (0, 1, ...).
+* `Random.Within low hi`: Generates integers within a range.
+* `Random.FloatWithin low hi`: Generates doubles within a range.
+* `Random.String`: Generates random strings.
+* `Random.ReadableString`: Generates random readable strings.
+* `Random.StringExhaustive`: Generates random strings including nulls.
+* `Random.Anything`: Generates a mix of ints, floats, bools, strings and tuples, lists, arrays, options of these.
+
+### Random generator combinators
+
+* `Random.Map mapping gen`: Maps a function over a generator.
+* `Random.SuchThat predicate gen`: Filter the values of a generator by a predicate.
+* `Random.ArrayOf gen`: Generates arrays (up to lengh 100), getting the items from the given generator.
+* `Random.ResizeArrayOf gen`: Similar to as above, generates `ResizeArray`s.
+* `Random.ListOf gen`: Similar to as above, generates `List`s.
+* `Random.Tuple2Of (a, b)`: Generates a 2-tuple, getting the items from the given generators.
+* `Random.Tuple3Of (a, b, c)`: Same as above for 3-tuples.
+* `Random.Tuple4Of (a, b, c, d)`: Same as above for 4-tuples.
+* `Random.OneOf arr`: Generates values from a given array.
+* `Random.Mix a b`: Mixes values coming from two generators, alternating between them.
+* `Random.MixMany gens`: Mixes values coming from an array of generators.
+* `Random.MixManyWithoutBases gens`: Same as above, but skips the constant base values.
+* `Random.Const x`: Creates a generator that always returns the same value.
+* `Random.OptionOf x`: Creates a generator has `None` as a base value, then maps items using `Some`.
