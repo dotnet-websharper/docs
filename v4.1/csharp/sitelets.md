@@ -1,4 +1,4 @@
-# Developing with Sitelets in C# #
+# Routing requests and serving content with Sitelets #
 
 Sitelets are WebSharper's primary way to create server-side content. They provide facilities to route requests and generate HTML pages or JSON responses.
 
@@ -12,7 +12,7 @@ Sitelets allow you to:
 
 * Have [safe links](#linking) for referencing other content contained within your site.
 
-* Use the type-safe HTML and templating facilities from [UI.Next](ui-CSharp.md) on the server side.
+* Use the type-safe HTML and templating facilities from [UI](ui.md) on the server side.
 
 * Automatically [parse JSON requests and generate JSON responses](Json.md) based on your types.
 
@@ -22,7 +22,7 @@ Below is a minimal example of a complete site serving one HTML page:
 using System;
 using System.Threading.Tasks;
 using WebSharper.Sitelets;
-using static WebSharper.UI.Next.CSharp.Html;
+using static WebSharper.UI.CSharp.Html;
 
 namespace MyWebsite
 {
@@ -58,8 +58,7 @@ The `MySampleWebsite` value has type `Sitelet<object>`. It defines a complete we
 
 `MySampleWebsite` is annotated with the attribute `[Website]` to indicate that this is the sitelet that should be served.
 
-<a name="sitelet-routing"></a>
-## Sitelet routing
+## Routing
 
 WebSharper Sitelets abstract away URLs and request parsing by using an endpoint type that represents the different HTTP endpoints available in a website. For example, a site's URL scheme can be represented by the following endpoint types:
 
@@ -88,6 +87,13 @@ Based on this, a Sitelet is a value that represents the following mappings:
 * Mapping from endpoints to URLs. This allows you to have internal links that are verified by the type system, instead of writing URLs by hand and being at the mercy of a typo or a change in the URL scheme. You can read more on this [in the "Context" section](#context).
 
 * Mapping from endpoints to content. Once a request has been parsed, this determines what content (HTML or other) must be returned to the client.
+
+### Trivial Sitelets
+
+Two helpers exist for creating a Sitelet with a trivial router: only handling requests on the root.
+
+* `Application.Text` takes a `Func<Context, string>` function and creates a Sitelet that serves the result string as a text response.
+* `Application.SinglePage`takes a `Func<Context, Task<Content>>` function and creates a Sitelet that serves the returned content.
 
 ### SiteletBuilder
 
@@ -617,7 +623,7 @@ new SiteletBuilder()
 You can return full HTML pages, with managed dependencies using `Content.Page`. Here is a simple example:
 
 ```csharp
-using static WebSharper.UI.Next.CSharp.Html;
+using static WebSharper.UI.CSharp.Html;
 
 new SiteletBuilder()
     .With<T>((ctx, endpoint) =>
@@ -861,6 +867,12 @@ The implementation of these functions relies on cookies and thus requires that t
 * `context.ResolveUrl` resolves links to static pages in your application. A leading `~/` character is translated to the `ApplicationPath` described above.
 
 * `context.RootFolder` returns the physical folder on the server machine from which the application is running.
+
+* `context.Environment` returns an `IDictionary<string, object>` which depends on the host on which WebSharper is running.
+
+    * When running on ASP.NET, `context.Environment["HttpContext"]` contains the `System.Web.HttpContextBase` for the current request.
+    
+    * When running on OWIN, `context.Environment` is the OWIN environment.
 
 ### Routers
 
