@@ -1108,7 +1108,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 A useful helper to have in the file defining your router is:
     ```fsharp
         let Link page content =
-            a [ attr.href (router |> Router.Link page) ] [ text content ]
+            a [ attr.href (Router.Link router page) ] [ text content ]
     ```
 This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
 * `Sitelet.New` creates a Sitelet from a router and handler. Example:
@@ -1123,14 +1123,14 @@ This works the same on both server and client-side to create basic `<a>` links t
 ```
 Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
 Sitelets are only a server-side type.
-* `Router.Ajax` writes makes a request from an action value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
+* `Router.Ajax` makes a request from an action value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
 ```fsharp
     // [<EndPoint "/get-data">] GetData of int
 
     let GetDataAsync i =
         async {
             try
-                return! router |> Router.Ajax (GetData i) |> Some
+                return! Some (Router.Ajax router (GetData i))
             with _ ->
                 None
         }
