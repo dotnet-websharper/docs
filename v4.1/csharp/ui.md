@@ -22,40 +22,25 @@ The main way to create `Doc`s is to use the static methods from the `WebSharper.
 
 Every HTML element has a dedicated method, such as `div` or `p`, which takes a any number of `object` parameters, which can represent attributes or child elements. The following parameter values are accepted:
 
-On the server:
+Both on the server and the client:
 
 * value of type `WebSharper.UI.Doc`, which can represent one, none or multiple child nodes.
+* value of type `WebSharper.UI.Attr`, which can represent one, none or multiple attributes.
 * a string value will be added as a text node.
 * `null` will be treated as empty content.
-* an object implementing `WebSharper.INode` (server only), which exposes a method to write to the response content directly.
-* a Linq expression of type `Expr<IControlBody>` (server only), which creates a placeholder in the returned HTML, to be replaced by client-side code.
+
+Additionally, on the server:
+
+* an object implementing `WebSharper.INode`, which exposes a method to write to the response content directly.
+* a Linq expression of type `Expr<IControlBody>`, which creates a placeholder in the returned HTML, to be replaced by client-side code.
 * any other will be converted to a string with its `ToString` function and included as a text node.
 
 On the client:
 
-* value of type `WebSharper.UI.Doc`, which can represent one, none or multiple child nodes.
-* a string value will be added as a text node.
-* `null` will be treated as empty content.
 * a `Dom.Element` will be added as a static child element.
-
-* a `View<T>`, where `T` can be any type
-
-client
-
-        | :? Doc as d -> d
-        | :? string as t -> Doc.TextNode t
-        | :? Element as e -> Doc'.Static e |> As<Doc>        
-        | :? Function as v ->
-            Doc'.EmbedView (
-                (As<View<_>>v).Map (As Doc'.ToMixedDoc)
-            ) |> As<Doc>
-        | :? Var<obj> as v ->
-            Doc'.EmbedView (
-                v.View.Map (As Doc'.ToMixedDoc)
-            ) |> As<Doc>
-        | null -> Doc.Empty
-        | o -> Doc.TextNode (string o)
-
+* a `View<T>`, where `T` can be any type handled except `Attr`, and creates a reactive binding to that `View` (more about [Views](#views) later).
+* a `Var<T>`, where `T` can be any type handled except `Attr`, and creates a reactive binding to the value of that `Var` (more about [Vars](#vars) later).
+* any other will be converted to a string with its `ToString` function and included as a text node.
 
 ```csharp
 using WebSharper.UI.CSharp.Html;
@@ -189,7 +174,7 @@ var myFormControl =
             attr.selected("selected"),
             "Third choice"
         )
-    ]
+   )
 
 // <select name="mySelect">
 //   <option value="first">First choice</option>
@@ -256,7 +241,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
 * [`Attr.Create`](/api/WebSharper.UI.Attr#Create) creates a single attribute. It is equivalent to the function with the same name from the `attr` module. This function is useful if the attribute name is only known at runtime, or if you want to create a non-standard attribute that isn't available in `attr`.
 
     ```csharp
-    let eltWithNonStandardAttr =
+    var eltWithNonStandardAttr =
         div(Attr.Create("my-attr", "my-value"), "...")
         
     // <div my-attr="my-value">...</div>
@@ -268,10 +253,10 @@ A special kind of attribute is event handlers. They can be created using functio
 Furthermore, some element constructing methods define an overload to add an event handler to a default event directly, like a `click` for a `button`.
 
 ```csharp
-let myButton =
+var myButton =
     button(on.click((el, ev) => JS.Window.Alert("Hi!")), "Click me!");
 
-let myButtonShorterForm =
+var myButtonShorterForm =
     button("Click me!", () => JS.Window.Alert("Hi!"));
 ```
 
@@ -292,3 +277,945 @@ var myButton =
     );
 
 ```
+
+### HTML on the client
+
+To insert a Doc into the document on the client side, use the `.Run*` family of extension methods you get from having using `WebSharper.UI.CSharp`. Each of these methods has two overloads: one directly taking a DOM [`Element`](/api/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/WebSharper.JavaScript.Dom.Node), and the other taking the id of an element as a string.
+
+* [`.Run`](/api/WebSharper.UI.Doc#Run) inserts the Doc as the child(ren) of the given DOM element. Note that it replaces the existing children, if any.
+
+    ```fsharp
+    using WebSharper.JavaScript;
+    using WebSharper.UI;
+    using WebSharper.UI.Client;
+    using WebSharper.UI.Html;
+    using WebSharper.UI.CSharp;
+
+    public static void Main() 
+    {
+        div("This goes into #main.").Run("main");
+        
+        p("This goes into the first paragraph with class my-content.").Run(JS.Document.QuerySelector("p.my-content"));
+    }
+    ```
+
+* `.RunAppend` inserts the Doc as the last child(ren) of the given DOM element.
+
+* `.RunPrepend` inserts the Doc as the first child(ren) of the given DOM element.
+
+* `.RunAfter` inserts the Doc as the next sibling(s) of the given DOM node.
+
+* `.RunBefore` inserts the Doc as the previous sibling(s) of the given DOM node.
+
+* `Doc.RunReplace` inserts the Doc repacing the given DOM node.
+
+### HTML on the server
+
+On the server side, using [sitelets](sitelets.md), you can create HTML pages from Docs by passing them to the `Body` or `Head` arguments of `Content.Page`.
+
+```csharp
+using System.Threading.Tasks;
+using WebSharper.Sitelets;
+using WebSharper.UI;
+using WebSharper.UI.CSharp;
+using static WebSharper.UI.CSharp.Html;
+
+public static Task<Content> MyPage(Context ctx) =>
+    Content.Page(
+        Title: "Welcome!",
+        Body: doc(
+            h1("Welcome!"),       
+            p("This is my home page.")
+        )
+    );
+```
+
+To include client-side elements inside a page, use the `ClientSide` method of the Sitelets context.
+
+<a name="templating"></a>
+## HTML Templates
+
+WebSharper.UI's syntax for creating HTML is compact and convenient, but sometimes you do need to include a plain HTML file in a project. It is much more convenient for designing to have a .html file that you can touch up and reload your application without having to recompile it. This is what Templates provide. Templates are HTML files that can be loaded by WebSharper.UI, and augmented with special elements and attributes that provide additional functionality:
+
+* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by F# code;
+* Declaring two-way binding between F# Vars and HTML input elements (see [reactive](#reactive));
+* Declaring inner Templates, smaller HTML widgets within the page, that can be instantiated dynamically.
+
+All of these are parsed from HTML at compile time and provided as F# types and methods, ensuring that your templates are correct.
+
+### Basics
+
+To generate code based on a HTML file, include the `.html` as a `Content` element in your project.
+WebSharper's build as well as the analyzer then creates a `.g.cs` file with the same name.
+Include this too in your project, recommended way (for an `index.html`) is:
+
+```xml
+    <Compile Include="index.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>index.html</DependentUpon>
+    </Compile>
+```
+
+The generated class will be in a namespace that is created from the assembly name and appending `.Template`.
+The class will be named as the capitalized form of the name of the HTML file.
+
+To instantiate it, call your type's constructor and then its `.Doc()` method.
+
+```csharp
+// mytemplate.html:
+// <div>
+//   <h1>Welcome!</h1>
+//   <p>Welcome to my site.</p>
+// </div>
+
+
+var myPage = new Template.MyTemplate().Doc();
+
+// equivalent to:
+// var myPage =
+//     div(
+//         h1("Welcome!"),
+//         p("Welcome to my site.")
+//     );
+```
+
+Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](#inner-templates).
+
+You can also declare a template from multiple files at once using a comma-separated list of file names. In this case, the template for each file is a nested class named after the file, truncated of its file extension.
+
+```csharp
+// myTemplate.html:
+// <div>
+//   <h1>Welcome!</h1>
+//   <p>Welcome to my site.</p>
+// </div>
+
+// secondTemplate.html:
+// <div>
+//   <h2>This is a section.</h2>
+//   <p>And this is its content.</p>
+// </div>
+
+var myPage =
+    doc(
+        new Template.MyTemplate().Doc(),
+        new Template.SecondTemplate().Doc()
+    )
+
+// equivalent to:
+// var myPage =
+//     doc(
+//         div(
+//             h1("Welcome!"),
+//             p("Welcome to my site.")
+//        ),
+//         div(
+//             h2("This is a section."),
+//             p("And this is its content.")
+//        )
+//    );
+```
+
+### Holes
+
+You can add holes to your template that will be filled by C# code. Each hole has a name. To fill a hole in F#, call the method with this name on the template instance before finishing with `.Doc()`.
+
+* `${HoleName}` creates a `string` hole. You can use it in text or in the value of an attribute.
+
+    ```csharp
+    // mytemplate.html:
+    // <div style="background-color: ${Color}">
+    //   <h1>Welcome, ${Name}!</h1>
+    //   <!-- You can use the same hole name multiple times,
+    //        and they will all be filled with the same F# value. -->
+    //   <p>This div's color is ${Color}.</p>
+    // </div>
+    
+    var myPage =
+        new Template.MyTemplate()
+            .Color("red")
+            .Name("my friend")
+            .Doc();
+
+    // result:
+    // <div style="background-color: red">
+    //   <h1>Welcome, my friend!</h1>
+    //   <!-- You can use the same hole name multiple times,
+    //        and they will all be filled with the same F# value. -->
+    //   <p>This div's color is red.</p>
+    // </div>
+    ```
+    
+    On the client side, this hole can also be filled with a `View<string>` (see [reactive](#reactive)) to include dynamically updated text content.
+
+* The attribute `ws-replace` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will be replaced with the provided Doc(s). The name of the hole is the value of the `ws-replace` attribute.
+
+    ```csharp
+    // mytemplate.html:
+    // <div>
+    //   <h1>Welcome!</h1>
+    //   <div ws-replace="Content"></div>
+    // </div>
+    
+    var myPage =
+        new Template.MyTemplate()
+            .Content(p("Welcome to my site."),)
+            .Doc();
+
+    // result:
+    // <div>
+    //   <h1>Welcome!</h1>
+    //   <p>Welcome to my site.</p>
+    // </div>
+    ```
+
+* The attribute `ws-hole` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will have its _contents_ replaced with the provided Doc(s). The name of the hole is the value of the `ws-hole` attribute.
+
+    ```fsharp
+    // mytemplate.html:
+    // <div>
+    //   <h1>Welcome!</h1>
+    //   <div ws-hole="Content"></div>
+    // </div>
+    
+    var myPage =
+        new Template.MyTemplate()
+            .Content(p("Welcome to my site."))
+            .Doc();
+
+    // result:
+    // <div>
+    //   <h1>Welcome!</h1>
+    //   <div>
+    //       <p>Welcome to my site.</p>
+    //   </div>
+    // </div>
+    ```
+
+* The attribute `ws-attr` creates an `Attr` or `seq<Attr>` hole. The name of the hole is the value of the `ws-attr` attribute.
+
+    ```fsharp
+    // mytemplate.html:
+    // <div ws-attr="MainDivAttr">
+    //   <h1>Welcome!</h1>
+    //   <p>Welcome to my site.</p>
+    // </div>
+    
+    var myPage =
+        new Template.MyTemplate()
+            .MainDivAttr(attr.@class("main"))
+            .Doc();
+
+    // result:
+    // <div class="main">
+    //   <h1>Welcome!</h1>
+    //   <p>Welcome to my site.</p>
+    // </div>
+    ```
+
+* The attribute `ws-var` creates a `Var` hole (see [reactive](#reactive)) that is bound to the element. It can be used on the following elements:
+
+    * `<input>`, `<textarea>`, `<select>`, for which it creates a `Var<string>` hole.
+    * `<input type="number">`, for which it creates a hole that can be one of the following types: `Var<int>`, `Var<float>`, `Var<CheckedInput<int>>`, `Var<CheckedInput<float>>`.
+    * `<input type="checkbox">`, for which it creates a `Var<bool>` hole.
+
+    The name of the hole is the value of the `ws-attr` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
+
+    ```fsharp
+    // mytemplate.html:
+    // <div>
+    //   <input ws-var="Name" />
+    //   <div>Hi, ${Name}!</div>
+    // </div>
+
+    var myPage =
+        var varName = Var.Create("");
+        new Template.MyTemplate()
+            .Name(varName)
+            .Doc();
+
+    // result:
+    // <div class="main">
+    //   <input />
+    //   <div>Hi, [value of above input]!</div>
+    // </div>
+    ```
+
+    If you don't fill the hole (ie you don't call `.Name(varName)` above), the `Var` will be implicitly created, so `${Name}` will still be dynamically updated from the user's input.
+
+* The attribute `ws-onclick` (or any other event name instead of `click`) creates an event handler hole of type `TemplateEvent -> unit`. The argument of type `TemplateEvent` has the following fields:
+
+    * `Target: Dom.Element` is the element itself.
+    * `Event: Dom.Event` is the event triggered.
+    * `Vars` has a field for each of the `Var`s associated to `ws-var`s in the template.
+
+    ```fsharp
+    // mytemplate.html:
+    // <div>
+    //   <input ws-var="Name" />
+    //   <button ws-onclick="Click">Ok</button>
+    // </div>
+    
+    var myPage =
+        new Template.MyTemplate()
+            .Click(fun t -> JS.Window.Alert("Hi, " + t.Vars.Name.Value))
+            .Doc();
+    ```
+
+<a name="inner-templates"></a>
+### Inner templates
+
+To create a template for a widget (as opposed to a full page), you can put it in its own dedicated template file, but another option is to make it an inner template. An inner template is a smaller template declared inside a template file using the following syntax:
+
+* The `ws-template` attribute declares that its element is a template whose name is the value of this attribute.
+* The `ws-children-template` attribute declares that the children of its element is a template whose name is the value of this attribute.
+
+Inner templates are available in F# as a nested class under the main provided type.
+
+```csharp
+// mytemplate.html:
+// <div ws-attr="MainAttr">
+//   <div ws-replace="InputFields"></div>
+//   <div ws-template="Field" class="field-wrapper">
+//     <label for="${Id}">${Which} Name: </label>
+//     <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
+//   </div>
+// </div>
+
+public static Doc InputField(string id, string which, Var<string> svar) =>
+    new Template.MyTemplate.Field()
+        .Id(id)
+        .Which(which)
+        .Var(svar)
+        .Doc();
+
+var firstName = Var.Create("");
+var lastName = Var.Create("");
+var myForm =
+    new Template.MyTemplate()
+        .MainAttr(attr.@class("my-form"))
+        .InputFields(
+            doc(
+                InputField("first", "First", firstName),
+                InputField("last", "Last", lastName)
+            ),
+        )
+        .Doc();
+
+// result:
+// <div class="my-form">
+//   <div class="field-wrapper">
+//     <label for="first">First Name: </label>
+//     <input placeholder="First Name" name="first" />
+//   </div>
+//   <div class="field-wrapper">
+//     <label for="last">Last Name: </label>
+//     <input placeholder="Last Name" name="last" />
+//   </div>
+// </div>
+```
+
+### Instantiating templates in HTML
+
+You can also instantiate a template within another template, entirely in HTML, without the need for F# to glue them together.
+
+A node named `<ws-TemplateName>` instantiates the inner template `TemplateName` from the same file. A node named `<ws-fileName.TemplateName>` instantiates the inner template `TemplateName` from the file `fileName`. The file name is the same as the generated class name, so with file extension excluded.
+
+Child elements of the `<ws-*>` fill holes. These elements are named after the hole they fill.
+
+* `${Text}` holes are filled with the text content of the element.
+* `ws-hole` and `ws-replace` holes are filled with the HTML content of the element.
+* `ws-attr` holes are filled with the attributes of the element.
+* Other types of holes cannot be directly filled like this.
+
+Additionally, attributes on the `<ws-*>` element itself define hole mappings. That is to say, `<ws-MyTpl Inner="Outer">` fills the hole named `Inner` of the template `MyTpl` with the value of the hole `Outer` of the containing template. As a shorthand, `<ws-MyTpl Attr>` is equivalent to `<ws-MyTpl Attr="Attr">`.
+
+Any holes that are neither mapped by an attribute nor filled by a child element are left empty.
+
+The following example is equivalent to the example from [Inner Templates](#inner-templates):
+
+```csharp
+// mytemplate.html:
+// <div ws-attr="MainAttr">
+//   <!-- Instantiate the template for input fields. -->
+//   <!-- Creates the holes FirstVar and SecondVar for the main template. -->
+//   <!-- Fills the holes Id, Which and Var of Field in both instantiations. -->
+//   <ws-Field Var="FirstVar">
+//     <Id>first</Id>
+//     <Which>First</Which>
+//   </ws-field>
+//   <ws-Field Var="SecondVar">
+//     <Id>second</Id>
+//     <Which>Second</Which>
+//   </ws-field>
+// </div>
+// <!-- Declare the template for input fields -->
+// <div ws-template="Field" class="field-wrapper">
+//   <label for="${Id}">${Which} Name: </label>
+//   <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
+// </div>
+
+var firstName = Var.Create("");
+var lastName = Var.Create("");
+var myForm =
+    new Template.MyTemplate()
+        .FirstVar(firstName)
+        .LastVar(lastName)
+        .Doc();
+```
+
+### Controlling the loading of templates (TODO)
+
+The type provider can be parameterized to control how its contents are loaded both on the server and the client. For example:
+
+```fsharp
+type new Template.MyTemplate = 
+    Template<"mytemplate.html", 
+        clientLoad = ClientLoad.Inline,
+        serverLoad = ServerLoad.WhenChanged>
+```
+
+The possible values for `clientLoad` are:
+
+* `ClientLoad.Inline` (default): The template is included in the compiled JavaScript code, and any change to `mytemplate.html` requires a recompilation to be reflected in the application.
+* `ClientLoad.FromDocument`: The template is loaded from the DOM. This means that `mytemplate.html` *must* be the document in which the code is run: either directly served as a Single-Page Application, or passed to `Content.Page` in a Client-Server Application.
+
+The possible values for `serverLoad` are:
+
+* `ServerLoad.WhenChanged` (default): The runtime sets up a file watcher on the template file, and reloads it whenever it is edited.
+* `ServerLoad.Once`: The template file is loaded on first use and never reloaded.
+* `ServerLoad.PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
+
+### Accessing the template's model (TODO)
+
+Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
+
+* In event handlers, it is available as the `Vars` property of the handler argument.
+* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars.
+
+    ```csharp
+    // mytemplate.html:
+    // <div>
+    //   <input ws-var="Name" />
+    //   <div>Hi, ${Name}!</div>
+    // </div>
+
+    var myInstance = new Template.MyTemplate().Create();
+    myInstance.Vars.Name = "John Doe";
+    var myDoc = myInstance.Doc;
+
+    // result:
+    // <div>
+    //   <input value="John Doe" />
+    //   <div>Hi, John Doe!</div>
+    // </div>
+    ```
+
+### Mixing client code in server-side templates
+
+It is possible to include some client-side functionality when creating a template on the server side.
+
+* If you use `ws-var="VarName"`, the corresponding Var will be created on the client on page startup. However, passing a Var using `.VarName(myVar)` is not possible, since it would be a server-side Var.
+
+* Event handlers (such as `ws-onclick="EventName"`) work fully if you pass a delegate: `.EventName(e => ...)`. The body of this function will be compiled to JavaScript. You can also pass a top-level function, in this case it must be declared with `[JavaScript]`.
+
+<a name="reactive"></a>
+## Reactive layer
+
+WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
+
+### Vars
+
+Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<T>`](/api/WebSharper.UI.Var\`1). Vars store a value of type `T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
+
+The following are available from `WebSharper.UI.CSharp.Client.Html`:
+
+* `input` creates an `<input>` element with given attributes that is bound to a `Var<string>`, `Var<int>` or `Var<double>`.
+
+    ```csharp
+    var varText = Var.Create("initial value");
+    var myInput = input(varText, attr.name "my-input", varText);
+    ```
+    
+    With the above code, once `myInput` has been inserted in the document, getting `varText.Value` will at any point reflect what the user has entered, and setting it will edit the input.
+
+* `textarea` creates a `<textarea>` element bound to a `Var<string>`.
+
+* `passwordBox` creates an `<input type="password">` element bound to a `Var<string>`.
+
+* `checkbox` creates an `<input type="checkbox">` element bound to a `Var<bool>`.
+
+* `checkbox` has an overload that also creates an `<input type="checkbox">`, but instead of associating it with a simple `Var<bool>`, it associates it with a specific `T` in a `Var<IEnumerable<T>>`. If the box is checked, then the element is added to the list, otherwise it is removed.
+
+    ```csharp
+    enum Color { Red, Green, Blue };
+    
+    // Initially, Green and Blue are checked.
+    var varColor = Var.Create<IEnumerable<Color>>(new[] { Color.Blue, Color.Green });
+    
+    var mySelector =
+        div(
+            label(
+                checkbox(Color.Red, varColor),
+                " Select Red"
+            ),
+            label(
+                checkbox(Color.Green, varColor),
+                " Select Green"
+            ),
+            label(
+                checkbox(Color.Blue, varColor),
+                " Select Blue"
+            )
+       );
+        
+    // Result:
+    // <div>
+    //   <label><input type="checkbox" /> Select Red</label>
+    //   <label><input type="checkbox" checked /> Select Green</label>
+    //   <label><input type="checkbox" checked /> Select Blue</label>
+    // </div>
+    // Plus varColor is bound to contain the list of ticked checkboxes.
+    ```
+
+* `select` creates a dropdown `<select>` given a list of values to select from. The label of every `<option>` is determined by the given print function for the associated value.
+
+    ```csharp
+    enum Color { Red, Green, Blue };
+
+    // Initially, Green is checked.
+    var varColor = Var.Create(Green);
+
+    // Choose the text of the dropdown's options.
+    string showColor(Color c) { 
+        switch (c)
+        {
+            case Color.Red: return "Red";
+            case Color.Green: return "Green";
+            case Color.Blue: return "Blue";
+            default: return "";
+        }
+    }
+
+    var mySelector =
+        select(varColor, new[] { Color.Red, Color.Green, Color.Blue }, showColor);
+        
+    // Result:
+    // <select>
+    //   <option>Red</option>
+    //   <option>Green</option>
+    //   <option>Blue</option>
+    // </select>
+    // Plus varColor is bound to contain the selected color.
+    ```
+
+* `radio` creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
+
+    ```fsharp
+    enum Color { Red, Green, Blue };
+    
+    // Initially, Green is selected.
+    var varColor = Var.Create(Color.Green);
+    
+    var mySelector =
+        div(
+            label(
+                radio(varColor. Color.Red),
+                " Select Red"
+            ),
+            label(
+                radio(varColor. Color.Green),
+                " Select Green"
+            ),
+            label(
+                radio(varColor. Color.Blue),
+                " Select Blue"
+            )
+       );
+        
+    // Result:
+    // <div>
+    //   <label><input type="radio" /> Select Red</label>
+    //   <label><input type="radio" checked /> Select Green</label>
+    //   <label><input type="radio" /> Select Blue</label>
+    // </div>
+    // Plus varColor is bound to contain the selected color.
+    ```
+
+### Views
+
+The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/WebSharper.UI.View\`1). A `View<T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `T`.
+
+One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying performing side-effects in methods like `.Map`.
+
+In pseudo-code below, `[[x]]` notation is used to denote the value of the View `x` at every point in time, so that `[[x]]` = `[[y]]` means that the two views `x` and `y` are observationally equivalent.
+
+#### Creating and combining Views
+
+The first and main way to get a View is using the [`View`](/api/WebSharper.UI.Var\`1#View) property of `Var<T>`. This retrieves a View that tracks the current value of the Var.
+
+You can create Views using the following functions and combinators from the `View` module:
+
+* [`View.Const`](/api/WebSharper.UI.View#Const\`\`1) creates a View whose value is always the same.
+
+    ```csharp
+    var v = View.Const(42);
+
+    // [[v]] = 42
+    ```
+
+* <a name="view-map"></a>`.Map` takes an existing View and maps its value through a function.
+
+    ```csharp
+    View<string> v1 = // ...
+    var v2 = v1.Map (s => s.Length);
+
+    // [[v2]] = String.length [[v1]]
+    ```
+
+* [`View.Map2`](/api/WebSharper.UI.View#Map2\`\`3) takes two existing Views (the one we are calling it on and one extra) and map their value through a function.
+
+    ```csharp
+    View<int> v1 = // ...
+    View<int> v2 = // ...
+    var v3 = v1.Map2(v2, (x, y) => x + y);
+
+    // [[v3]] = [[v1]] + [[v2]]
+    ```
+
+    Similarly, [`.Map3`](/api/WebSharper.UI.View#Map3\`\`4) takes three existing Views and map their value through a function.
+
+* `.MapAsync` is similar to `View.Map` but maps through an asynchronous function.
+
+    An important property here is that this combinator saves work by abandoning requests. That is, if the input view changes faster than we can asynchronously convert it, the output view will not propagate change until it obtains a valid latest value. In such a system, intermediate results are thus discarded.
+    
+    Similarly, `.MapAsync2` maps two existing Views through an asynchronous function.
+
+* `.Apply` takes a View of a function and a View of its argument type, and combines them to create a View of its return type.
+
+<a name="view-doc"></a>
+#### Inserting Views in the Doc
+
+Once you have created a View to represent your dynamic content, here are the various ways to include it in a Doc:
+
+* `text` has a reactive overload, which creates a text node from a `View<string>`.
+
+    ```fsharp
+    var varTxt = Var.Create("");
+    var vLength =
+        varTxt.View
+            .Map(x => x.Length)
+            .Map(l => $"You entered {l} characters.");
+    var res =
+        div(
+            input(varName),
+            text vLength // text can be even omitted here
+        );
+    ```
+
+* `.Bind` maps a View into a dynamic Doc.
+
+    ```csharp
+    abstract class UserId { }
+
+    class UserName : UserId
+    {
+        public string Name { get; set; }
+    }
+
+    class Email : UserId
+    {
+        public string Value { get; set; }
+    }
+
+    Var<bool> rvIsEmail = Var.Create(false);
+    Var<UserId> rvEmail = Var.Create<UserId>(new Email { Value = "" });
+    Var<UserId> rvUsername = Var.Create<UserId>(new UserName { Name = "" });
+
+    View<UserId> vUserId = rvIsEmail.View.Bind(isEmail =>
+        isEmail ? rvEmail.View : rvUsername.View
+    );
+    ```
+
+* `attr.*` attribute constructors also have overloads taking a `View<string>`.
+
+    For example, the following sets the background of the input element based on the user input value:
+
+    ```csharp
+    var varTxt = Var.Create("");
+    var vStyle =
+        varTxt.View
+            .Map(s => "background-color: " + s);
+    var res =
+        input(varTxt, attr.style(vStyle));
+    ```
+
+* `attr.*` constructors also have overloads that take an extra `View<bool>`. When this View is true, the attribute is set (and dynamically updated), and when it is false, the attribute is removed.
+
+    ```csharp
+    var varTxt = Var.Create("");
+    var varCheck = Var.Create(true);
+    var vStyle =
+        varTxt.View
+            .Map(s => "background-color: " + s);
+    var res =
+        div(
+            input(varTxt, attr.style(vStyle, varCheck.View)),
+            checkbox(varCheck)
+        );
+    ```
+
+### ListModels
+
+[`ListModel<K, T>`](/api/WebSharper.UI.ListModel\`2) is a convenient type to store an observable collection of items of type `T`. Items can be accessed using an identifier, or key, of type `K`.
+
+ListModels are to dictionaries as Vars are to refs: a type with similar capabilities, but with the additional capability to be reactively observed, and therefore to have your UI automatically change according to changes in the stored content.
+
+#### Creating ListModels
+
+You can create ListModels with the following functions:
+
+* [`ListModel.FromSeq`](/api/WebSharper.UI.ListModel#FromSeq\`\`1) creates a ListModel where items are their own key.
+
+    ```fsharp
+    var myNameColl = ListModel.FromSeq [ "John"; "Ana"),
+    ```
+
+* [`ListModel.Create`](/api/WebSharper.UI.ListModel#Create\`\`2) creates a ListModel using a given function to determine the key of an item.
+
+    ```fsharp
+    type Person = { Username: string; Name: string }
+    
+    var myPeopleColl =
+        ListModel.Create (fun p -> p.SSN)
+            [ { Username = "johnny87"; Name = "John" };
+              { Username = "theana12"; Name = "Ana" }),
+    ```
+
+Every following example will assume the above `Person` type and `myPeopleColl` model.
+
+#### Modifying ListModels
+
+Once you have a ListModel, you can modify its contents like so:
+
+* [`listModel.Add`](/api/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
+
+    ```fsharp
+    myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+    // myPeopleColl now contains John, Ana and Sam.
+    
+    myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+    // myPeopleColl now contains Johnny, Ana and Sam.
+    ```
+
+* [`listModel.RemoveByKey`](/api/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
+
+    ```fsharp
+    myPeopleColl.RemoveByKey("theana12")
+    // myPeopleColl now contains John.
+    
+    myPeopleColl.RemoveByKey("chloe94")
+    // myPeopleColl now contains John.
+    ```
+
+* [`listModel.Remove`](/api/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey x)`, where `getKey` is the key function passed to `ListModel.Create` and `x` is the argument to `Remove`.
+
+    ```fsharp
+    myPeopleColl.Remove({ Username = "theana12"; Name = "Another Ana" })
+    // myPeopleColl now contains John.
+    ```
+
+* [`listModel.Set`](/api/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
+
+    ```fsharp
+    myPeopleColl.Set([ { Username = "chloe94"; Name = "Chloe" };
+                       { Username = "a13x"; Name = "Alex" }),)
+    // myPeopleColl now contains Chloe, Alex.
+    ```
+
+* [`listModel.Clear`](/api/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
+
+    ```fsharp
+    myPeopleColl.Clear()
+    // myPeopleColl now contains no items.
+    ```
+
+* [`listModel.UpdateBy`](/api/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns None or the item is not found, nothing is done.
+
+    ```fsharp
+    myPeople.UpdateBy (fun u -> Some { u with Name = "The Real Ana" }) "theana12"
+    // myPeopleColl now contains John, The Real Ana.
+    
+    myPeople.UpdateBy (fun u -> None) "johnny87"
+    // myPeopleColl now contains John, The Real Ana.
+    ```
+
+* [`listModel.UpdateAll`](/api/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns None, the corresponding item is unchanged.
+
+    ```fsharp
+    myPeople.UpdateAll (fun u -> 
+        if u.Username.Contains "ana" then
+            Some { u with Name = "The Real Ana" }
+        else
+            None)
+    // myPeopleColl now contains John, The Real Ana.
+    ```
+
+#### Reactively observing ListModels
+
+The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
+
+* [`listModel.View`](/api/WebSharper.UI.ListModel\`2#View) gives a `View<seq<T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
+
+    ```fsharp
+    var myPeopleList =
+        myPeopleColl.View
+        |> Doc.BindView (fun people ->
+            ul(
+                people
+                |> Seq.map (fun p -> li(p.Name), :> Doc)
+                |> Doc.Concat
+           ), :> Doc
+        )
+    ```
+
+* [`listModel.ViewState`](/api/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<T>>`. Here are the differences:
+
+    * `ViewState` provides better performance.
+    * `ListModelState<T>` implements `seq<T>`, but it additionally provides indexing and length of the sequence.
+    * However, a `ViewState` is only valid until the next change to the model.
+    
+    As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting `seq` separately.
+
+* [`listModel.Map`](/api/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
+
+    * `Map(f: T -> 'V)` assumes that the item with a given key does not change.
+    
+        ```fsharp
+        var myDoc =
+            myPeopleColl.Map(fun p ->
+                Console.Log p.Username
+                p(p.Name),
+            )
+            |> Doc.BindView Doc.Concat
+            |> Doc.RunAppend JS.Document.Body
+        // Logs johnny87, theana12
+        // Displays John, Ana
+        
+        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        // Logs mynameissam
+        // Displays John, Ana, Sam
+        
+        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        // Logs nothing, since no key has been added
+        // Displays John, Ana, Sam (unchanged)
+        ```
+
+    * `Map(f: 'K -> View<T> -> 'V)` additionally observes changes to individual items that are updated.
+    
+        ```fsharp
+        var myDoc =
+            myPeopleColl.Map(fun k vp ->
+                Console.Log k
+                p(textView (vp |> View.Map (fun p -> p.Name))),
+            )
+            |> Doc.BindView Doc.Concat
+            |> Doc.RunAppend JS.Document.Body
+        // Logs johnny87, theana12
+        // Displays John, Ana
+        
+        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        // Logs mynameissam
+        // Displays John, Ana, Sam
+        
+        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        // Logs nothing, since no key has been added
+        // Displays Johnny, Ana, Sam (changed!)
+        ```
+
+    Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
+
+* [`listModel.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+
+* [`listModel.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
+
+    ```fsharp
+    var showJohn =
+        myPeopleColl.TryFindByKeyAsView("johnny87")
+        |> Doc.BindView (function
+            | None -> text "He is not here."
+            | Some u -> text (sprintf "He is here, and his name is %s." u.Name)
+        )
+    ```
+
+* [`listModel.FindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
+
+* [`listModel.ContainsKeyAsView`](/api/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
+
+    ```fsharp
+    View.Map Option.isSome (listModel.TryFindByKeyAsView(k))
+    ```
+
+#### Inserting ListModels in the Doc
+
+To show the contents of a ListModel in your document, you can of course use one of the above View methods and pass it to `Doc.BindView`.
+
+## Routing
+
+If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
+
+### Install client-side routing
+
+There are 3 scenarios for client-side routing which WebSharper routing makes possible:
+* For creating single-page applications, when browser refresh is never wanted, `Router.Install` creates a global click handler that prevents default behavior of `<a>` links on your page pointing to a local URL.
+* If you want client-side navigation only between some part of the whole site map covered by the router, you can use `Router.Slice` before `Router.Install`. This creates a global click handler that now only override behavior of local links which can be mapped to the subset actions that are handled in the client. For example you can make navigating between `yoursite.com/profile/...` links happen with client-side routing, but any links that would point out of `/profile/...` are still doing browser navigation automatically.
+* If you want to have client-side routing on a sub-page that the server knows nothing about, `Router.InstallHash` subscribes to `window.location.hash` changes only. You can use a router that is specific to that single sub-page.
+
+In all cases, the `Install` function used returns a `Var`, which you can use to map the visible content of your page from. It has a two way binding to the URL: link or forward/back navigation changes the value of the `Var`, and setting the value does a client-side navigation which also updates the URL automatically.
+
+Example for `Router.Install`, using the router value introduced in the [Sitelets documentation](sitelets.md):
+```fsharp
+var ClientMain() =
+    var location = rPages |> Router.Install Home
+    location.View.Doc(function
+        | Home -> div [ text "This is the home page"),
+        | Contact p -> div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age)),
+    )
+```
+First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server-side correctly), which could be a home or an error page.
+
+Also, you need to make sure that your router value is `[JavaScript]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
+
+`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#contact/Bob/32`.
+
+Example for `Router.Slice` and `Router.Install`:
+```fsharp
+var ContactMain() =    
+    var location =
+        rPages |> Router.Slice
+            (function Contact p -> Some p | _ -> None)
+            Contact
+        |> Router.Install ("unknown", 0)
+    location.View.Doc(fun p -> 
+        div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age)),
+    )
+```
+Here we only install a click handler for the contact pages, which means that a link to root will be a browser navigation, but links between contacts work fully on the client. The first function argument maps a full page value to an option of a value that we handle, and the second function maps this back to a full page value. So instead of a `Var<Pages>` here we get only a `Var<Person>`.
+
+In a real world application, usually you would have some `View.MapAsync` from the `location` variable, to pull some data related to the subpage from the server by an RPC call, and exposing that as content:
+
+```fsharp
+[<Remote>] // this is a server-side function exposed as a WebSharper RPC
+var GetContactDetails p = async { ... }
+
+var ContactMain() =    
+    var location = // ...
+    var contactDetails = location.View |> View.MapAsync GetContactDetails
+    contactDetails.View.Doc(fun p -> 
+        // show contact detils
+    )
+```
+
+You can navigate programmatically with `location.Value <- newLoc`, `location |> Var.Set newLoc` or `location := newLoc` (if you have `open WebSharper.UI.Next.Notation`). 
+

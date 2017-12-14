@@ -286,7 +286,7 @@ To insert a Doc into the document on the client side, use the `Doc.Run*` family 
 
 * [`Doc.RunBefore`](/api/WebSharper.UI.Doc#RunBefore) and [`Doc.RunBeforeById`](/api/WebSharper.UI.Doc#RunBeforeById) insert a given Doc as the previous sibling(s) of a given DOM node.
 
-* [`Doc.RunReplace`](/api/WebSharper.UI.Doc#RunReplace) and [`Doc.RunReplaceById`](/api/WebSharper.UI.Doc#RunReplaceById) insert a givev Doc instead of a given DOM node.
+* [`Doc.RunReplace`](/api/WebSharper.UI.Doc#RunReplace) and [`Doc.RunReplaceById`](/api/WebSharper.UI.Doc#RunReplaceById) insert a given Doc replacing a given DOM node.
 
 ### HTML on the server
 
@@ -322,14 +322,14 @@ let MyPage (ctx: Context<EndPoint>) =
     )
 ```
 
-To include client-side elements inside a page, use the `ClientSide` method of the Sitelets context.
+To include client-side elements inside a page, use the `client` method, opened with `WebSharper.UI.CSharp.Html`.
 
 <a name="templating"></a>
 ## HTML Templates
 
 WebSharper.UI's syntax for creating HTML is compact and convenient, but sometimes you do need to include a plain HTML file in a project. It is much more convenient for designing to have a .html file that you can touch up and reload your application without having to recompile it. This is what Templates provide. Templates are HTML files that can be loaded by WebSharper.UI, and augmented with special elements and attributes that provide additional functionality:
 
-* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by F# code;
+* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by C# code;
 * Declaring two-way binding between F# Vars and HTML input elements (see [reactive](#reactive));
 * Declaring inner Templates, smaller HTML widgets within the page, that can be instantiated dynamically.
 
@@ -921,7 +921,7 @@ You can create Views using the following functions and combinators from the `Vie
 
 Once you have created a View to represent your dynamic content, here are the various ways to include it in a Doc:
 
-* [`textView`](/api/WebSharper.UI.Html#textView) is a reactive counterpart to `text`, which creates a text node a `View<string>`.
+* [`textView`](/api/WebSharper.UI.Html#textView) is a reactive counterpart to `text`, which creates a text node from a `View<string>`.
 
     ```fsharp
     let varTxt = Var.Create ""

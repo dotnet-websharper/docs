@@ -800,9 +800,9 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
 
     * `LoginUser("username")` creates a cookie that expires with the user's browser session.
     
-    * `LoginUser("username", persistent = true)` creates a cookie that lasts indefinitely.
+    * `LoginUser("username", persistent: true)` creates a cookie that lasts indefinitely.
     
-    * `LoginUser("username", duration = d)` creates a cookie that expires after the given duration.
+    * `LoginUser("username", duration: d)` creates a cookie that expires after the given duration.
     
     Example:
     
@@ -812,10 +812,10 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
         // We're assuming here that the login is successful,
         // eg you have verified a password against a database.
         await context.UserSession.LoginUser(username, 
-                duration = TimeSpan.FromDays(30.));
+                duration: TimeSpan.FromDays(30.));
         return Content.Page(
-            Title = "Welcome!",
-            Body = text($"Welcome, {username}!")
+            Title: "Welcome!",
+            Body: text($"Welcome, {username}!")
         );
     } 
     ```
@@ -831,8 +831,8 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     {
         var username = await context.UserSession.GetLoggedInUser();
         return Content.Page(
-            Title = "Welcome!",
-            Body =
+            Title: "Welcome!",
+            Body:
                 text (
                     username is null
                     ? "Welcome, stranger!"
