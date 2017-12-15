@@ -1003,7 +1003,7 @@ You can create ListModels with the following functions:
     type Person = { Username: string; Name: string }
     
     let myPeopleColl =
-        ListModel.Create (fun p -> p.SSN)
+        ListModel.Create (fun p -> p.Username)
             [ { Username = "johnny87"; Name = "John" };
               { Username = "theana12"; Name = "Ana" } ]
     ```

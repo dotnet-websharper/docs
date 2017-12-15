@@ -284,7 +284,7 @@ To insert a Doc into the document on the client side, use the `.Run*` family of 
 
 * [`.Run`](/api/WebSharper.UI.Doc#Run) inserts the Doc as the child(ren) of the given DOM element. Note that it replaces the existing children, if any.
 
-    ```fsharp
+    ```csharp
     using WebSharper.JavaScript;
     using WebSharper.UI;
     using WebSharper.UI.Client;
@@ -449,7 +449,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
     
     On the client side, this hole can also be filled with a `View<string>` (see [reactive](#reactive)) to include dynamically updated text content.
 
-* The attribute `ws-replace` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will be replaced with the provided Doc(s). The name of the hole is the value of the `ws-replace` attribute.
+* The attribute `ws-replace` creates a `Doc` or `IEnumerable<Doc>` hole. The element on which this attribute is set will be replaced with the provided Doc(s). The name of the hole is the value of the `ws-replace` attribute.
 
     ```csharp
     // mytemplate.html:
@@ -470,9 +470,9 @@ You can add holes to your template that will be filled by C# code. Each hole has
     // </div>
     ```
 
-* The attribute `ws-hole` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will have its _contents_ replaced with the provided Doc(s). The name of the hole is the value of the `ws-hole` attribute.
+* The attribute `ws-hole` creates a `Doc` or `IEnumerable<Doc>` hole. The element on which this attribute is set will have its _contents_ replaced with the provided Doc(s). The name of the hole is the value of the `ws-hole` attribute.
 
-    ```fsharp
+    ```csharp
     // mytemplate.html:
     // <div>
     //   <h1>Welcome!</h1>
@@ -493,9 +493,9 @@ You can add holes to your template that will be filled by C# code. Each hole has
     // </div>
     ```
 
-* The attribute `ws-attr` creates an `Attr` or `seq<Attr>` hole. The name of the hole is the value of the `ws-attr` attribute.
+* The attribute `ws-attr` creates an `Attr` or `IEnumerable<Attr>` hole. The name of the hole is the value of the `ws-attr` attribute.
 
-    ```fsharp
+    ```csharp
     // mytemplate.html:
     // <div ws-attr="MainDivAttr">
     //   <h1>Welcome!</h1>
@@ -522,7 +522,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
 
     The name of the hole is the value of the `ws-attr` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
 
-    ```fsharp
+    ```csharp
     // mytemplate.html:
     // <div>
     //   <input ws-var="Name" />
@@ -550,7 +550,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
     * `Event: Dom.Event` is the event triggered.
     * `Vars` has a field for each of the `Var`s associated to `ws-var`s in the template.
 
-    ```fsharp
+    ```csharp
     // mytemplate.html:
     // <div>
     //   <input ws-var="Name" />
@@ -669,7 +669,7 @@ var myForm =
 
 The type provider can be parameterized to control how its contents are loaded both on the server and the client. For example:
 
-```fsharp
+```csharp
 type new Template.MyTemplate = 
     Template<"mytemplate.html", 
         clientLoad = ClientLoad.Inline,
@@ -812,7 +812,7 @@ The following are available from `WebSharper.UI.CSharp.Client.Html`:
 
 * `radio` creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
 
-    ```fsharp
+    ```csharp
     enum Color { Red, Green, Blue };
     
     // Initially, Green is selected.
@@ -901,7 +901,7 @@ Once you have created a View to represent your dynamic content, here are the var
 
 * `text` has a reactive overload, which creates a text node from a `View<string>`.
 
-    ```fsharp
+    ```csharp
     var varTxt = Var.Create("");
     var vLength =
         varTxt.View
@@ -974,23 +974,27 @@ ListModels are to dictionaries as Vars are to refs: a type with similar capabili
 
 #### Creating ListModels
 
-You can create ListModels with the following functions:
+You can create ListModels with the following methods constructors:
 
-* [`ListModel.FromSeq`](/api/WebSharper.UI.ListModel#FromSeq\`\`1) creates a ListModel where items are their own key.
+* `ListModel.FromSeq` creates a ListModel where items are their own key.
 
-    ```fsharp
-    var myNameColl = ListModel.FromSeq [ "John"; "Ana"),
+    ```csharp
+    var myNameColl = ListModel.FromSeq (new[] { "John", "Ana" });
     ```
 
-* [`ListModel.Create`](/api/WebSharper.UI.ListModel#Create\`\`2) creates a ListModel using a given function to determine the key of an item.
+* `new ListModel<K, T>(keyFunction)` creates a ListModel using a given function to determine the key of an item. You can add items with a collection initializer too.
 
-    ```fsharp
-    type Person = { Username: string; Name: string }
+    ```csharp
+    class Person { 
+        public string Username; 
+        public string Name; 
+    }
     
     var myPeopleColl =
-        ListModel.Create (fun p -> p.SSN)
-            [ { Username = "johnny87"; Name = "John" };
-              { Username = "theana12"; Name = "Ana" }),
+        new ListModel<string, Person>(p => p.Username) {
+            new Person { Username = "johnny87", Name = "John" },
+            new Person { Username = "theana12", Name = "Ana" }
+        };
     ```
 
 Every following example will assume the above `Person` type and `myPeopleColl` model.
@@ -999,66 +1003,68 @@ Every following example will assume the above `Person` type and `myPeopleColl` m
 
 Once you have a ListModel, you can modify its contents like so:
 
-* [`listModel.Add`](/api/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
+* [`.Add`](/api/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
 
-    ```fsharp
-    myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+    ```csharp
+    myPeopleColl.Add(new Person { Username = "mynameissam", Name = "Sam" });
     // myPeopleColl now contains John, Ana and Sam.
     
-    myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+    myPeopleColl.Add(new Person { Username = "johnny87", Name = "Johnny" });
     // myPeopleColl now contains Johnny, Ana and Sam.
     ```
 
-* [`listModel.RemoveByKey`](/api/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
+* [`.RemoveByKey`](/api/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
 
-    ```fsharp
-    myPeopleColl.RemoveByKey("theana12")
+    ```csharp
+    myPeopleColl.RemoveByKey("theana12");
     // myPeopleColl now contains John.
     
-    myPeopleColl.RemoveByKey("chloe94")
+    myPeopleColl.RemoveByKey("chloe94");
     // myPeopleColl now contains John.
     ```
 
-* [`listModel.Remove`](/api/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey x)`, where `getKey` is the key function passed to `ListModel.Create` and `x` is the argument to `Remove`.
+* [`.Remove`](/api/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey(x))`, where `getKey` is the key function passed to the `ListModel` constructor and `x` is the argument to `Remove`.
 
-    ```fsharp
-    myPeopleColl.Remove({ Username = "theana12"; Name = "Another Ana" })
+    ```csharp
+    myPeopleColl.Remove(new Person { Username = "theana12", Name = "Another Ana" });
     // myPeopleColl now contains John.
     ```
 
-* [`listModel.Set`](/api/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
+* [`.Set`](/api/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
 
-    ```fsharp
-    myPeopleColl.Set([ { Username = "chloe94"; Name = "Chloe" };
-                       { Username = "a13x"; Name = "Alex" }),)
+    ```csharp
+    myPeopleColl.Set(new[] {
+         new Person { Username = "chloe94", Name = "Chloe" },
+         new Person { Username = "a13x", Name = "Alex" }
+    });
     // myPeopleColl now contains Chloe, Alex.
     ```
 
-* [`listModel.Clear`](/api/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
+* [`.Clear`](/api/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
 
-    ```fsharp
-    myPeopleColl.Clear()
+    ```csharp
+    myPeopleColl.Clear();
     // myPeopleColl now contains no items.
     ```
 
-* [`listModel.UpdateBy`](/api/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns None or the item is not found, nothing is done.
+* [`.UpdateBy`](/api/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns `null` or the item is not found, nothing is done. If the function does return a value, it must wrap it in an `FSharpOption` to disambiguate valid `null` values from missing values. You can do this the easiest with the `FSharpConvert.Some` helper.
 
-    ```fsharp
-    myPeople.UpdateBy (fun u -> Some { u with Name = "The Real Ana" }) "theana12"
+    ```csharp
+    myPeople.UpdateBy("theana12", u => FSharpConvert.Some (new Person { UserName = u, Name = "The Real Ana" }));
     // myPeopleColl now contains John, The Real Ana.
     
-    myPeople.UpdateBy (fun u -> None) "johnny87"
+    myPeople.UpdateBy("johnny87", u => null); 
     // myPeopleColl now contains John, The Real Ana.
     ```
 
-* [`listModel.UpdateAll`](/api/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns None, the corresponding item is unchanged.
+* [`.UpdateAll`](/api/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns `null`, the corresponding item is unchanged.
 
-    ```fsharp
-    myPeople.UpdateAll (fun u -> 
-        if u.Username.Contains "ana" then
-            Some { u with Name = "The Real Ana" }
-        else
-            None)
+    ```csharp
+    myPeople.UpdateAll(u => 
+        u.Username.Contains("ana")
+            ? FSharpConvert.Some (new Person { UserName = u, Name = "The Real Ana" })
+            : null
+    )
     // myPeopleColl now contains John, The Real Ana.
     ```
 
@@ -1066,156 +1072,98 @@ Once you have a ListModel, you can modify its contents like so:
 
 The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
 
-* [`listModel.View`](/api/WebSharper.UI.ListModel\`2#View) gives a `View<seq<T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
+* [`.View`](/api/WebSharper.UI.ListModel\`2#View) gives a `View<IEnumerable<T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
 
-    ```fsharp
+    ```csharp
     var myPeopleList =
         myPeopleColl.View
-        |> Doc.BindView (fun people ->
-            ul(
-                people
-                |> Seq.map (fun p -> li(p.Name), :> Doc)
-                |> Doc.Concat
-           ), :> Doc
-        )
+            .Doc(people =>
+                ul(
+                    Doc.Concat(people.Select(p => li(p.Name)))
+                )
+            );
     ```
 
-* [`listModel.ViewState`](/api/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<T>>`. Here are the differences:
+* [`.ViewState`](/api/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<T>>`. Here are the differences:
 
     * `ViewState` provides better performance.
-    * `ListModelState<T>` implements `seq<T>`, but it additionally provides indexing and length of the sequence.
+    * `ListModelState<T>` implements `IEnumerable<T>`, but it additionally provides indexing and length of the sequence.
     * However, a `ViewState` is only valid until the next change to the model.
     
-    As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting `seq` separately.
+    As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting sequence separately.
 
-* [`listModel.Map`](/api/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
+* [`.Map`](/api/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
 
-    * `Map(f: T -> 'V)` assumes that the item with a given key does not change.
+    * `Map(Func<T, V> f)` assumes that the item with a given key does not change.
     
-        ```fsharp
+        ```csharp
         var myDoc =
-            myPeopleColl.Map(fun p ->
-                Console.Log p.Username
-                p(p.Name),
-            )
-            |> Doc.BindView Doc.Concat
-            |> Doc.RunAppend JS.Document.Body
+            myPeopleColl.Map(p => {
+                Console.Log(p.Username);
+                return p.Name;
+            })
+                .Doc(Doc.Concat)
+                .RunAppend(JS.Document.Body);
         // Logs johnny87, theana12
         // Displays John, Ana
         
-        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        myPeopleColl.Add(new Person { Username = "mynameissam", Name = "Sam" });
         // Logs mynameissam
         // Displays John, Ana, Sam
         
-        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        myPeopleColl.Add(new Person { Username = "johnny87", Name = "Johnny" });
         // Logs nothing, since no key has been added
         // Displays John, Ana, Sam (unchanged)
         ```
 
-    * `Map(f: 'K -> View<T> -> 'V)` additionally observes changes to individual items that are updated.
+    * `Map(Func<K, View<T>, V> f)` additionally observes changes to individual items that are updated.
     
-        ```fsharp
+        ```csharp
         var myDoc =
-            myPeopleColl.Map(fun k vp ->
-                Console.Log k
-                p(textView (vp |> View.Map (fun p -> p.Name))),
-            )
-            |> Doc.BindView Doc.Concat
-            |> Doc.RunAppend JS.Document.Body
+            myPeopleColl.Map((k, vp) => {
+                Console.Log(k);
+                return p(vp.Map(p => p.Name));
+            })
+                .Doc(Doc.Concat)
+                .RunAppend(JS.Document.Body);
         // Logs johnny87, theana12
         // Displays John, Ana
         
-        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
+        myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" });
         // Logs mynameissam
         // Displays John, Ana, Sam
         
-        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" });
         // Logs nothing, since no key has been added
         // Displays Johnny, Ana, Sam (changed!)
         ```
 
     Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
 
-* [`listModel.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+* [`.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
 
-* [`listModel.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
+* [`.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
 
-    ```fsharp
+    ```csharp
     var showJohn =
         myPeopleColl.TryFindByKeyAsView("johnny87")
-        |> Doc.BindView (function
-            | None -> text "He is not here."
-            | Some u -> text (sprintf "He is here, and his name is %s." u.Name)
-        )
+            .Doc (u =>
+                u is null
+                    ? text "He is not here."
+                    : text $"He is here, and his name is {u.Name.Value}."
+            );
     ```
 
-* [`listModel.FindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
+* [`.FindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
 
-* [`listModel.ContainsKeyAsView`](/api/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
+* [`.ContainsKeyAsView`](/api/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
 
-    ```fsharp
-    View.Map Option.isSome (listModel.TryFindByKeyAsView(k))
+    ```csharp
+    listModel.TryFindByKeyAsView(k).Map(v => !(v is null))
     ```
 
 #### Inserting ListModels in the Doc
 
 To show the contents of a ListModel in your document, you can of course use one of the above View methods and pass it to `Doc.BindView`.
 
-## Routing
-
-If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
-
-### Install client-side routing
-
-There are 3 scenarios for client-side routing which WebSharper routing makes possible:
-* For creating single-page applications, when browser refresh is never wanted, `Router.Install` creates a global click handler that prevents default behavior of `<a>` links on your page pointing to a local URL.
-* If you want client-side navigation only between some part of the whole site map covered by the router, you can use `Router.Slice` before `Router.Install`. This creates a global click handler that now only override behavior of local links which can be mapped to the subset actions that are handled in the client. For example you can make navigating between `yoursite.com/profile/...` links happen with client-side routing, but any links that would point out of `/profile/...` are still doing browser navigation automatically.
-* If you want to have client-side routing on a sub-page that the server knows nothing about, `Router.InstallHash` subscribes to `window.location.hash` changes only. You can use a router that is specific to that single sub-page.
-
-In all cases, the `Install` function used returns a `Var`, which you can use to map the visible content of your page from. It has a two way binding to the URL: link or forward/back navigation changes the value of the `Var`, and setting the value does a client-side navigation which also updates the URL automatically.
-
-Example for `Router.Install`, using the router value introduced in the [Sitelets documentation](sitelets.md):
-```fsharp
-var ClientMain() =
-    var location = rPages |> Router.Install Home
-    location.View.Doc(function
-        | Home -> div [ text "This is the home page"),
-        | Contact p -> div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age)),
-    )
-```
-First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server-side correctly), which could be a home or an error page.
-
-Also, you need to make sure that your router value is `[JavaScript]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
-
-`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#contact/Bob/32`.
-
-Example for `Router.Slice` and `Router.Install`:
-```fsharp
-var ContactMain() =    
-    var location =
-        rPages |> Router.Slice
-            (function Contact p -> Some p | _ -> None)
-            Contact
-        |> Router.Install ("unknown", 0)
-    location.View.Doc(fun p -> 
-        div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age)),
-    )
-```
-Here we only install a click handler for the contact pages, which means that a link to root will be a browser navigation, but links between contacts work fully on the client. The first function argument maps a full page value to an option of a value that we handle, and the second function maps this back to a full page value. So instead of a `Var<Pages>` here we get only a `Var<Person>`.
-
-In a real world application, usually you would have some `View.MapAsync` from the `location` variable, to pull some data related to the subpage from the server by an RPC call, and exposing that as content:
-
-```fsharp
-[<Remote>] // this is a server-side function exposed as a WebSharper RPC
-var GetContactDetails p = async { ... }
-
-var ContactMain() =    
-    var location = // ...
-    var contactDetails = location.View |> View.MapAsync GetContactDetails
-    contactDetails.View.Doc(fun p -> 
-        // show contact detils
-    )
-```
-
-You can navigate programmatically with `location.Value <- newLoc`, `location |> Var.Set newLoc` or `location := newLoc` (if you have `open WebSharper.UI.Next.Notation`). 
 
