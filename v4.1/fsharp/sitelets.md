@@ -497,17 +497,17 @@ It is possible to annotate your endpoint type with attributes to customize `Site
 
 ### Catching wrong requests with Sitelet.InferWithErrors
 
-By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to give potential other components (such as [ASP.NET](http://websharper.com/docs/aspnet)) a chance to respond to the request. However, if you want to send a custom response for badly-formatted requests, you can use [`Sitelet.InferWithErrors`](/api/WebSharper.Sitelets.Sitelet#InferWithErrors\`\`1) instead. This function wraps the parsed request in the [`ActionEncoding.DecodeResult<'EndPoint>`](/api/WebSharper.Sitelets.ActionEncoding.DecodeResult\`1) union. Here are the cases you can match against:
+By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to give potential other components (such as [ASP.NET](http://websharper.com/docs/aspnet)) a chance to respond to the request. However, if you want to send a custom response for badly-formatted requests, you can use [`Sitelet.InferWithErrors`](/api/WebSharper.Sitelets.Sitelet#InferWithErrors\`\`1) instead. This function wraps the parsed request in the [`ParseRequestResult<'EndPoint>`](/api/WebSharper.Sitelets.ParseRequestResult\`1) union. Here are the cases you can match against:
 
-* `ActionEncoding.Success of 'EndPoint`: The request was successfully parsed.
+* `ParseRequestResult.Success of 'EndPoint`: The request was successfully parsed.
 
-* `ActionEncoding.InvalidMethod of 'EndPoint * method: string`: An endpoint was successfully parsed but with the given wrong HTTP method.
+* `ParseRequestResult.InvalidMethod of 'EndPoint * method: string`: An endpoint was successfully parsed but with the given wrong HTTP method.
 
-* `ActionEncoding.MissingQueryParameter of 'EndPoint * name: string`: The URL path was successfully parsed but a mandatory query parameter with the given name was missing. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the query parameter value should be.
+* `ParseRequestResult.MissingQueryParameter of 'EndPoint * name: string`: The URL path was successfully parsed but a mandatory query parameter with the given name was missing. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the query parameter value should be.
 
-* `ActionEncoding.InvalidJson of 'EndPoint`: The URL was successfully parsed but the JSON body wasn't. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the JSON-decoded value should be.
+* `ParseRequestResult.InvalidJson of 'EndPoint`: The URL was successfully parsed but the JSON body wasn't. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the JSON-decoded value should be.
 
-* `ActionEncoding.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value ([`Unchecked.defaultof<_>`](/api/Microsoft.FSharp.Core.Operators.Unchecked#defaultof\`\`1)) where the form body-decoded value should be.
+* `ParseRequestResult.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value ([`Unchecked.defaultof<_>`](/api/Microsoft.FSharp.Core.Operators.Unchecked#defaultof\`\`1)) where the form body-decoded value should be.
 
 If multiple of these kinds of errors happen, only the last one is reported.
 
@@ -517,7 +517,7 @@ If the URL path isn't matched, then the request falls through as with `Sitelet.I
 open WebSharper.Sitelets
 
 module SampleSite =
-    open WebSharper.Sitelets.ActionEncoding
+    open WebSharper.Sitelets
 
     type EndPoint =
     | [<Method "GET"; Query "page">] Articles of page: int
@@ -525,12 +525,12 @@ module SampleSite =
     [<Website>]
     let MySitelet = Sitelet.InferWithCustomErrors <| fun context endpoint ->
         match endpoint with
-        | Success (Articles page) ->
+        | ParseRequestResult.Success (Articles page) ->
             Content.Text ("serving page " + string page)
-        | InvalidMethod (_, m) ->
+        | ParseRequestResult.InvalidMethod (_, m) ->
             Content.Text ("Invalid method: " + m)
             |> Content.SetStatus Http.Status.MethodNotAllowed
-        | MissingQueryParameter (_, p) ->
+        | ParseRequestResult.MissingQueryParameter (_, p) ->
             Content.Text ("Missing parameter: " + p)
             |> Content.SetStatus (Http.Status.Custom 400 (Some "Bad Request"))
         | _ ->
@@ -646,7 +646,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
     val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
     ```
 
-    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the action specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
+    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
 
 * [`Sitelet.Map`](/api/WebSharper.Sitelets.Sitelet#Map\`\`2) converts a Sitelet to a different endpoint type using mapping functions in both directions.
 
@@ -875,7 +875,7 @@ The functions to create sitelets from content, namely `Sitelet.Infer` and `Sitel
 <a name="linking"></a>
 ### Creating links
 
-Since every accepted URL is uniquely mapped to a strongly typed action value, it is also possible to generate internal links from an action value. For this, you can use the method [`context.Link`](/api/WebSharper.Sitelets.Context\`1#Link).
+Since every accepted URL is uniquely mapped to a strongly typed endpoint value, it is also possible to generate internal links from an endpoint value. For this, you can use the method [`context.Link`](/api/WebSharper.Sitelets.Context\`1#Link).
 
 ```fsharp
 open WebSharper.UI.Html
@@ -898,7 +898,7 @@ let HomePage (context: Context<EndPoint>) =
     )
 ```
 
-Note how `context.Link` is used in order to resolve the URL to the `BlogArticle` action.  Action URLs are always constructed relative to the application root, whether the application is deployed as a standalone website or in a virtual folder.  [`context.ResolveUrl`](/api/WebSharper.Sitelets.Context\`1#ResolveUrl) helps to manually construct application-relative URLs to resources that do not map to actions.
+Note how `context.Link` is used in order to resolve the URL to the `BlogArticle` endpoint.  Endpoint URLs are always constructed relative to the application root, whether the application is deployed as a standalone website or in a virtual folder.  [`context.ResolveUrl`](/api/WebSharper.Sitelets.Context\`1#ResolveUrl) helps to manually construct application-relative URLs to resources that do not map to endpoints.
 
 ### Managing User Sessions
 
@@ -992,17 +992,43 @@ The implementation of these functions relies on cookies and thus requires that t
 So far, we have constructed sitelets using built-in constructors such as `Sitelet.Infer`. But if you want finer-grained control over the exact URLs that it parses and generates, you can create sitelets by hand.
 
 A sitelet consists of two parts; a router and a handler.
-The job of the router is to map actions to URLs and to map HTTP requests to actions.
-The handler is responsible for handling actions, by returning content (a synchronous or asynchronous HTTP response).
+The job of the router is to map endpoints to URLs and to map HTTP requests to endpoints.
+The handler is responsible for handling endpoints, by returning content (a synchronous or asynchronous HTTP response).
 
 ### Routers
 
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
 * Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[JavaScript]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
-* Manually, by using combinators to build up larger routers from elementary router values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
+* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
+* Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
-The following example shows how you can create a customized router of type `WebSharper.Sitelets.Router<Action>` by writing the two mappings manually:
+The following example shows how you can create a router of type `WebSharper.Sitelets.IRouter<EndPoint>` by writing the two mappings manually:
+
+```fsharp
+open WebSharper.Sitelets
+
+module WebSite =
+    type EndPoint = | Page1 | Page2
+
+    let MyRouter : Router<EndPoint> =
+        let route (req: Http.Request) =
+            if req.Uri.LocalPath = "/page1" then
+                Some Page1
+            elif req.Uri.LocalPath = "/page2" then
+                Some Page2
+            else
+                None
+        let link endPoint =
+            match endPoint with
+            | EndPoint.Page1 ->
+                Some <| System.Uri("/page2", System.UriKind.Relative)
+            | EndPoint.Page2 ->
+                Some <| System.Uri("/page1", System.UriKind.Relative)
+        Router.New route link
+```
+
+A simplified version, `Router.Create` exists to create routers, using only already broken up URL segments:
 
 ```fsharp
 open WebSharper.Sitelets
@@ -1023,7 +1049,7 @@ module WebSite =
         Router.Create link route
 ```
 
-Specifying routers manually gives you full control of how to parse incoming requests and to map actions to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and actions, so that linking to an action produces a URL that is in turn routed back to the same action.
+Specifying routers manually gives you full control of how to parse incoming requests and to map endpoints to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and endpoints, so that linking to an endpoint produces a URL that is in turn routed back to the same endpoint.
 
 Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/WebSharper.Sitelets.Router#Table\`\`1):
 
@@ -1057,8 +1083,8 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 
 ### Router combinators
 
-* `/`: Parses or writes using two routers one after the other. For example `rString / rInt` will have type `Router<string * int>`. This operator has overloads for any combination of generic and non-generic routers, as well as a string on either side to add a constant URL fragment. For example `r "article" / r "id" / rInt` can be shortened to `"article/id" / rInt`.
-* `+`: Parses or writes using the first router if successful, otherwise the second.
+* `/` (alias `Router.Combine`): Parses or writes using two routers one after the other. For example `rString / rInt` will have type `Router<string * int>`. This operator has overloads for any combination of generic and non-generic routers, as well as a string on either side to add a constant URL fragment. For example `r "article" / r "id" / rInt` can be shortened to `"article/id" / rInt`.
+* `+` (alias `Router.Add`): Parses or writes using the first router if successful, otherwise the second.
 * `Router.Sum`: Optimized version of combining a sequence of routers with `+`. Parses or writes with the first router in the sequence that can handle the path or value.
 * `Router.Map`: A bijection (or just surjection) between representations handled by routers. For example if you have a `type Person = { Name: string; Age: int }`, then you can define a router for it by mapping from a `Router<string * int>` like so
     ```fsharp
@@ -1095,7 +1121,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Option`: Creates an F# option parser/writer. Writes or reads `None` and `Some/x` segments.
 * `Router.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router. For 
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
-* `Router.Table`: Creates a router mapping between a list of static action values and paths.
+* `Router.Table`: Creates a router mapping between a list of static endpoint values and paths.
 * `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
 * `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
 * [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
@@ -1115,15 +1141,15 @@ This works the same on both server and client-side to create basic `<a>` links t
 ```fsharp
     [<Website>]
     let Main =
-        Sitelet.New rPages (fun ctx action ->
-            match action with 
+        Sitelet.New rPages (fun ctx ep ->
+            match ep with 
             | Home -> div [] [ text "This is the home page" ]
             | Contact _ -> client <@ ContactMain() @>
         )
 ```
 Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
 Sitelets are only a server-side type.
-* `Router.Ajax` makes a request from an action value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
+* `Router.Ajax` makes a request from an endpoint value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
 ```fsharp
     // [<EndPoint "/get-data">] GetData of int
 
