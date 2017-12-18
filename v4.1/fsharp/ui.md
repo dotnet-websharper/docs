@@ -1178,7 +1178,7 @@ To show the contents of a ListModel in your document, you can of course use one 
 
 ## Routing
 
-If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
+If you have a `WebSharper.Sitelets.Router<'T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
 
 ### Install client-side routing
 
@@ -1194,15 +1194,15 @@ Example for `Router.Install`, using the router value introduced in the [Sitelets
 let ClientMain() =
     let location = rPages |> Router.Install Home
     location.View.Doc(function
-        | Home -> div [ text "This is the home page" ]
-        | Contact p -> div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
+        | Home -> div [] [ text "This is the home page" ]
+        | Contact p -> div [] [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
     )
 ```
 First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server-side correctly), which could be a home or an error page.
 
-Also, you need to make sure that your router value is `[JavaScript]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
+Also, you need to make sure that your router value is `[<JavaScript>]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
 
-`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#contact/Bob/32`.
+`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#/contact/Bob/32`.
 
 Example for `Router.Slice` and `Router.Install`:
 ```fsharp
@@ -1213,7 +1213,7 @@ let ContactMain() =
             Contact
         |> Router.Install ("unknown", 0)
     location.View.Doc(fun p -> 
-        div [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
+        div [] [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
     )
 ```
 Here we only install a click handler for the contact pages, which means that a link to root will be a browser navigation, but links between contacts work fully on the client. The first function argument maps a full page value to an option of a value that we handle, and the second function maps this back to a full page value. So instead of a `Var<Pages>` here we get only a `Var<Person>`.
@@ -1228,7 +1228,7 @@ let ContactMain() =
     let location = // ...
     let contactDetails = location.View |> View.MapAsync GetContactDetails
     contactDetails.View.Doc(fun p -> 
-        // show contact detils
+        // show contact details
     )
 ```
 

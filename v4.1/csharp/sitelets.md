@@ -573,7 +573,7 @@ public class Article {
 Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, a => a.Title)
 ```
 
-* `.Embed` similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
+The mapping functions can also be partial, so one or both of them can return `null` on some inputs. The only important thing is that the two functions are the inverse of each other on valid values, so `decode(encode(x)) = x` for all values of `x`. Also, `null` should never be a valid endpoint value for this to work.
 
 ```csharp
 [EndPoint("/article")]
@@ -581,7 +581,7 @@ public class Article : Home {
     public string Title;
 }
 
-Sitelet.Infer<string>(ArticleContent).Embed(t => new Article() { Title = t }, Home p => p is Article ? FSharpConvert.Some((a as Article).Title) : null)
+Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, Home p => p is Article ? (a as Article).Title : null)
 ```
 
 The `embed` function must return a value of type `FSharpOption`. A missing value can be represented by a `null`, while you can create a filled value most easily with the `FSharpConvert.Some` static method (defined in `WebSharper` namespace).
@@ -876,10 +876,143 @@ The implementation of these functions relies on cookies and thus requires that t
 
 ### Routers
 
-The router component of a sitelet can be constructed in multiple ways. The main options are:
+The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
-* Sitelets has a built-in `WebSharper.Sitelets.Routing.Router` type that encapsulate a mapping from `Http.Request` to the action type, and a mapping from the action type to `System.Uri`.
-* `WebSharper.UI` also contains a router abstraction, that is also able to be shared between the server and the client (translated to JavaScript), so that the client can generate links from action values too, or handle some URL changes without browser navigation (client-side routing).
-This type necessarily has less server-only concerns, so parser in `WebSharper.UI.Routing.Router` only deals with the URL string and request method and body instead of being able to access the underlying `Http.Request`.
-This router also has an `Infer` helper that shares almost all of attribute semantics described above.
-It is possible to convert it to a Sitelets router, but not the other way around. See the [WebSharper.UI documentation](ui.md#routing) for details.
+* Declaratively, using `InferRouter.Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[JavaScript]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
+* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
+* Implementing the `IRouter` interface. This is the most universal way, but has less options for composition.
+
+The following example shows how you can create a router of type `WebSharper.Sitelets.IRouter<EndPoint>` by writing the two mappings manually:
+
+```csharp
+using WebSharper.Sitelets;
+
+public enum EndPoint { Page1, Page2 }
+
+public class MyRouter : IRouter<EndPoint>
+{
+    public EndPoint Route(Http.Request req) 
+    {
+        switch (req.Uri.LocalPath)
+        {
+            case "/page1": return EndPoint.Page1;
+            case "/page2": return EndPoint.Page2;
+            default: return null;
+        }
+    }
+
+    public Uri Link(EndPoint endpoint) 
+    {
+        switch (endpoint)
+        {
+            case EndPoint.Page1: return new Uri("/page1", System.UriKind.Relative);
+            case EndPoint.Page2: return new Uri("/page2", System.UriKind.Relative);
+            default: return null;
+        }
+    }
+}
+```
+
+Specifying routers manually gives you full control of how to parse incoming requests and to map endpoints to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and endpoints, so that linking to an endpoint produces a URL that is in turn routed back to the same endpoint.
+
+Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/WebSharper.Sitelets.Router#Table\`\`1):
+
+```csharp
+var MyRouter : Router<EndPoint> =
+    Router.Table(
+        Tuple.Create(EndPoint.Page1, "/page1"),
+        Tuple.Create(EndPoint.Page2, "/page2")
+    )
+```
+
+Even simpler, if you want to create the same URL shapes that would be generated by `Sitelet.Infer`, you can simply use `InferRouter.Router.Infer()`:
+
+```csharp
+var MyRouter : Router<EndPoint> =
+    InferRouter.Router.Infer ()
+```
+
+### Router primitives
+
+The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Router` values and construct functions: (following examples are assuming that you have `using static WebSharper.Sitelets.RouterOperators;`)
+
+* `rRoot`: Recognizes and writes an empty path.
+* `r "path"`: Recognizes and writes a specific subpath. You can also write `r "path/subpath"` to parse two or more segments of the URL.
+* `rString`, `rChar`: Recognizes a URIComponent as a string or char and writes it as a URIComponent.
+* `rTryParse<T>`: Creates a router for any type that defines a `TryParse` static method.
+* `rInt`, `rDouble`, ...: Creates a router for numeric values.
+* `rBool`, `rGuid`: Additional primitive types to parse from or write to the URL. 
+* `rDateTime`: Parse or write a `DateTime`, takes a format string.
+
+### Router combinators
+
+* `Router.Combine`: Parses or writes using two routers one after the other. For example `Router.Combine(rString, rInt)` will have type `Router<Tuple<string, int>>`.
+* `/`: Same as above, but when one side is a non-generic `Router` or a string which adds a constant URL fragment. For example `r("article") / r("id") / rInt` can be shortened to `"article/id" / rInt`.
+* `+` (alias `Router.Add`): Parses or writes using the first router if successful, otherwise the second.
+* `Router.Sum`: Optimized version of combining a sequence of routers with `+`. Parses or writes with the first router in the sequence that can handle the path or value.
+* `.Map`: A bijection (or just surjection) between representations handled by routers. For example if you have a class named `Person` with fields `string Name` and `int Age`, then you can define a router for it by mapping from a `Router<Tuple<string, int>>` like so
+    ```csharp
+    var rPerson =
+        Router.Combine(rString, rInt)
+            .Map(
+                (n, a) => new Person { Name = n, Age = a },
+                p => (p.Name, p.Age).ToTuple()
+            );
+    ```
+    See that `Map` needs two function arguments, to convert data back and forth between representations. All values of the resulting type must be mapped back to underlying type by the second function in a way compatible with the first function to work correctly.
+* `.MapTo`: Maps a non-generic `Router` to a single valued `Router<T>`. For example if `Home` is a base class for your endpoint type hierarchy with a singleton instance, you can create a router for it by:
+    ```csharp
+    var rHome = rRoot.MapTo(Home.Instance);
+    ```
+    This only needs a single value as argument, but the type used must be comparable, so the writer part of the newly created `Router<T>` can decide if it is indeed the `Home.Instance` value that it needs to write by the underlying router (in our case producing a root URL).
+* `.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt.Filter(x => x >= 0)`, which won't parse and write negative values.
+* `.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt.Query("x")`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which inclide primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
+* `.QueryNullable`: Modifies a router to read an optional query value as a `System.Nullable`. Creates a `Router<Nullable<T>`, same restrictions apply as to `Query`.
+* `.Box`: Converts a `Router<T>` to a `Router<object>`. When writing, it uses a type check to see if the object is of type `T` so it can be passed to underlying router.
+* `.Unbox`:  Converts a `Router<object>` to a `Router<T>`. When parsing, it uses a type check to see if the object is of type `T` so that the parsed value can be represented in `T`.
+* `.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `rString.Array()` can handle `2/x/y`.
+* `.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router. For 
+* `InferRouter.Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets.md).
+* `Router.Table`: Creates a router mapping from any number of `Tuple<Endpoint, string>` arguments, connecting the given endpoint values and paths.
+* `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
+* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body(x => x, x => x)` just gets the request body as a string.
+* [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
+* [`Router.FormData`](/api/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
+* `Router.Delay` can be used to construct routers for recursive data types. Takes an `Func<Router<'T>>` function, and evaluates it firsthe t time the router is used for parsing and writing (never just when combining them).
+
+### Using the router
+
+* `Router.Link` creates a (relative) link using a router.
+A useful helper to have in the file defining your router is:
+    ```csharp
+        public Doc MakeLink(EndPoint page, string content) =>
+            a(attr.href(router.Link(page)), content);
+    ```
+This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
+* `Sitelet.New` creates a Sitelet from a router and handler. Example:
+```csharp
+    [Website]
+    static Sitelet<object> Main =>
+        Sitelet.New(rPages, (ctx, ep) => {
+            switch (ep)
+            {
+                case Home h: return div("This is the home page");
+                case Contact c: return client (() => ContactMain());
+                default: return null;
+            }
+        }
+```
+Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
+Sitelets are only a server-side type.
+* `Router.Ajax` makes a request from an endpoint value on the client and executes it using `jQuery.ajax`. Returns a `Task<string>`, which raises an exception internally if the request fails. Example:
+```csharp
+    // [<EndPoint "/get-data/{i}">] public class GetData { public int i; }
+
+    public async Task<string> GetDataAsyncSafe(int i) {
+        try
+            return await router.Ajax(new GetData { i = i });
+        else 
+            return null;
+    }
+
+```

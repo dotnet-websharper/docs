@@ -999,7 +999,7 @@ The handler is responsible for handling endpoints, by returning content (a synch
 
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
-* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[JavaScript]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
+* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[<JavaScript>]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
 * Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
 * Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
@@ -1076,7 +1076,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `rRoot`: Recognizes and writes an empty path.
 * `r "path"`: Recognizes and writes a specific subpath. You can also write `r "path/subpath"` to parse two or more segments of the URL.
 * `rString`, `rChar`: Recognizes a URIComponent as a string or char and writes it as a URIComponent.
-* `rTryParse<T>`: Creates a router for any type that defines a `TryParse` static method.
+* `rTryParse<'T>`: Creates a router for any type that defines a `TryParse` static method.
 * `rInt`, `rDouble`, ...: Creates a router for numeric values.
 * `rBool`, `rGuid`: Additional primitive types to parse from or write to the URL. 
 * `rDateTime`: Parse or write a `DateTime`, takes a format string.
@@ -1095,16 +1095,16 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
             (fun p -> p.Name, p.Age)
     ```
     See that `Map` needs two function arguments, to convert data back and forth between representations. All values of the resulting type must be mapped back to underlying type by the second function in a way compatible with the first function to work correctly.
-* `Router.MapTo`: Maps a non-generic `Router` to a single valued `Router<T>`. For example if `Home` is a union case in your `Pages` union type describing pages on your site, you can create a router for it by:
+* `Router.MapTo`: Maps a non-generic `Router` to a single valued `Router<'T>`. For example if `Home` is a union case in your `Pages` union type describing pages on your site, you can create a router for it by:
     ```fsharp
     let rHome : Router<Pages> =
         rRoot |> Router.MapTo Home
     ```
-    This only needs a single value as argument, but the type used must be comparable, so the writer part of the newly created `Router<T>` can decide if it is indeed a `Home` value that it needs to write by the underlying router (in our case producing a root URL).
+    This only needs a single value as argument, but the type used must be comparable, so the writer part of the newly created `Router<'T>` can decide if it is indeed a `Home` value that it needs to write by the underlying router (in our case producing a root URL).
 * `Router.Embed`: An injection between representations handled by routers. For example if you have a `Router<Person>` parsing a person's details, and a `Contact of Person` union case in your `Pages` union, you can do:
     ```fsharp
     let rContact : Router<Pages> =
-        r "contact" / rPerson 
+        "contact" / rPerson 
         |> Router.Embed
             Contact
             (function Contact p -> Some p | _ -> None)
@@ -1112,10 +1112,12 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
     See that now we have two functions again, but the second is returning an option. The first tells us that once a path is parsed (for example we are recognizing `contact/Bob/32` here), it can wrap it in a `Contact` case (`Contact` here is used as a short version of a union case constructor, a function with signature `Person -> Pages`). And if the newly created router gets a value to write, it can use the second function to map it back optionally to an underlying value.
 * `Router.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt |> Router.Filter (fun x -> x >= 0)`, which won't parse and write negative values.
 * `Router.Slice`: restricts a router to parse/write values only that can be mapped to a new value. Equivalent to using `Filter` first to restrict the set of values and then `Map` to convert to a type that is a better representation of the restricted values.
+* `Router.TryMap`: a combination of `Slice` and `Embed`, a mapping from a subset of source values to a subset of target values. Both the encode and decode functions must return `None` if there is no mapping to a value of the other type.
 * `Router.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which inclide primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
-* `Router.QueryOption`: Modifies a router to read an optional query value. Creates a `Router<option<T>`, same restrictions apply as to `Query`.
-* `Router.Box`: Converts a `Router<T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `T` so it can be passed to underlying router.
-* `Router.Unbox`:  Converts a `Router<obj>` to a `Router<T>`. When parsing, it uses a type check to see if the object is of type `T` so that the parsed value can be represented in `T`.
+* `Router.QueryOption`: Modifies a router to read an optional query value as an F# option. Creates a `Router<option<'T>`, same restrictions apply as to `Query`.
+* `Router.QueryNullable`: Modifies a router to read an optional query value as a `System.Nullable`. Creates a `Router<Nullable<'T>`, same restrictions apply as to `Query`.
+* `Router.Box`: Converts a `Router<'T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `'T` so it can be passed to underlying router.
+* `Router.Unbox`:  Converts a `Router<obj>` to a `Router<'T>`. When parsing, it uses a type check to see if the object is of type `'T` so that the parsed value can be represented in `'T`.
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
 * `Router.Option`: Creates an F# option parser/writer. Writes or reads `None` and `Some/x` segments.
@@ -1153,7 +1155,7 @@ Sitelets are only a server-side type.
 ```fsharp
     // [<EndPoint "/get-data">] GetData of int
 
-    let GetDataAsync i =
+    let GetDataAsyncSafe i =
         async {
             try
                 return! Some (Router.Ajax router (GetData i))
