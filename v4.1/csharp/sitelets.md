@@ -584,8 +584,6 @@ public class Article : Home {
 Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, Home p => p is Article ? (a as Article).Title : null)
 ```
 
-The `embed` function must return a value of type `FSharpOption`. A missing value can be represented by a `null`, while you can create a filled value most easily with the `FSharpConvert.Some` static method (defined in `WebSharper` namespace).
-
 ## Content
 
 Content describes the response to send back to the client: HTTP status, headers and body. Content is always worked with asynchronously: all the constructors and combinators described below take and return values of type `Task<Content>`.
