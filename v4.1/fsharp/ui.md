@@ -1156,9 +1156,9 @@ let vFirstName = varPerson.View |> View.Map (fun p -> p.FirstName)
 
 Additionally, `var.V` can be used as a shorthand for [lenses](#lens). `.V` is a shorthand for `.LensAuto` when passed to the following supporting functions:
 
-* `Doc.Input`, `Doc.InputArea`, `Doc.PasswordBox`
-* `Doc.IntInput`, `Doc.IntInputUnchecked`
-* `Doc.FloatInput`, `Doc.FloatInputUnchecked`
+* [`Doc.InputV`](/api/WebSharper.UI.Doc#InputV), [`Doc.InputAreaV`](/api/WebSharper.UI.Doc#InputVArea), [`Doc.PasswordBoxV`](/api/WebSharper.UI.Doc#PasswordBoxV)
+* [`Doc.IntInputV`](/api/WebSharper.UI.Doc#IntInputV), [`Doc.IntInputUncheckedV`](/api/WebSharper.UI.Doc#IntInputUncheckedV)
+* [`Doc.FloatInputV`](/api/WebSharper.UI.Doc#FloatInputV), [`Doc.FloatInputUncheckedV`](/api/WebSharper.UI.Doc#FloatInputUncheckedV)
 
 ```fsharp
 type Person = { FirstName : string; LastName : string }
@@ -1166,8 +1166,8 @@ let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
 
 let myForm =
     div [] [
-        Doc.Input [ attr.placeholder "First Name" ] varPerson.V.FirstName
-        Doc.Input [ attr.placeholder "Last Name" ] varPerson.V.LastName
+        Doc.InputV [ attr.placeholder "First Name" ] varPerson.V.FirstName
+        Doc.InputV [ attr.placeholder "Last Name" ] varPerson.V.LastName
     ]
 
 // The above is equivalent to:
@@ -1381,7 +1381,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
             myPeopleColl.MapLens(fun k vp ->
                 label [] [
                     text (vp.V.Username + ": ")
-                    Doc.Input [] vp.V.Name
+                    Doc.InputV [] vp.V.Name
                 ]
             )
             |> Doc.BindView Doc.Concat
