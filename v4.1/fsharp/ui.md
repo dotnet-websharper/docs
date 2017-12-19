@@ -849,9 +849,11 @@ More variants are available in the [`Doc` module](/api/WebSharper.UI.Client.Doc)
 
 The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/WebSharper.UI.View\`1). A `View<'T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `'T`.
 
-One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`View.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying performing side-effects in functions like `View.Map`.
+One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`View.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in functions like `View.Map`.
 
 In pseudo-code below, `[[x]]` notation is used to denote the value of the View `x` at every point in time, so that `[[x]]` = `[[y]]` means that the two views `x` and `y` are observationally equivalent.
+
+Note that several of the functions below can be used more concisely using [the V shorthand](#v).
 
 #### Creating and combining Views
 
@@ -981,6 +983,212 @@ Once you have created a View to represent your dynamic content, here are the var
     ]
     ```
 
+<a name="lens"></a>
+### IRefs and lensing
+
+WebSharper.UI provides the interface [`IRef<'T>`](/api/WebSharper.UI.IRef\`1) which has the same capabilities as `Var<'T>`. `Var<'T>` itself implements `IRef<'T>`. In fact, all of the rendering functions mentioned above, such as `Doc.Input`, take `IRef<'T>` arguments rather than `Var<'T>`.
+
+This interface makes it possible to create Var-like values without creating a new Var proper. The main example of this is **lenses**.
+
+In WebSharper.UI, a lens is an IRef that "focuses" on a sub-part of an existing IRef (or Var). For example, given the following:
+
+```fsharp
+type Person = { FirstName : string; LastName : string }
+let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
+```
+
+You might want to create a form that allows entering the first and last name separately. For this, you need two `IRef<string>`s that directly observe and alter the `FirstName` and `LastName` fields of the value stored in `varPerson`. This is exactly what a lens does.
+
+To create a lens, you need to pass a getter and a setter function. The getter is called when the lens needs to know its current value, and extracts it from the parent IRef's current value. The setter is called when setting the value of the lens; it receives the current value of the parent IRef and the new value of the lens, and returns the new value of the parent IRef.
+
+```fsharp
+let varFirstName = varPerson.Lens (fun p -> p.FirstName)
+                                  (fun p n -> { p with FirstName = n })
+let varLastName = varPerson.Lens (fun p -> p.LastName)
+                                 (fun p n -> { p with LastName = n })
+let myForm =
+    div [] [
+        Doc.Input [ attr.placeholder "First Name" ] varFirstName
+        Doc.Input [ attr.placeholder "Last Name" ] varLastName
+    ]
+```
+
+#### Automatic lenses
+
+In the specific case of records, you can use `LensAuto` to create lenses more concisely. This method only takes the getter, and is able to generate the corresponding setter during compilation.
+
+```fsharp
+let varFirstName = varPerson.LensAuto (fun p -> p.FirstName)
+
+// The above is equivalent to:
+let varFirstName = varPerson.Lens (fun p -> p.FirstName)
+                                  (fun p n -> { p with FirstName = n })
+```
+
+You can be even more concise when using `Doc.Input` and family thanks to [the V shorthand](#v).
+
+<a name="v"></a>
+### The V Shorthand
+
+Mapping reactive values from their model to a value that you want to display can be greatly simplified using the V shorthand. This shorthand revolves around passing calls to the property `view.V` to a number of supporting functions.
+
+#### Views and V
+
+When an expression containing a call to `view.V` is passed as argument to one of the supporting functions, it is converted to a call to `View.Map` on this view, and the resulting expression is used in a way relevant to the supporting function.
+
+The simplest supporting function is called `V`, and it simply returns the view expression.
+
+```fsharp
+type Person = { FirstName: string; LastName: string }
+
+let vPerson : View<Person> = // ...
+
+let vFirstName = V(vPerson.V.FirstName)
+
+// The above is equivalent to:
+let vFirstName = vPerson |> View.Map (fun p -> p.FirstName)
+```
+
+You can use arbitrarily complex expressions:
+
+```
+let vFullName = V(vPerson.V.FirstName + " " + vPerson.V.LastName)
+
+// The above is equivalent to:
+let vFirstName = vPerson |> View.Map (fun p -> p.FirstName + " " + p.LastName)
+```
+
+Other supporting functions use the resulting View in different ways:
+
+* `text` passes the resulting View to `textView`.
+
+    ```fsharp
+    let showName : Doc = text (vPerson.V.FirstName + " " + vPerson.V.LastName)
+
+    // The above is equivalent to:
+    let showName = 
+        textView (
+            vPerson
+            |> View.Map (fun p -> p.V.FirstName + " " + p.V.LastName)
+        )
+    ```
+
+* `attr.*` attribute creation functions pass the resulting View to the corresponding `attr.*Dyn`.
+
+    ```fsharp
+    type ImgData = { Src: string; Height: int }
+    
+    let myImgData = Var.Create { Src = "/my-img.png"; Height = 200 }
+    
+    let myImg =
+        img [
+            attr.src (myImgData.V.Src)
+            attr.height (string myImgData.V.Height)
+        ] []
+
+    // The above is equivalent to:
+    let myImg =
+        img [
+            attr.srcDyn (myImgData.View |> View.Map (fun i -> i.Src))
+            attr.heightDyn (myImgData.View |> View.Map (fun i -> string i.Height))
+        ] []
+    ```
+
+* `Attr.Style` passes the resulting View to `Attr.DynamicStyle`.
+
+    ```fsharp
+    type MyStyle = { BgColor: string; Width: int }
+    
+    let myStyle = Var.Create { BgColor = "orangered"; Width = 400 }
+    
+    let myElt =
+        div [
+            Attr.Style "background-color" myStyle.V.BgColor
+            Attr.Style "width" (sprintf "%ipx" myStyle.V.Width)
+        ] [ text "This is my elt" ]
+
+    // The above is equivalent to:
+    let myElt =
+        div [
+            Attr.DynamicStyle "background-color"
+                (myStyle |> View.Map (fun s -> s.BgColor))
+            Attr.DynamicStyle "width"
+                (myStyle |> View.Map (fun s -> sprintf "%ipx" s.Width))
+        ] [ text "This is my elt" ]
+    ```
+
+Calling `.V` outside of one of the above supporting functions is a compile error. There is one exception: if `view` is a `View<Doc>`, then `view.V` is equivalent to `Doc.EmbedView view`.
+
+```fsharp
+let varPerson = Var.Create (Some { FirstName = "John"; LastName = "Doe" })
+
+let vMyDoc = V(
+    match varPerson with
+    | None -> Doc.Empty
+    | Some p -> div [] [ text varPerson.V.FirstName ]
+)
+let myDoc = vMyDoc.V
+
+// The above is equivalent to:
+let vMyDoc =
+    varPerson.View |> View.Map (fun p ->
+        match p with
+        | None -> Doc.Empty
+        | Some p -> div [] [ text p.FirstName ]
+    )
+let myDoc = Doc.EmbedView vMyDoc
+```
+#### Vars and V
+
+Vars also have a `.V` property. When used with one of the above supporting functions, it is equivalent to `.View.V`.
+
+```fsharp
+let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
+
+let vFirstName = V(varPerson.V.FirstName)
+
+// The above is equivalent to:
+let vFirstName = V(varPerson.View.V.FirstName)
+
+// Which is also equivalent to:
+let vFirstName = varPerson.View |> View.Map (fun p -> p.FirstName)
+```
+
+Additionally, `var.V` can be used as a shorthand for [lenses](#lens). `.V` is a shorthand for `.LensAuto` when passed to the following supporting functions:
+
+* `Doc.Input`, `Doc.InputArea`, `Doc.PasswordBox`
+* `Doc.IntInput`, `Doc.IntInputUnchecked`
+* `Doc.FloatInput`, `Doc.FloatInputUnchecked`
+
+```fsharp
+type Person = { FirstName : string; LastName : string }
+let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
+
+let myForm =
+    div [] [
+        Doc.Input [ attr.placeholder "First Name" ] varPerson.V.FirstName
+        Doc.Input [ attr.placeholder "Last Name" ] varPerson.V.LastName
+    ]
+
+// The above is equivalent to:
+let myForm =
+    div [] [
+        Doc.Input [ attr.placeholder "First Name" ]
+            (varPerson.LensAuto (fun p -> p.FirstName))
+        Doc.Input [ attr.placeholder "Last Name" ]
+            (varPerson.LensAuto (fun p -> p.LastName))
+    ]
+
+// Which is equivalent to:
+let myForm =
+    div [] [
+        Doc.Input [ attr.placeholder "First Name" ] 
+            (varPerson.Lens (fun p -> p.FirstName) (fun p n -> { p with FirstName = n }))
+        Doc.Input [ attr.placeholder "Last Name" ]
+            (varPerson.Lens (fun p -> p.LastName) (fun p n -> { p with LastName = n }))
+    ]
+```
+
 ### ListModels
 
 [`ListModel<'K, 'T>`](/api/WebSharper.UI.ListModel\`2) is a convenient type to store an observable collection of items of type `'T`. Items can be accessed using an identifier, or key, of type `'K`.
@@ -1077,6 +1285,22 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains John, The Real Ana.
     ```
 
+* [`listModel.Lens`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `IRef<'T>` that is bound to the value for a given key.
+
+    ```fsharp
+    let john : IRef<Person> = myPeople.Lens "johnny87"
+    ```
+
+* [`listModel.LensInto`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `IRef<'T>` that is bound to a part of the value for a given key. See [lenses](#lens) for more information.
+
+    ```fsharp
+    let varJohnsName : IRef<string> =
+        myPeople.LensInto "johnny87" (fun p -> p.Name) (fun p n -> { p with Name = n })
+
+    // The following input field edits John's name directly in the listModel.
+    let editJohnsName = Doc.Input [] varJohnsName
+    ```
+
 #### Reactively observing ListModels
 
 The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
@@ -1130,13 +1354,12 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
     * `Map(f: 'K -> View<'T> -> 'V)` additionally observes changes to individual items that are updated.
     
         ```fsharp
-        let myDoc =
-            myPeopleColl.Map(fun k vp ->
-                Console.Log k
-                p [] [ textView (vp |> View.Map (fun p -> p.Name)) ]
-            )
-            |> Doc.BindView Doc.Concat
-            |> Doc.RunAppend JS.Document.Body
+        myPeopleColl.Map(fun k vp ->
+            Console.Log k
+            p [] [ textView (vp |> View.Map (fun p -> p.Name)) ]
+        )
+        |> Doc.BindView Doc.Concat
+        |> Doc.RunAppend JS.Document.Body
         // Logs johnny87, theana12
         // Displays John, Ana
         
@@ -1151,7 +1374,22 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
 
     Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
 
-* [`listModel.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+* [`listModel.MapLens`](/api/WebSHarper.UI.ListModel\`2#MapLens) is similar to the second `Map` method above, except that it passes an `IRef<'T>` instead of a `View<'T>`. This makes it possible to edit list items within the mapping function.
+
+    ```fsharp
+        let myDoc =
+            myPeopleColl.MapLens(fun k vp ->
+                label [] [
+                    text (vp.V.Username + ": ")
+                    Doc.Input [] vp.V.Name
+                ]
+            )
+            |> Doc.BindView Doc.Concat
+    ```
+
+* [`listModel.Doc`](/api/WebSharper.UI.ListModel\`2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+
+* [`listModel.DocLens`](/api/WebSharper.UI.ListModel\`2#DocLens), similarly, is like `MapLens` but concatenating the resulting Docs.
 
 * [`listModel.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
 
@@ -1171,10 +1409,6 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
     ```fsharp
     View.Map Option.isSome (listModel.TryFindByKeyAsView(k))
     ```
-
-#### Inserting ListModels in the Doc
-
-To show the contents of a ListModel in your document, you can of course use one of the above View methods and pass it to `Doc.BindView`.
 
 ## Routing
 
