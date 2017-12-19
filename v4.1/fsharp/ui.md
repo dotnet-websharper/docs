@@ -984,22 +984,20 @@ Once you have created a View to represent your dynamic content, here are the var
     ```
 
 <a name="lens"></a>
-### IRefs and lensing
+### Vars and lensing
 
-WebSharper.UI provides the interface [`IRef<'T>`](/api/WebSharper.UI.IRef\`1) which has the same capabilities as `Var<'T>`. `Var<'T>` itself implements `IRef<'T>`. In fact, all of the rendering functions mentioned above, such as `Doc.Input`, take `IRef<'T>` arguments rather than `Var<'T>`.
+The `Var<'T>` type is actually an abstract class, this makes it possible to create instances with an implementation different from `Var.Create`. The main example of this are **lenses**.
 
-This interface makes it possible to create Var-like values without creating a new Var proper. The main example of this is **lenses**.
-
-In WebSharper.UI, a lens is an IRef that "focuses" on a sub-part of an existing IRef (or Var). For example, given the following:
+In WebSharper.UI, a lens is a `Var` without its own storage cell that "focuses" on a sub-part of an existing `Var`. For example, given the following:
 
 ```fsharp
 type Person = { FirstName : string; LastName : string }
 let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
 ```
 
-You might want to create a form that allows entering the first and last name separately. For this, you need two `IRef<string>`s that directly observe and alter the `FirstName` and `LastName` fields of the value stored in `varPerson`. This is exactly what a lens does.
+You might want to create a form that allows entering the first and last name separately. For this, you need two `Var<string>`s that directly observe and alter the `FirstName` and `LastName` fields of the value stored in `varPerson`. This is exactly what a lens does.
 
-To create a lens, you need to pass a getter and a setter function. The getter is called when the lens needs to know its current value, and extracts it from the parent IRef's current value. The setter is called when setting the value of the lens; it receives the current value of the parent IRef and the new value of the lens, and returns the new value of the parent IRef.
+To create a lens, you need to pass a getter and a setter function. The getter is called when the lens needs to know its current value, and extracts it from the parent `Var`'s current value. The setter is called when setting the value of the lens; it receives the current value of the parent `Var` and the new value of the lens, and returns the new value of the parent `Var`.
 
 ```fsharp
 let varFirstName = varPerson.Lens (fun p -> p.FirstName)
@@ -1285,16 +1283,16 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains John, The Real Ana.
     ```
 
-* [`listModel.Lens`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `IRef<'T>` that is bound to the value for a given key.
+* [`listModel.Lens`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `Var<'T>` that does not have its own separate storage, but is bound to the value for a given key.
 
     ```fsharp
-    let john : IRef<Person> = myPeople.Lens "johnny87"
+    let john : Var<Person> = myPeople.Lens "johnny87"
     ```
 
-* [`listModel.LensInto`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `IRef<'T>` that is bound to a part of the value for a given key. See [lenses](#lens) for more information.
+* [`listModel.LensInto`](/api/WebSharper.UI.ListModel\`2#Lens) creates an `Var<'T>` that does not have its own separate storage, but is bound to a part of the value for a given key. See [lenses](#lens) for more information.
 
     ```fsharp
-    let varJohnsName : IRef<string> =
+    let varJohnsName : Var<string> =
         myPeople.LensInto "johnny87" (fun p -> p.Name) (fun p n -> { p with Name = n })
 
     // The following input field edits John's name directly in the listModel.
@@ -1374,7 +1372,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
 
     Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
 
-* [`listModel.MapLens`](/api/WebSHarper.UI.ListModel\`2#MapLens) is similar to the second `Map` method above, except that it passes an `IRef<'T>` instead of a `View<'T>`. This makes it possible to edit list items within the mapping function.
+* [`listModel.MapLens`](/api/WebSHarper.UI.ListModel\`2#MapLens) is similar to the second `Map` method above, except that it passes an `Var<'T>` instead of a `View<'T>`. This makes it possible to edit list items within the mapping function.
 
     ```fsharp
         let myDoc =
