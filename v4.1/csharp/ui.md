@@ -736,7 +736,7 @@ The following are available from `WebSharper.UI.CSharp.Client.Html`:
 
     ```csharp
     var varText = Var.Create("initial value");
-    var myInput = input(varText, attr.name "my-input", varText);
+    var myInput = input(varText, attr.name("my-input"), varText);
     ```
     
     With the above code, once `myInput` has been inserted in the document, getting `varText.Value` will at any point reflect what the user has entered, and setting it will edit the input.
@@ -848,9 +848,11 @@ The following are available from `WebSharper.UI.CSharp.Client.Html`:
 
 The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/WebSharper.UI.View\`1). A `View<T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `T`.
 
-One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying performing side-effects in methods like `.Map`.
+One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in methods like `.Map`.
 
 In pseudo-code below, `[[x]]` notation is used to denote the value of the View `x` at every point in time, so that `[[x]]` = `[[y]]` means that the two views `x` and `y` are observationally equivalent.
+
+Note that several of the methods below can be used more concisely using [the V shorthand](#v).
 
 #### Creating and combining Views
 
@@ -966,6 +968,152 @@ Once you have created a View to represent your dynamic content, here are the var
             checkbox(varCheck)
         );
     ```
+
+<a name="lens"></a>
+### IRefs and lensing
+
+The `Var<'T>` type is actually an abstract class, this makes it possible to create instances with an implementation different from `Var.Create`. The main example of this are **lenses**.
+
+In WebSharper.UI, a lens is a Var that "focuses" on a sub-part of an existing Var. For example, given the following:
+
+```csharp
+class Person { 
+    public string FirstName;
+    public string LastName;
+}
+
+var varPerson = Var.Create(new Person { FirstName = "John", LastName = "Doe" });
+```
+
+You might want to create a form that allows entering the first and last name separately. For this, you need two `Var<string>`s that directly observe and alter the `FirstName` and `LastName` fields of the value stored in `varPerson`. This is exactly what a lens does.
+
+To create a lens, you need to pass a getter and a setter function. The getter is called when the lens needs to know its current value, and extracts it from the parent IRef's current value. The setter is called when setting the value of the lens; it receives the current value of the parent IRef and the new value of the lens, and returns the new value of the parent IRef.
+
+```csharp
+Var<string> varFirstName =
+    varPerson.Lens(
+        p => p.FirstName,
+        (p, n) => new Person { FirstName = n, LastName = p.LastName }
+    );
+Var<string> varLastName =
+    varPerson.Lens(
+        p => p.LastName,
+        (p, n) => new Person { FirstName = p.FirstName, LastName = n }
+    );
+Doc myForm =
+    div(
+        input(varFirstName, attr.placeholder("First Name")),
+        input(varLastName, attr.placeholder("Last Name"))
+    )
+```
+
+<a name="v"></a>
+### The V Shorthand
+
+Mapping reactive values from their model to a value that you want to display can be greatly simplified using the V shorthand. This shorthand revolves around passing calls to the property `view.V` to a number of supporting functions.
+
+#### Views and V
+
+When an expression containing a call to `view.V` is passed as argument to one of the supporting functions, it is converted to a call to `View.Map` on this view, and the resulting expression is used in a way relevant to the supporting function.
+
+The simplest supporting function is called `V`, and it simply returns the view expression. It requires `using static WebSharper.UI.V`.
+
+```csharp
+class Person { 
+    public string FirstName;
+    public string LastName;
+}
+
+View<Person> vPerson = // ...
+
+View<string> vFirstName = V(vPerson.V.FirstName);
+
+// The above is equivalent to:
+View<string> vFirstName = vPerson.Map(p => p.FirstName);
+```
+
+You can use arbitrarily complex expressions:
+
+```
+var vFullName = V(vPerson.V.FirstName + " " + vPerson.V.LastName);
+
+// The above is equivalent to:
+var vFirstName = vPerson.Map (p => p.FirstName + " " + p.LastName);
+```
+
+Other supporting functions use the resulting View in different ways:
+
+* `doc` applies this transformation to every argument before concatenating the results as a Doc.
+
+    ```csharp
+    Doc showName = doc(vPerson.V.FirstName, " ", vPerson.V.LastName);
+
+    // The above is equivalent to:
+    Doc showName = 
+        doc(vPerson.Map(p => p.V.FirstName), " ", vPerson.Map(p => p.V.LastName));
+    ```
+
+* Similarly, HTML element functions (`div`, etc.) apply this transformation to every non-attribute argument.
+
+    ```csharp
+    Doc showName = doc(vPerson.V.FirstName, " ", vPerson.V.LastName);
+
+    // The above is equivalent to:
+    Doc showName = 
+        doc(vPerson.Map(p => p.V.FirstName), " ", vPerson.Map(p => p.V.LastName));
+    ```
+
+* `attr.*(string)` attribute creation functions pass the resulting View to the corresponding `attr.*(View<string>)`.
+
+    ```csharp
+    class ImgData
+    {
+        public string Src;
+        public int Height;
+    }
+    
+    var myImgData = Var.Create(new ImgData { Src = "/my-img.png", Height = 200 });
+    
+    var myImg =
+        img(
+            attr.src(myImgData.V.Src),
+            attr.height(myImgData.V.Height.ToString())
+        );
+
+    // The above is equivalent to:
+    var myImg =
+        img(
+            attr.src(myImgData.Map(i => i.Src)),
+            attr.height(myImgData.Map(i => i.Height.ToString()))
+        )
+    ```
+
+Calling `.V` outside of one of the above supporting functions is a compile error. There is one exception: if `view` is a `View<Doc>`, then `view.V` is equivalent to `doc(view)`.
+
+```csharp
+let vMyDoc = V(varPerson.V == null ? Doc.Empty : div(varPerson.V.FirstName))
+let myDoc = vMyDoc.V
+
+// The above is equivalent to:
+let vMyDoc = varPerson.View.Map(p => p == null ? Doc.Empty : div(p.FirstName))
+let myDoc = doc(vMyDoc)
+```
+
+#### Vars and V
+
+Vars also have a `.V` property. When used with one of the above supporting functions, it is equivalent to `.View.V`.
+
+```fsharp
+var varPerson = Var.Create(new Person { FirstName = "John", LastName = "Doe" });
+
+var vFirstName = V(varPerson.V.FirstName);
+
+// The above is equivalent to:
+var vFirstName = V(varPerson.View.V.FirstName);
+
+// Which is also equivalent to:
+var vFirstName = varPerson.View.Map(p => p.FirstName);
+```
 
 ### ListModels
 

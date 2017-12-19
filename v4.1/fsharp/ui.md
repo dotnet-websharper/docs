@@ -1121,7 +1121,7 @@ Calling `.V` outside of one of the above supporting functions is a compile error
 let varPerson = Var.Create (Some { FirstName = "John"; LastName = "Doe" })
 
 let vMyDoc = V(
-    match varPerson with
+    match varPerson.V with
     | None -> Doc.Empty
     | Some p -> div [] [ text varPerson.V.FirstName ]
 )
@@ -1136,6 +1136,7 @@ let vMyDoc =
     )
 let myDoc = Doc.EmbedView vMyDoc
 ```
+
 #### Vars and V
 
 Vars also have a `.V` property. When used with one of the above supporting functions, it is equivalent to `.View.V`.
