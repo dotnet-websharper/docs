@@ -7,6 +7,8 @@ WebSharper.UI is a library providing a novel, pragmatic and convenient approach 
 
 This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
 
+Get the package from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui).
+
 ## Using HTML
 
 WebSharper.UI's core type for HTML construction is [`Doc`](/api/WebSharper.UI.Doc). A Doc can represent a single DOM node (element, text), but it can also be a sequence of zero or more nodes. This allows you to treat equally any HTML snippet that you want to insert into a document, whether it consists of a single element or not.
@@ -322,7 +324,7 @@ let MyPage (ctx: Context<EndPoint>) =
     )
 ```
 
-To include client-side elements inside a page, use the `client` method, opened with `WebSharper.UI.CSharp.Html`.
+To include client-side elements inside a page, use the `client` method, from inside `WebSharper.UI.Html`.
 
 <a name="templating"></a>
 ## HTML Templates

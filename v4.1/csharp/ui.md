@@ -2,10 +2,13 @@
 
 WebSharper.UI is a library providing a novel, pragmatic and convenient approach to UI reactivity. It includes:
 
-* An [HTML library](#html) usable both from the server side and from the client side, which you can use to build HTML pages either by calling F# functions to create elements, or by instantiating template HTML files.
+* An [HTML library](#html) usable both from the server side and from the client side, which you can use to build HTML pages either by calling C# functions to create elements, or by instantiating template HTML files.
 * A [reactive layer](#reactive) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP). This reactive system integrates with the HTML library to create reactive documents. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the reactive system, rather than a single state value associated with the component.
 
 This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
+
+The the base library, and C#-oriented extension methods are in two separate packages, get them from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui) and [WebSharper.UI.CSharp](https://www.nuget.org/packages/websharper.ui.csharp).
+
 
 ## Using HTML
 
@@ -18,7 +21,7 @@ Additionally, client-side Docs can be reactive. A same Doc can consist of differ
 
 #### Docs
 
-The main way to create `Doc`s is to use the static methods from the `WebSharper.UI.CSharp.Html` or `WebSharper.UI.CSharp.Client.Html` classes. The difference is that the first contains server-side `Doc` constructors, including taking event handlers as a LINQ expression, to be auto-translated and ran on the client. The second contains server-side `Doc` constructors, including reactive functionalities. The composing static `Doc` content is available on both with the same syntax.
+The main way to create `Doc`s is to use the static methods from the `WebSharper.UI.Html` or `WebSharper.UI.Client.Html` classes. The difference is that the first contains server-side `Doc` constructors, including taking event handlers as a LINQ expression, to be auto-translated and ran on the client. The second contains server-side `Doc` constructors, including reactive functionalities. The composing static `Doc` content is available on both with the same syntax.
 
 Every HTML element has a dedicated method, such as `div` or `p`, which takes a any number of `object` parameters, which can represent attributes or child elements. The following parameter values are accepted:
 
@@ -43,7 +46,7 @@ On the client:
 * any other will be converted to a string with its `ToString` function and included as a text node.
 
 ```csharp
-using WebSharper.UI.CSharp.Html;
+using WebSharper.UI.Html;
 
 var myDoc =
     div(
@@ -143,7 +146,7 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
     ```
 
 * [`Doc.Verbatim`](/api/WebSharper.UI.Doc#Verbatim) creates a Doc from plain HTML text.  
-    **Security warning:** this function does not perform any checks on the contents, and can be a code injection vulnerability if used improperly. We recommend avoiding it unless absolutely necessary, and properly sanitizing user inputs if you do use it. If you simply want to use HTML syntax instead of F# functions, take a look at [templating](#templating).
+    **Security warning:** this function does not perform any checks on the contents, and can be a code injection vulnerability if used improperly. We recommend avoiding it unless absolutely necessary, and properly sanitizing user inputs if you do use it. If you simply want to use HTML syntax instead of C# functions, take a look at [templating](#templating).
 
     ```csharp
     var plainDoc =
@@ -280,7 +283,7 @@ var myButton =
 
 ### HTML on the client
 
-To insert a Doc into the document on the client side, use the `.Run*` family of extension methods you get from having using `WebSharper.UI.CSharp`. Each of these methods has two overloads: one directly taking a DOM [`Element`](/api/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/WebSharper.JavaScript.Dom.Node), and the other taking the id of an element as a string.
+To insert a Doc into the document on the client side, use the `.Run*` family of extension methods. Each of these methods has two overloads: one directly taking a DOM [`Element`](/api/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/WebSharper.JavaScript.Dom.Node), and the other taking the id of an element as a string.
 
 * [`.Run`](/api/WebSharper.UI.Doc#Run) inserts the Doc as the child(ren) of the given DOM element. Note that it replaces the existing children, if any.
 
@@ -289,7 +292,6 @@ To insert a Doc into the document on the client side, use the `.Run*` family of 
     using WebSharper.UI;
     using WebSharper.UI.Client;
     using WebSharper.UI.Html;
-    using WebSharper.UI.CSharp;
 
     public static void Main() 
     {
@@ -317,8 +319,7 @@ On the server side, using [sitelets](sitelets.md), you can create HTML pages fro
 using System.Threading.Tasks;
 using WebSharper.Sitelets;
 using WebSharper.UI;
-using WebSharper.UI.CSharp;
-using static WebSharper.UI.CSharp.Html;
+using static WebSharper.UI.Html;
 
 public static Task<Content> MyPage(Context ctx) =>
     Content.Page(
@@ -337,11 +338,11 @@ To include client-side elements inside a page, use the `ClientSide` method of th
 
 WebSharper.UI's syntax for creating HTML is compact and convenient, but sometimes you do need to include a plain HTML file in a project. It is much more convenient for designing to have a .html file that you can touch up and reload your application without having to recompile it. This is what Templates provide. Templates are HTML files that can be loaded by WebSharper.UI, and augmented with special elements and attributes that provide additional functionality:
 
-* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by F# code;
-* Declaring two-way binding between F# Vars and HTML input elements (see [reactive](#reactive));
+* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by C# code;
+* Declaring two-way binding between C# Vars and HTML input elements (see [reactive](#reactive));
 * Declaring inner Templates, smaller HTML widgets within the page, that can be instantiated dynamically.
 
-All of these are parsed from HTML at compile time and provided as F# types and methods, ensuring that your templates are correct.
+All of these are parsed from HTML at compile time and provided as C# types and methods, ensuring that your templates are correct.
 
 ### Basics
 
@@ -419,7 +420,7 @@ var myPage =
 
 ### Holes
 
-You can add holes to your template that will be filled by C# code. Each hole has a name. To fill a hole in F#, call the method with this name on the template instance before finishing with `.Doc()`.
+You can add holes to your template that will be filled by C# code. Each hole has a name. To fill a hole in C#, call the method with this name on the template instance before finishing with `.Doc()`.
 
 * `${HoleName}` creates a `string` hole. You can use it in text or in the value of an attribute.
 
@@ -428,7 +429,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
     // <div style="background-color: ${Color}">
     //   <h1>Welcome, ${Name}!</h1>
     //   <!-- You can use the same hole name multiple times,
-    //        and they will all be filled with the same F# value. -->
+    //        and they will all be filled with the same C# value. -->
     //   <p>This div's color is ${Color}.</p>
     // </div>
     
@@ -442,7 +443,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
     // <div style="background-color: red">
     //   <h1>Welcome, my friend!</h1>
     //   <!-- You can use the same hole name multiple times,
-    //        and they will all be filled with the same F# value. -->
+    //        and they will all be filled with the same C# value. -->
     //   <p>This div's color is red.</p>
     // </div>
     ```
@@ -571,7 +572,7 @@ To create a template for a widget (as opposed to a full page), you can put it in
 * The `ws-template` attribute declares that its element is a template whose name is the value of this attribute.
 * The `ws-children-template` attribute declares that the children of its element is a template whose name is the value of this attribute.
 
-Inner templates are available in F# as a nested class under the main provided type.
+Inner templates are available in C# as a nested class under the main provided type.
 
 ```csharp
 // mytemplate.html:
@@ -618,7 +619,7 @@ var myForm =
 
 ### Instantiating templates in HTML
 
-You can also instantiate a template within another template, entirely in HTML, without the need for F# to glue them together.
+You can also instantiate a template within another template, entirely in HTML, without the need for C# to glue them together.
 
 A node named `<ws-TemplateName>` instantiates the inner template `TemplateName` from the same file. A node named `<ws-fileName.TemplateName>` instantiates the inner template `TemplateName` from the file `fileName`. The file name is the same as the generated class name, so with file extension excluded.
 
@@ -730,7 +731,7 @@ WebSharper.UI's reactive layer helps represent user inputs and other time-varyin
 
 Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<T>`](/api/WebSharper.UI.Var\`1). Vars store a value of type `T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
 
-The following are available from `WebSharper.UI.CSharp.Client.Html`:
+The following are available from `WebSharper.UI.Client.Html`:
 
 * `input` creates an `<input>` element with given attributes that is bound to a `Var<string>`, `Var<int>` or `Var<double>`.
 
@@ -1103,7 +1104,7 @@ let myDoc = doc(vMyDoc)
 
 Vars also have a `.V` property. When used with one of the above supporting functions, it is equivalent to `.View.V`.
 
-```fsharp
+```csharp
 var varPerson = Var.Create(new Person { FirstName = "John", LastName = "Doe" });
 
 var vFirstName = V(varPerson.V.FirstName);
