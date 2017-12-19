@@ -665,27 +665,28 @@ var myForm =
         .Doc();
 ```
 
-### Controlling the loading of templates (TODO)
+### Controlling the loading of templates
 
-The type provider can be parameterized to control how its contents are loaded both on the server and the client. For example:
+The code generator can be parameterized to control how its contents are loaded both on the server and the client by special comments on top of the html file. For example:
 
-```csharp
-type new Template.MyTemplate = 
-    Template<"mytemplate.html", 
-        clientLoad = ClientLoad.Inline,
-        serverLoad = ServerLoad.WhenChanged>
+```html
+<!-- ClientLoad = Inline 
+     ServerLoad = WhenChanged -->
+<!DOCTYPE html> ...
 ```
 
-The possible values for `clientLoad` are:
+The comment can contain values for `ClientLoad` and `ServerLoad` as listed below, in separate lines if both are provided. Both keys and values are case-insensitive and spaces and any other kind of comment lines are ignored.
 
-* `ClientLoad.Inline` (default): The template is included in the compiled JavaScript code, and any change to `mytemplate.html` requires a recompilation to be reflected in the application.
-* `ClientLoad.FromDocument`: The template is loaded from the DOM. This means that `mytemplate.html` *must* be the document in which the code is run: either directly served as a Single-Page Application, or passed to `Content.Page` in a Client-Server Application.
+The possible values for `ClientLoad` are:
 
-The possible values for `serverLoad` are:
+* `Inline` (default): The template is included in the compiled JavaScript code, and any change to `mytemplate.html` requires a recompilation to be reflected in the application.
+* `FromDocument`: The template is loaded from the DOM. This means that `mytemplate.html` *must* be the document in which the code is run: either directly served as a Single-Page Application, or passed to `Content.Page` in a Client-Server Application.
 
-* `ServerLoad.WhenChanged` (default): The runtime sets up a file watcher on the template file, and reloads it whenever it is edited.
-* `ServerLoad.Once`: The template file is loaded on first use and never reloaded.
-* `ServerLoad.PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
+The possible values for `ServerLoad` are:
+
+* `WhenChanged` (default): The runtime sets up a file watcher on the template file, and reloads it whenever it is edited.
+* `Once`: The template file is loaded on first use and never reloaded.
+* `PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
 
 ### Accessing the template's model (TODO)
 
