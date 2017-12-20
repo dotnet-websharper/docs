@@ -331,7 +331,7 @@ To include client-side elements inside a page, use the `client` method, from ins
 
 WebSharper.UI's syntax for creating HTML is compact and convenient, but sometimes you do need to include a plain HTML file in a project. It is much more convenient for designing to have a .html file that you can touch up and reload your application without having to recompile it. This is what Templates provide. Templates are HTML files that can be loaded by WebSharper.UI, and augmented with special elements and attributes that provide additional functionality:
 
-* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by C# code;
+* Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by F# code;
 * Declaring two-way binding between F# Vars and HTML input elements (see [reactive](#reactive));
 * Declaring inner Templates, smaller HTML widgets within the page, that can be instantiated dynamically.
 

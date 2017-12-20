@@ -46,7 +46,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile" class="feature-image" >
             <p class="title">Generate static sites</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/offline-sitelet.png" class="feature-image" />
             <p>Output HTML+JS into a folder, all set up to work without WebSharper's server runtime.</p>
         </div>
     </div>
@@ -68,7 +68,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Metaprogramming</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/macro.png" class="feature-image" />
             <p>Customize translation with macros: every call to annotated methods can be modified by your custom class.</p>
         </div>
     </div>
@@ -82,7 +82,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Reactive UI</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/reactive.gif" class="feature-image" />
             <p>Let the data flow through your web pages.</p>
         </div>
         <div class="column is-4-desktop is-6-mobile">
