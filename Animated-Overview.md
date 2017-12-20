@@ -28,7 +28,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Inlined client code</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/client-inlined.png" class="feature-image" />
             <p>Have event handlers and client-generated content in C#/F# right inside your server-side code, auto-translated to JavaScript.</p>
         </div>
     </div>
@@ -109,7 +109,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">WebSocket support</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/websockets.png" class="feature-image" />
             <p>Using a customizable JSON format for your messages.</p>
         </div>
     </div>
