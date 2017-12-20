@@ -36,12 +36,12 @@ a whole set of client-side functional abstractions.
     <div class="columns">
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Declarative routing</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/routing.png" class="feature-image" />
             <p>Parse requests and write links using C#/F# types automatically.</p>
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Customizable JSON format</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/json-format.png" class="feature-image" />
             <p>Parse and generate JSON based on the shape and attributes of your data type.</p>
         </div>
         <div class="column is-4-desktop is-6-mobile" class="feature-image" >
@@ -58,7 +58,7 @@ a whole set of client-side functional abstractions.
     <div class="columns">
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Use the power of C# and/or F#</p>
-            <img src="/images/todo.png" class="feature-image" />
+            <img src="/images/linq.png" class="feature-image" />
             <p>Source-to-source translation with support for latest and greatest language features of both C# and F#.</p>
         </div>
         <div class="column is-4-desktop is-6-mobile">
@@ -104,7 +104,7 @@ a whole set of client-side functional abstractions.
         </div>
         <div class="column is-4-desktop is-6-mobile">
             <p class="title">Remoting with ease</p>
-            <img src="/images/remoting.png" class="feature-image" />
+            <img src="/images/cs-analyzer.gif" class="feature-image" />
             <p>Doing an AJAX request is just a plain asynchronous call to your server-side function.</p>
         </div>
         <div class="column is-4-desktop is-6-mobile">
