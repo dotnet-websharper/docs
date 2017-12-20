@@ -913,7 +913,7 @@ public class MyRouter : IRouter<EndPoint>
 
 Specifying routers manually gives you full control of how to parse incoming requests and to map endpoints to corresponding URLs.  It is your responsibility to make sure that the router forms a bijection of URLs and endpoints, so that linking to an endpoint produces a URL that is in turn routed back to the same endpoint.
 
-Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/WebSharper.Sitelets.Router#Table\`\`1):
+Constructing routers manually is only required for very special cases. The above router can for example be generated using [`Router.Table`](/api/v4.1/WebSharper.Sitelets.Router#Table\`\`1):
 
 ```csharp
 var MyRouter : Router<EndPoint> =
@@ -974,8 +974,8 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Table`: Creates a router mapping from any number of `Tuple<Endpoint, string>` arguments, connecting the given endpoint values and paths.
 * `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
 * `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body(x => x, x => x)` just gets the request body as a string.
-* [`Router.Json`](/api/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
-* [`Router.FormData`](/api/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
+* [`Router.Json`](/api/v4.1/WebSharper.Sitelets.Router#Json\`\`1) creates a router that parses the request body by the JSON format derived from the type argument.
+* [`Router.FormData`](/api/v4.1/WebSharper.Sitelets.Router#FormData) creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
 * `Router.Delay` can be used to construct routers for recursive data types. Takes an `Func<Router<'T>>` function, and evaluates it firsthe t time the router is used for parsing and writing (never just when combining them).
 
 ### Using the router

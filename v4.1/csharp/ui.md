@@ -12,7 +12,7 @@ The the base library, and C#-oriented extension methods are in two separate pack
 
 ## Using HTML
 
-WebSharper.UI's core type for HTML construction is [`Doc`](/api/WebSharper.UI.Doc). A Doc can represent a single DOM node (element, text), but it can also be a sequence of zero or more nodes. This allows you to treat equally any HTML snippet that you want to insert into a document, whether it consists of a single element or not.
+WebSharper.UI's core type for HTML construction is [`Doc`](/api/v4.1/WebSharper.UI.Doc). A Doc can represent a single DOM node (element, text), but it can also be a sequence of zero or more nodes. This allows you to treat equally any HTML snippet that you want to insert into a document, whether it consists of a single element or not.
 
 Additionally, client-side Docs can be reactive. A same Doc can consist of different elements at different moments in time, depending on user input or other variables. See [the reactive section](#reactive) to learn more about this.
 
@@ -80,13 +80,13 @@ var myText =
 // </div>
 ```
 
-One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as [`Dom`](/api/WebSharper.UI.Elt#Dom) to get the underlying `Dom.Element`.
+One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/v4.1/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as [`Dom`](/api/v4.1/WebSharper.UI.Elt#Dom) to get the underlying `Dom.Element`.
 
-Additional functions in the [`Doc`](/api/WebSharper.UI.Doc) can create or combine Docs:
+Additional functions in the [`Doc`](/api/v4.1/WebSharper.UI.Doc) can create or combine Docs:
 
 * `doc` takes a number of object arguments, same as HTML element construction methods, but does not wrap them in an element, but returns a `Doc` that contains the given content as consecutive nodes.
 
-* [`Doc.Empty`](/api/WebSharper.UI.Doc#Empty) creates a Doc consisting of zero nodes, optimized version of `doc()`. Inside parameter lists of HTML element constructors, you can pass a `null` to have empty content, but when you are returning a `Doc`, it is recommended to use `Doc.Empty` so that instance methods can be called on the return value without a null error.
+* [`Doc.Empty`](/api/v4.1/WebSharper.UI.Doc#Empty) creates a Doc consisting of zero nodes, optimized version of `doc()`. Inside parameter lists of HTML element constructors, you can pass a `null` to have empty content, but when you are returning a `Doc`, it is recommended to use `Doc.Empty` so that instance methods can be called on the return value without a null error.
 
     ```csharp
     public Doc WelcomeText(bool show) =>
@@ -97,7 +97,7 @@ Additional functions in the [`Doc`](/api/WebSharper.UI.Doc) can create or combin
     // or nothing.
     ```
 
-* [`Doc.Append`](/api/WebSharper.UI.Doc#Append) creates a Doc consisting of the concatenation of two Docs, optimized version of `doc(x, y)`.
+* [`Doc.Append`](/api/v4.1/WebSharper.UI.Doc#Append) creates a Doc consisting of the concatenation of two Docs, optimized version of `doc(x, y)`.
 
     ```csharp
     var titleAndBody =
@@ -112,7 +112,7 @@ Additional functions in the [`Doc`](/api/WebSharper.UI.Doc) can create or combin
 
 For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make Docs a monoid.
 
-* [`Doc.Concat`](/api/WebSharper.UI.Doc#Concat) generalizes `Append` by concatenating a sequence of Docs. Optimized version of `doc` that does not need to do type checks.
+* [`Doc.Concat`](/api/v4.1/WebSharper.UI.Doc#Concat) generalizes `Append` by concatenating a sequence of Docs. Optimized version of `doc` that does not need to do type checks.
 
     ```csharp
     var thisPage =
@@ -133,7 +133,7 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
     // </ul>
     ```
 
-* [`Doc.Element`](/api/WebSharper.UI.Doc#Element) creates an element with the given name, attributes and children. It is equivalent to the function with the same name from the `Html` module. This function is useful if the tag name is only known at runtime, or if you want to create a non-standard element that isn't available in `Html`. The following example creates a header tag of a given level (`h1`, `h2`, etc).
+* [`Doc.Element`](/api/v4.1/WebSharper.UI.Doc#Element) creates an element with the given name, attributes and children. It is equivalent to the function with the same name from the `Html` module. This function is useful if the tag name is only known at runtime, or if you want to create a non-standard element that isn't available in `Html`. The following example creates a header tag of a given level (`h1`, `h2`, etc).
 
     ```csharp
     public Doc MakeHeader(int level, string content) =>
@@ -145,7 +145,7 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
     // or etc.
     ```
 
-* [`Doc.Verbatim`](/api/WebSharper.UI.Doc#Verbatim) creates a Doc from plain HTML text.  
+* [`Doc.Verbatim`](/api/v4.1/WebSharper.UI.Doc#Verbatim) creates a Doc from plain HTML text.  
     **Security warning:** this function does not perform any checks on the contents, and can be a code injection vulnerability if used improperly. We recommend avoiding it unless absolutely necessary, and properly sanitizing user inputs if you do use it. If you simply want to use HTML syntax instead of C# functions, take a look at [templating](#templating).
 
     ```csharp
@@ -164,7 +164,7 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
 <a name="attr"></a>
 #### Attrs
 
-To create attributes, use corresponding functions from the [`attr`](/api/WebSharper.UI.Html.attr) nested class inside the `Html` static classes.
+To create attributes, use corresponding functions from the [`attr`](/api/v4.1/WebSharper.UI.Html.attr) nested class inside the `Html` static classes.
 
 ```csharp
 var myFormControl =
@@ -204,9 +204,9 @@ var myEltWithData =
 // <div data-uid="myDiv">...</div>
 ```
 
-Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. The functions in the [`Attr`](/api/WebSharper.UI.Attr) module can create such non-singleton attributes.
+Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. The functions in the [`Attr`](/api/v4.1/WebSharper.UI.Attr) module can create such non-singleton attributes.
 
-* [`Attr.Empty`](/api/WebSharper.UI.Attr#Empty) creates an empty attribute.
+* [`Attr.Empty`](/api/v4.1/WebSharper.UI.Attr#Empty) creates an empty attribute.
 
     ```csharp
     public Doc ValueAttr(string v) =>
@@ -217,7 +217,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     // or nothing.
     ```
 
-* [`Attr.Append`](/api/WebSharper.UI.Attr#Append) combines two attributes.
+* [`Attr.Append`](/api/v4.1/WebSharper.UI.Attr#Append) combines two attributes.
 
     ```csharp
     var passwordAttr =
@@ -226,7 +226,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     // type="password" placeholder="Password"
     ```
 
-* [`Attr.Concat`](/api/WebSharper.UI.Attr#Concat) combines a sequence of attributes.
+* [`Attr.Concat`](/api/v4.1/WebSharper.UI.Attr#Concat) combines a sequence of attributes.
 
     ```csharp
     var passwordAttr =
@@ -241,7 +241,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     // type="password" placeholder="Password" class="pw-input"
     ```
 
-* [`Attr.Create`](/api/WebSharper.UI.Attr#Create) creates a single attribute. It is equivalent to the function with the same name from the `attr` module. This function is useful if the attribute name is only known at runtime, or if you want to create a non-standard attribute that isn't available in `attr`.
+* [`Attr.Create`](/api/v4.1/WebSharper.UI.Attr#Create) creates a single attribute. It is equivalent to the function with the same name from the `attr` module. This function is useful if the attribute name is only known at runtime, or if you want to create a non-standard attribute that isn't available in `attr`.
 
     ```csharp
     var eltWithNonStandardAttr =
@@ -252,7 +252,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
 
 #### Event handlers
 
-A special kind of attribute is event handlers. They can be created using functions from the [`on`](/api/WebSharper.UI.Html#on) nested static class.
+A special kind of attribute is event handlers. They can be created using functions from the [`on`](/api/v4.1/WebSharper.UI.Html#on) nested static class.
 Furthermore, some element constructing methods define an overload to add an event handler to a default event directly, like a `click` for a `button`.
 
 ```csharp
@@ -283,9 +283,9 @@ var myButton =
 
 ### HTML on the client
 
-To insert a Doc into the document on the client side, use the `.Run*` family of extension methods. Each of these methods has two overloads: one directly taking a DOM [`Element`](/api/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/WebSharper.JavaScript.Dom.Node), and the other taking the id of an element as a string.
+To insert a Doc into the document on the client side, use the `.Run*` family of extension methods. Each of these methods has two overloads: one directly taking a DOM [`Element`](/api/v4.1/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/v4.1/WebSharper.JavaScript.Dom.Node), and the other taking the id of an element as a string.
 
-* [`.Run`](/api/WebSharper.UI.Doc#Run) inserts the Doc as the child(ren) of the given DOM element. Note that it replaces the existing children, if any.
+* [`.Run`](/api/v4.1/WebSharper.UI.Doc#Run) inserts the Doc as the child(ren) of the given DOM element. Note that it replaces the existing children, if any.
 
     ```csharp
     using WebSharper.JavaScript;
@@ -729,7 +729,7 @@ WebSharper.UI's reactive layer helps represent user inputs and other time-varyin
 
 ### Vars
 
-Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<T>`](/api/WebSharper.UI.Var\`1). Vars store a value of type `T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
+Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<T>`](/api/v4.1/WebSharper.UI.Var\`1). Vars store a value of type `T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
 
 The following are available from `WebSharper.UI.Client.Html`:
 
@@ -847,7 +847,7 @@ The following are available from `WebSharper.UI.Client.Html`:
 
 ### Views
 
-The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/WebSharper.UI.View\`1). A `View<T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `T`.
+The full power of WebSharper.UI's reactive layer comes with [`View`s](/api/v4.1/WebSharper.UI.View\`1). A `View<T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `T`.
 
 One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use [`.Map`](#view-map), the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#view-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in methods like `.Map`.
 
@@ -857,11 +857,11 @@ Note that several of the methods below can be used more concisely using [the V s
 
 #### Creating and combining Views
 
-The first and main way to get a View is using the [`View`](/api/WebSharper.UI.Var\`1#View) property of `Var<T>`. This retrieves a View that tracks the current value of the Var.
+The first and main way to get a View is using the [`View`](/api/v4.1/WebSharper.UI.Var\`1#View) property of `Var<T>`. This retrieves a View that tracks the current value of the Var.
 
 You can create Views using the following functions and combinators from the `View` module:
 
-* [`View.Const`](/api/WebSharper.UI.View#Const\`\`1) creates a View whose value is always the same.
+* [`View.Const`](/api/v4.1/WebSharper.UI.View#Const\`\`1) creates a View whose value is always the same.
 
     ```csharp
     var v = View.Const(42);
@@ -878,7 +878,7 @@ You can create Views using the following functions and combinators from the `Vie
     // [[v2]] = String.length [[v1]]
     ```
 
-* [`View.Map2`](/api/WebSharper.UI.View#Map2\`\`3) takes two existing Views (the one we are calling it on and one extra) and map their value through a function.
+* [`View.Map2`](/api/v4.1/WebSharper.UI.View#Map2\`\`3) takes two existing Views (the one we are calling it on and one extra) and map their value through a function.
 
     ```csharp
     View<int> v1 = // ...
@@ -888,7 +888,7 @@ You can create Views using the following functions and combinators from the `Vie
     // [[v3]] = [[v1]] + [[v2]]
     ```
 
-    Similarly, [`.Map3`](/api/WebSharper.UI.View#Map3\`\`4) takes three existing Views and map their value through a function.
+    Similarly, [`.Map3`](/api/v4.1/WebSharper.UI.View#Map3\`\`4) takes three existing Views and map their value through a function.
 
 * `.MapAsync` is similar to `View.Map` but maps through an asynchronous function.
 
@@ -1118,7 +1118,7 @@ var vFirstName = varPerson.View.Map(p => p.FirstName);
 
 ### ListModels
 
-[`ListModel<K, T>`](/api/WebSharper.UI.ListModel\`2) is a convenient type to store an observable collection of items of type `T`. Items can be accessed using an identifier, or key, of type `K`.
+[`ListModel<K, T>`](/api/v4.1/WebSharper.UI.ListModel\`2) is a convenient type to store an observable collection of items of type `T`. Items can be accessed using an identifier, or key, of type `K`.
 
 ListModels are to dictionaries as Vars are to refs: a type with similar capabilities, but with the additional capability to be reactively observed, and therefore to have your UI automatically change according to changes in the stored content.
 
@@ -1153,7 +1153,7 @@ Every following example will assume the above `Person` type and `myPeopleColl` m
 
 Once you have a ListModel, you can modify its contents like so:
 
-* [`.Add`](/api/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
+* [`.Add`](/api/v4.1/WebSharper.UI.ListModel\`2#Add) inserts an item into the model. If there is already an item with the same key, this item is replaced.
 
     ```csharp
     myPeopleColl.Add(new Person { Username = "mynameissam", Name = "Sam" });
@@ -1163,7 +1163,7 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains Johnny, Ana and Sam.
     ```
 
-* [`.RemoveByKey`](/api/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
+* [`.RemoveByKey`](/api/v4.1/WebSharper.UI.ListModel\`2#RemoveByKey) removes the item from the model that has the given key. If there is no such item, then nothing happens.
 
     ```csharp
     myPeopleColl.RemoveByKey("theana12");
@@ -1173,14 +1173,14 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains John.
     ```
 
-* [`.Remove`](/api/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey(x))`, where `getKey` is the key function passed to the `ListModel` constructor and `x` is the argument to `Remove`.
+* [`.Remove`](/api/v4.1/WebSharper.UI.ListModel\`2#Remove) removes the item from the model that has the same key as the given item. It is effectively equivalent to `listModel.RemoveByKey(getKey(x))`, where `getKey` is the key function passed to the `ListModel` constructor and `x` is the argument to `Remove`.
 
     ```csharp
     myPeopleColl.Remove(new Person { Username = "theana12", Name = "Another Ana" });
     // myPeopleColl now contains John.
     ```
 
-* [`.Set`](/api/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
+* [`.Set`](/api/v4.1/WebSharper.UI.ListModel\`2#Set) sets the entire contents of the model, discarding the previous contents.
 
     ```csharp
     myPeopleColl.Set(new[] {
@@ -1190,14 +1190,14 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains Chloe, Alex.
     ```
 
-* [`.Clear`](/api/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
+* [`.Clear`](/api/v4.1/WebSharper.UI.ListModel\`2#Clear) removes all items from the model.
 
     ```csharp
     myPeopleColl.Clear();
     // myPeopleColl now contains no items.
     ```
 
-* [`.UpdateBy`](/api/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns `null` or the item is not found, nothing is done. If the function does return a value, it must wrap it in an `FSharpOption` to disambiguate valid `null` values from missing values. You can do this the easiest with the `FSharpConvert.Some` helper.
+* [`.UpdateBy`](/api/v4.1/WebSharper.UI.ListModel\`2#UpdateBy) updates the item with the given key. If the function returns `null` or the item is not found, nothing is done. If the function does return a value, it must wrap it in an `FSharpOption` to disambiguate valid `null` values from missing values. You can do this the easiest with the `FSharpConvert.Some` helper.
 
     ```csharp
     myPeople.UpdateBy("theana12", u => FSharpConvert.Some (new Person { UserName = u, Name = "The Real Ana" }));
@@ -1207,7 +1207,7 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains John, The Real Ana.
     ```
 
-* [`.UpdateAll`](/api/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns `null`, the corresponding item is unchanged.
+* [`.UpdateAll`](/api/v4.1/WebSharper.UI.ListModel\`2#UpdateAll) updates all the items of the model. If the function returns `null`, the corresponding item is unchanged.
 
     ```csharp
     myPeople.UpdateAll(u => 
@@ -1222,7 +1222,7 @@ Once you have a ListModel, you can modify its contents like so:
 
 The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
 
-* [`.View`](/api/WebSharper.UI.ListModel\`2#View) gives a `View<IEnumerable<T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
+* [`.View`](/api/v4.1/WebSharper.UI.ListModel\`2#View) gives a `View<IEnumerable<T>>` that reacts to changes to the model. The following example creates an HTML list of people which is automatically updated based on the contents of the model.
 
     ```csharp
     var myPeopleList =
@@ -1234,7 +1234,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
             );
     ```
 
-* [`.ViewState`](/api/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<T>>`. Here are the differences:
+* [`.ViewState`](/api/v4.1/WebSharper.UI.ListModel\`2#ViewState) is equivalent to `View`, except that it returns a `View<ListModelState<T>>`. Here are the differences:
 
     * `ViewState` provides better performance.
     * `ListModelState<T>` implements `IEnumerable<T>`, but it additionally provides indexing and length of the sequence.
@@ -1242,7 +1242,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
     
     As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting sequence separately.
 
-* [`.Map`](/api/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
+* [`.Map`](/api/v4.1/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
 
     * `Map(Func<T, V> f)` assumes that the item with a given key does not change.
     
@@ -1290,9 +1290,9 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
 
     Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
 
-* [`.Doc`](/api/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+* [`.Doc`](/api/v4.1/WebSharper.UI.ListModel\2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
 
-* [`.TryFindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
+* [`.TryFindByKeyAsView`](/api/v4.1/WebSharper.UI.ListModel\`2#TryFindByKeyAsView) gives a View on the item that has the given key, or `None` if it is absent.
 
     ```csharp
     var showJohn =
@@ -1304,9 +1304,9 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
             );
     ```
 
-* [`.FindByKeyAsView`](/api/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
+* [`.FindByKeyAsView`](/api/v4.1/WebSharper.UI.ListModel\`2#FindByKeyAsView) is equivalent to `TryFindByKeyAsView`, except that when there is no item with the given key, an exception is thrown.
 
-* [`.ContainsKeyAsView`](/api/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
+* [`.ContainsKeyAsView`](/api/v4.1/WebSharper.UI.ListModel\`2#ContainsKeyAsView) gives a View on whether there is an item with the given key. It is equivalent to (but more optimized than):
 
     ```csharp
     listModel.TryFindByKeyAsView(k).Map(v => !(v is null))
