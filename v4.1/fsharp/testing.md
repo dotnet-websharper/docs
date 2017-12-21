@@ -47,8 +47,10 @@ when referring to being server-side code.
     - [Random generator constructors](#random-generator-constructors)
     - [Random generator combinators](#random-generator-combinators)
 
+<a name="categories-and-tests"></a>
 ## Categories and tests
 
+<a name="testcategory"></a>
 ### TestCategory
 
 Creates a definition for a single named test category.
@@ -66,7 +68,7 @@ let MyTests =
         }
     }
 ```
-
+<a name="test"></a>
 ### Test
 
 Creates a definition for a single named test.
@@ -91,6 +93,7 @@ These all have four versions for optionally naming it and/or using it with an as
 * operations with `Msg` also accept a name for that single assertion,
 * operations with `Async` accept a value of type `Async<'T>` as the actual value instead. Expected value is still provided as a value of `'T`.
 
+<a name="runnerruntests"></a>
 ### Runner.RunTests
 
 Takes an array of `TestCategory` values
@@ -114,7 +117,7 @@ Later, in server-side code, serve this on a [Sitelet](sitelets.md) endpoint:
         Body = client <@ RunAllTests() @>
     )
 ```
-
+<a name="expect"></a>
 ### Expect
 
 Tells the testing framework how many test cases are expected to be registered for this category.
@@ -139,8 +142,10 @@ let MyTests =
     }
 ```
 
+<a name="assertions"></a>
 ## Assertions
 
+<a name="istrue"></a>
 ### isTrue
 
 Checks if a single argument expression evaluates to `true`.
@@ -156,6 +161,7 @@ Checks if a single argument expression evaluates to `true`.
     }
 ```
 
+<a name="isfalse"></a>
 ### isFalse
 
 The negated versions of the above, the test passes if the expression evaluates to `false`.
@@ -171,8 +177,10 @@ The negated versions of the above, the test passes if the expression evaluates t
     }
 ```
 
+<a name="equality-checks"></a>
 ## Equality checks
 
+<a name="equal"></a>
 ### equal
 
 Checks if the two expressions evaluate to equal values as tested with WebSharper's equality.
@@ -190,10 +198,12 @@ and overrides on `Equals` method or implementing `IEquatable` is respected.
     }
 ```
 
+<a name="notequal"></a>
 ### notEqual
 
 The negated version of the above, fails if values are equal with WebSharper's equality.
 
+<a name="jsequal"></a>
 ### jsEqual
 
 Checks if the two expressions evaluate to equal values as tested with JavaScript's `==` operator.
@@ -209,48 +219,59 @@ which is directly translated to `==` in JavaScript.
     }
 ```
 
+<a name="notjsequal"></a>
 ### notJsEqual
 
 The negated version of the above, fails if values are equal with JavaScript's `==` operator.
 
+<a name="strictequal"></a>
 ### strictEqual
 
 Checks if the two expressions evaluate to equal values as tested with JavaScript's `===` operator.
 This is the same as using the `===.` operator in F# code (available with `open WebSharper.JavaScript`),
 which is directly translated to `===` in JavaScript.
 
+<a name="notstrictequal"></a>
 ### notStrictEqual
 
 The negated version of the above, fails if values are equal with JavaScript's `===` operator.
 
+<a name="deepequal"></a>
 ### deepEqual
 
 Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `deepEqual` function
 which is a deep recursive comparison, working on primitive types, arrays, objects, regular expressions, dates and functions.
 
+<a name="notdeepequal"></a>
 ### notDeepEqual
 
 The negated version of the above, uses `QUnit`'s `notDeepEqual` function instead.
 
+<a name="propequal"></a>
 ### propEqual
 
 Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `propEqual` function
 which compares just the direct properties on an object with strict equality (`===`).
 
+<a name="notpropequal"></a>
 ### notPropEqual
 
 The negated version of the above, uses `QUnit`'s `notPropEqual` function instead.
 
+<a name="approxequal"></a>
 ### approxEqual
 
 Compares floating point numbers, where a difference of `< 0.0001` is accepted.
 
+<a name="notapproxequal"></a>
 ### notApproxEqual
 
 The negated version of the above, fails if the difference of the two values is `< 0.0001`.
 
+<a name="exception-testing"></a>
 ## Exception testing
 
+<a name="raises"></a>
 ### raises
 
 Checks that the expression argument is raising any exception, passes test if it does.
@@ -269,6 +290,7 @@ when the test are running.
     }
 ```
 
+<a name="asynchronous-tests"></a>
 ## Asynchronous tests
 
 `Test` computation expressions also allow binding an `async` workflow at any point.
@@ -285,8 +307,10 @@ run synchronously for optimal performance.
     }
 ```
 
+<a name="property-testing"></a>
 ## Property testing
 
+<a name="do"></a>
 ### Do
 
 Using `Do` is very similar to using `Test "Name"`, it is a computation expression builder, enabling the same custom operations.
@@ -302,6 +326,7 @@ let SubTest x =
     }
 ```
 
+<a name="property"></a>
 ### property
 
 Auto-generates 100 random values based on a type and runs a sub-test with all of them.
@@ -322,6 +347,7 @@ When using a non-supported type, it results in a compile-time error.
     }
 ```
 
+<a name="propertywith"></a>
 ### propertyWith
 
 Similar to above, but the generator logic is not inferred from type, but passed to the operation.
@@ -342,6 +368,7 @@ allowing easier composition of complex testing values.
     }
 ```
 
+<a name="propertywithsample"></a>
 ### propertyWithSample
 
 Similar to above, but the argument is an exact sample on which the property is tested.
@@ -359,8 +386,10 @@ See [RandomValues.Sample](#randomsample) below.
     }
 ```
 
+<a name="looping"></a>
 ## Looping
 
+<a name="foreach"></a>
 ### forEach
 
 You cannot use a regular `for` loop inside a `Test` computation expression, but you can emulate it with the `forEach` operation.
@@ -378,8 +407,10 @@ Its use is similar to property testing, you can use `Do` to define the body of t
     }
 ```
 
+<a name="sample-value-generators"></a>
 ## Sample value generators
 
+<a name="randomvaluesgenerator"></a>
 ### RandomValues.Generator
 
 A generator is a record that can hold an array of static values to always test against,
@@ -397,6 +428,7 @@ type Generator<'T> =
     }
 ```
 
+<a name="randomvaluessample"></a>
 ### RandomValues.Sample
 
 The `RandomValues.Sample` type is a thin wrapper around an array of values, exposing multiple constructors
@@ -412,6 +444,7 @@ to create from a given array or explicit or inferred generators.
     let sampleInferred10 = RandomValues.Sample<int>(10); // creates given number of values
 ```
 
+<a name="random-generator-constructors"></a>
 ### Random generator constructors
 
 The following values and function produce simple `RandomValues.Generator` values:
@@ -431,6 +464,7 @@ The following values and function produce simple `RandomValues.Generator` values
 * `RandomValues.Auto<'T>`: Auto-generate values based on type, same as `property` uses internally.
 * `RandomValues.Anything`: Generates a mix of ints, floats, bools, strings and tuples, lists, arrays, options of these.
 
+<a name="random-generator-combinators"></a>
 ### Random generator combinators
 
 * `RandomValues.Map mapping gen`: Maps a function over a generator.
