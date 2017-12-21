@@ -1,6 +1,10 @@
 # Source maps
 
-## Embedding source maps in WebSharper libraries
+WebSharper can generate source map files when translating .NET code to
+JavaScript, effectively allowing you to read, debug and otherwise work with
+the original F#/C# code when your application is viewed in various browsers.
+
+## Embedding
 
 You can enable including source maps and the required source files
 in a WebSharper assembly, by adding the
@@ -16,18 +20,18 @@ It is also recommended to set
 to have source position information inside reflected definitions available 
 for WebSharper. Otherwise only the starting lines of functions can be mapped.
 
-If you build with `WebSharper.exe` directly, add `-sm` to the command line.
+If you build from the command line directly, add `-sm` to the command line.
 
 WebSharper itself is built with source map embedding, so you can debug into
 WebSharper library code.
 
-## Outputting source maps for WebSharper web projects
+## Unpacking
 
 If you have a separate web project hosting your WebSharper application,
 add the same `WebSharperSourceMap` property to the project file to unpack
-the source map files.
+the source map files embedded in the referenced libraries.
 
-## Usage
+## Debugging
 
 ### Internet Explorer
 
@@ -62,7 +66,7 @@ menu (cog icon in F12 panel).
 You can access the list of original sources, however breakpoints
 don't work correctly as of version 37.0.1.
 
-### Limitations
+## Limitations
 
 * Single-Page Application projects are currently not supported.
 
