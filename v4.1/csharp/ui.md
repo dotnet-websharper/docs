@@ -689,7 +689,7 @@ The possible values for `ServerLoad` are:
 * `Once`: The template file is loaded on first use and never reloaded.
 * `PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
 
-### Accessing the template's model (TODO)
+### Accessing the template's model
 
 Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
 
