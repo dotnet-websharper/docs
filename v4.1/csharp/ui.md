@@ -727,6 +727,18 @@ It is possible to include some client-side functionality when creating a templat
 
 WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
 
+### Special holes in server-side templates
+
+In a server-side template, you must specify the location of where WebSharper can include its generated content.
+Three special placeholders are provided to include client-side content in the page:
+
+* `scripts` is replaced with the JavaScript files required by the client-side code included in the page (including WebSharper-generated `.js` files). Usage: `<script ws-replace="scripts"></script>`
+* `styles` is replaced with the CSS files required by the client-side code included in the page. Usage: `<script ws-replace="scripts"></script>`
+* `meta` is replaced with a `<meta>` tag that contains initialization data for client-side controls. Usage: `<meta ws-replace="meta" />`
+
+The `scripts` hole is necessary for correct working of the served page if it contains any client-side WebSharper functionality.
+The other two are optional: if neither `styles` nor `meta` is provided explicilty, then they are included automatically above the content for `scripts`.
+
 ### Vars
 
 Reactive values that are directly set by code or by user interaction are represented by values of type [`Var<T>`](/api/v4.1/WebSharper.UI.Var\`1). Vars store a value of type `T` that you can get or set using the `Value` property. But they can additionally be reactively observed or two-way bound to HTML input elements.
