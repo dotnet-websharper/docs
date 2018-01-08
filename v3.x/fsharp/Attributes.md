@@ -120,7 +120,6 @@ The default inlines are such:
 * Instance property setter: `$this.PropName = $value`
 * Instance method: `$this.MethodName($arguments)`
 * Constructor: `new TypeName($arguments)` or if `Name` is specified for the constuctor itself: `new ConstructorName($arguments)`.
-If no `Name` is specified and the constructor takes no arguments then `{}` (empty JavaScript object).
 * Static property getter `TypeName.PropName`
 * Static property setter `TypeName.PropName = $value`
 * Static method: `TypeName.MethodName($arguments)`, or if a composite `Name` is specified for the method: `MethodPath($arguments)`

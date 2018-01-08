@@ -1,10 +1,6 @@
 # Source maps
 
-WebSharper can generate source map files when translating .NET code to
-JavaScript, effectively allowing you to read, debug and otherwise work with
-the original F#/C# code when your application is viewed in various browsers.
-
-## Embedding
+## Embedding source maps in WebSharper libraries
 
 You can enable including source maps and the required source files
 in a WebSharper assembly, by adding the
@@ -13,30 +9,25 @@ in a WebSharper assembly, by adding the
 
 property to your project file.
 
-It is also recommended to set
-
-    <OtherFlags>--quotations-debug</OtherFlags>
-
-to have source position information inside reflected definitions available 
-for WebSharper. Otherwise only the starting lines of functions can be mapped.
-
-If you build from the command line directly, add `-sm` to the command line.
-
-WebSharper itself is built with source map embedding, so you can debug into
+WebSharper itself and all publix  is built with source map embedding, so you can debug into
 WebSharper library code.
 
-## Unpacking
+Sitelets and single-page application projects are supported, offline sitelets 
+(generating static Html+JS output) is currently not.
+
+## Outputting source maps for WebSharper web projects
 
 If you have a separate web project hosting your WebSharper application,
 add the same `WebSharperSourceMap` property to the project file to unpack
-the source map files embedded in the referenced libraries.
+the source map files.
 
-## Debugging
+## Usage
 
-### Internet Explorer
+### Internet Explorer & Microsoft Edge
 
 You need to have Internet Explorer 11 on Windows 8.1 Update 1 or newer
 for source map support.
+Edge has inherited the debugging tool from IE11, works similarly.
 
 In the Debugger tab of F12 tools, the last icon in the toolbar says
 "Load the sources mapped to this generated file".
@@ -52,7 +43,7 @@ setting in Developer Tools Settings (cog icon in F12 panel).
 
 In the Sources tab of Developer Tools, open a generated `.js` file in 
 the `Scripts/WebSharper` folder to make Chrome load its source mappings.
-A folder named `FSharpSources` will appear with the original `.fs` files used
+A folder named `Source` will appear with the original `.fs` files used
 for WebSharper translation.
 You can use this to set breakpoints in original code.
 
@@ -65,11 +56,3 @@ menu (cog icon in F12 panel).
 
 You can access the list of original sources, however breakpoints
 don't work correctly as of version 37.0.1.
-
-## Limitations
-
-* Single-Page Application projects are currently not supported.
-
-* Can not have multiple source files with the same file name in a single project.
-
-* Inlines are not mapped.
