@@ -997,6 +997,112 @@ Once you have created a View to represent your dynamic content, here are the var
     ]
     ```
 
+<a name="view-seqcached"></a>
+#### Mapping Views on sequences
+
+Applications often deal with varying collections of data. This means using a View of a sequence: a value of type `View<seq<T>>`, `View<list<T>>` or `View<T[]>`. In this situation, it can be sub-optimal to use `Map` or `Doc` to render it: the whole sequence will be re-computed even when a single item has changed.
+
+The `SeqCached` family of functions fixes this issue. These functions map a View of a sequence to either a new `View<seq<U>>` (functions `View.MapSeqCached*` and method `.MapSeqCached()`) or to a `Doc` (functions `Doc.BindSeqCached` and method `.DocSeqCached()`) but avoid re-mapping items that haven't changed.
+
+There are different versions of these functions, which differ in how they decide that an item "hasn't changed".
+
+* [`View.MapSeqCached : ('T -> 'V) -> View<seq<'T>> -> View<seq<'V>>`](/api/v4.1/WebSharper.UI.View#MapSeqCached) uses standard F# equality to check items.
+
+    ```fsharp
+    let varNums = Var.Create [ 1; 2; 3 ]
+
+    let vStrs = 
+        varNums.View
+        |> View.MapSeqCached (fun i -> 
+            Console.Log i
+            p [] [ text (string i) ]
+        )
+        |> Doc.BindView Doc.Concat
+        |> Doc.RunAppend JS.Document.Body
+    // Prints 1, 2, 3
+    // Displays 1, 2, 3
+    
+    varNums.Value <- [ 1; 2; 3; 4 ]
+    // Prints 4
+    // Displays 1, 2, 3, 4
+    // Note: the existing <p> tags remain, they aren't recreated.
+    
+    varNums.Value <- [ 3; 2 ]
+    // Prints nothing
+    // Displays 3, 2
+    ```
+
+* [`View.MapSeqCachedBy : ('T -> 'K) -> ('T -> 'V) -> View<seq<'T>> -> View<seq<'V>>`](/api/v4.1/WebSharper.UI.View#MapSeqCachedBy) uses the given key function to check items. This means that if an item is added whose key is already present, the corresponding returned item is _not_ changed. So you should only use this when items are intended to be added or removed, but not changed.
+
+    ```fsharp
+    type Person = { Id: int; Name: string: int }
+
+    let ann = { Id = 0; Name = "Ann" }
+    let brian = { Id = 1; Name = "Brian" }
+    let bobby = { Id = 1; Name = "Bobby" }
+    let clara = { Id = 2; Name = "Clara" }
+    let dave = { Id = 3; Name = "Dave" }
+
+    let varPeople =
+        Var.Create (fun p -> p.Id) [ ann; brian; clara ]
+
+    varNums.View
+    |> View.MapSeqCachedBy (fun p -> p.Id) (fun p -> 
+        Console.Log p.Id
+        p [] [ text (string p.Name) ]
+    )
+    |> Doc.BindView Doc.Concat
+    |> Doc.RunAppend JS.Document.Body
+    // Prints 1, 2, 3
+    // Displays Ann, Brian, Clara
+    
+    varNums.Value <- [ ann; brian; clara; dave ]
+    // Prints 4
+    // Displays Ann, Brian, Clara, Dave
+    // Note: the existing <p> tags remain, they aren't recreated.
+    
+    varNums.Value <- [ ann; bobby; clara; dave ]
+    // Prints nothing
+    // Displays Ann, Brian, Clara, Dave
+    // The item with Id = 1 is already rendered as Brian,
+    // so it is not re-rendered as Bobby.
+    ```
+
+* [`View.MapSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> 'V) -> View<seq<'V>>](/api/v4.1/WebSharper.UI.View#MapSeqCachedViewBy) covers the situation where items are identified by a key function and can be updated. Instead of passing the item's value to the mapping function, it passes a View of it, so you can react to the changes.
+
+    ```fsharp
+    varNums.View
+    |> View.MapSeqCachedViewBy (fun p -> p.Id) (fun pid vp -> 
+        Console.Log pid
+        p [] [ textView (fun p -> string p.Name) ]
+    )
+    |> Doc.BindView Doc.Concat
+    |> Doc.RunAppend JS.Document.Body
+    // Prints 1, 2, 3
+    // Displays Ann, Brian, Clara
+    
+    varNums.Value <- [ ann; brian; clara; dave ]
+    // Prints 4
+    // Displays Ann, Brian, Clara, Dave
+    // Note: the existing <p> tags remain, they aren't recreated.
+    
+    varNums.Value <- [ ann; bobby; clara; dave ]
+    // Prints nothing
+    // Displays Ann, Bobby, Clara, Dave
+    // The item with Id = 1 is already rendered as Brian,
+    // so its <p> tag remains but its text content changes.
+    ```
+
+Each of these `View.MapSeqCached*` functions has a corresponding `Doc.BindSeqCached*`:
+
+* [`Doc.BindSeqCached : ('T -> #Doc) -> View<seq<'T>> -> Doc`](/api/v4.1/WebSharper.UI.Client.Doc#BindSeqCached)
+* [`Doc.BindSeqCachedBy : ('T -> 'K) -> ('T -> #Doc) -> View<seq<'T>> -> Doc`](/api/v4.1/WebSharper.UI.Client.Doc#BindSeqCached)
+* [`Doc.BindSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> #Doc) -> View<seq<'T>> -> Doc`](/api/v4.1/WebSharper.UI.Client.Doc#BindSeqCached)
+
+These functions map each item of the sequence to a Doc and then concatenates them. They are basically equivalent to passing the result of the corresponding `View.MapSeqCached*` to `Doc.BindView Doc.Concat`, like we did in the examples above.
+
+Finally, all of the above functions are also available as extension methods on the `View<seq<'T>>` type. `.MapSeqCached()` overloads correspond to `View.MapSeqCached*` functions, and `.DocSeqCached()` overloads correspond to `Doc.BindSeqCached*` functions.
+
 <a name="lens"></a>
 ### Vars and lensing
 
@@ -1063,7 +1169,7 @@ let vFirstName = vPerson |> View.Map (fun p -> p.FirstName)
 
 You can use arbitrarily complex expressions:
 
-```
+```fsharp
 let vFullName = V(vPerson.V.FirstName + " " + vPerson.V.LastName)
 
 // The above is equivalent to:
@@ -1169,9 +1275,22 @@ let vFirstName = varPerson.View |> View.Map (fun p -> p.FirstName)
 
 Additionally, `var.V` can be used as a shorthand for [lenses](#lens). `.V` is a shorthand for `.LensAuto` when passed to the following supporting functions:
 
-* [`Doc.InputV`](/api/v4.1/WebSharper.UI.Doc#InputV), [`Doc.InputAreaV`](/api/v4.1/WebSharper.UI.Doc#InputVArea), [`Doc.PasswordBoxV`](/api/v4.1/WebSharper.UI.Doc#PasswordBoxV)
-* [`Doc.IntInputV`](/api/v4.1/WebSharper.UI.Doc#IntInputV), [`Doc.IntInputUncheckedV`](/api/v4.1/WebSharper.UI.Doc#IntInputUncheckedV)
-* [`Doc.FloatInputV`](/api/v4.1/WebSharper.UI.Doc#FloatInputV), [`Doc.FloatInputUncheckedV`](/api/v4.1/WebSharper.UI.Doc#FloatInputUncheckedV)
+* [`Lens`](/api/v4.1/WebSharper.UI.Client.Doc#Lens) simply creates a lensed Var.
+
+    ```fsharp
+    type Person = { FirstName : string; LastName : string }
+    let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
+
+    let myForm =
+        div [] [
+            Doc.Input [ attr.placeholder "First Name" ] (Lens varPerson.V.FirstName)
+            Doc.Input [ attr.placeholder "Last Name" ] (Lens varPerson.V.LastName)
+        ]
+    ```
+
+* [`Doc.InputV`](/api/v4.1/WebSharper.UI.Client.Doc#InputV), [`Doc.InputAreaV`](/api/v4.1/WebSharper.UI.Doc#InputVArea), [`Doc.PasswordBoxV`](/api/v4.1/WebSharper.UI.Doc#PasswordBoxV)
+* [`Doc.IntInputV`](/api/v4.1/WebSharper.UI.Client.Doc#IntInputV), [`Doc.IntInputUncheckedV`](/api/v4.1/WebSharper.UI.Doc#IntInputUncheckedV)
+* [`Doc.FloatInputV`](/api/v4.1/WebSharper.UI.Client.Doc#FloatInputV), [`Doc.FloatInputUncheckedV`](/api/v4.1/WebSharper.UI.Doc#FloatInputUncheckedV)
 
 ```fsharp
 type Person = { FirstName : string; LastName : string }
@@ -1340,9 +1459,9 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
     
     As a summary, it is generally better to use `ViewState`. You only need to choose `View` if you need to store the resulting `seq` separately.
 
-* [`listModel.Map`](/api/v4.1/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
+* [`listModel.Map`](/api/v4.1/WebSharper.UI.ListModel\2#Map\`\`1) reactively maps a function on each item. It is similar to [the `View.MapSeqCached` family of functions](#view-seqcached): it is optimized so that the mapping function is not called again on every item when the content changes, but only on changed items. There are two variants:
 
-    * `Map(f: 'T -> 'V)` assumes that the item with a given key does not change.
+    * `Map(f: 'T -> 'V)` assumes that the item with a given key does not change. It is equivalent to `View.MapSeqCachedBy` using the ListModel's key function.
     
         ```fsharp
         let myDoc =
@@ -1355,32 +1474,42 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
         // Logs johnny87, theana12
         // Displays John, Ana
         
+        // We add an item with a key that doesn't exist yet,
+        // so the mapping function is called for it and the result is added.
         myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
         // Logs mynameissam
         // Displays John, Ana, Sam
         
+        // We change the value for an existing key,
+        // so this change is ignored by Map.
         myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
         // Logs nothing, since no key has been added
         // Displays John, Ana, Sam (unchanged)
         ```
 
-    * `Map(f: 'K -> View<'T> -> 'V)` additionally observes changes to individual items that are updated.
+    * `Map(f: 'K -> View<'T> -> 'V)` additionally observes changes to individual items that are updated. It is equivalent to `View.MapSeqCachedViewBy` using the ListModel's key function.
     
         ```fsharp
         myPeopleColl.Map(fun k vp ->
             Console.Log k
-            p [] [ textView (vp |> View.Map (fun p -> p.Name)) ]
+            p [] [ text (vp.V.Name) ]
         )
         |> Doc.BindView Doc.Concat
         |> Doc.RunAppend JS.Document.Body
         // Logs johnny87, theana12
         // Displays John, Ana
         
+        // We add an item with a key that doesn't exist yet,
+        // so the mapping function is called for it and the result is added.
         myPeopleColl.Add({ Username = "mynameissam"; Name = "Sam" })
         // Logs mynameissam
         // Displays John, Ana, Sam
-        
+
+        // We change the value for an existing key,
+        // so the mapping function is not called again
+        // but the View's value is updated.
         myPeopleColl.Add({ Username = "johnny87"; Name = "Johnny" })
+        // Here we changed the value for an existing key
         // Logs nothing, since no key has been added
         // Displays Johnny, Ana, Sam (changed!)
         ```
@@ -1400,7 +1529,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
             |> Doc.BindView Doc.Concat
     ```
 
-* [`listModel.Doc`](/api/v4.1/WebSharper.UI.ListModel\`2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is equivalent to what we did above in the example for `Map`: `listModel.Map(f) |> Doc.BindView Doc.Concat`.
+* [`listModel.Doc`](/api/v4.1/WebSharper.UI.ListModel\`2#Doc) is similar to `Map`, but the function must return a `Doc` and the resulting Docs are concatenated. It is similar to [the `Doc.BindSeqCached` family of functions](#view-seqcached).
 
 * [`listModel.DocLens`](/api/v4.1/WebSharper.UI.ListModel\`2#DocLens), similarly, is like `MapLens` but concatenating the resulting Docs.
 
