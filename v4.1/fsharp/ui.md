@@ -1074,7 +1074,7 @@ There are different versions of these functions, which differ in how they decide
     varNums.View
     |> View.MapSeqCachedViewBy (fun p -> p.Id) (fun pid vp -> 
         Console.Log pid
-        p [] [ textView (fun p -> string p.Name) ]
+        p [] [ textView (vp |> View.Map (fun p -> string p.Name)) ]
     )
     |> Doc.BindView Doc.Concat
     |> Doc.RunAppend JS.Document.Body
