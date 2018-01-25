@@ -1044,9 +1044,9 @@ There are different versions of these functions, which differ in how they decide
     let dave = { Id = 3; Name = "Dave" }
 
     let varPeople =
-        Var.Create (fun p -> p.Id) [ ann; brian; clara ]
+        Var.Create [ ann; brian; clara ]
 
-    varNums.View
+    varPeople.View
     |> View.MapSeqCachedBy (fun p -> p.Id) (fun p -> 
         Console.Log p.Id
         p [] [ text (string p.Name) ]
@@ -1056,12 +1056,12 @@ There are different versions of these functions, which differ in how they decide
     // Prints 1, 2, 3
     // Displays Ann, Brian, Clara
     
-    varNums.Value <- [ ann; brian; clara; dave ]
+    varPeople.Value <- [ ann; brian; clara; dave ]
     // Prints 4
     // Displays Ann, Brian, Clara, Dave
     // Note: the existing <p> tags remain, they aren't recreated.
     
-    varNums.Value <- [ ann; bobby; clara; dave ]
+    varPeople.Value <- [ ann; bobby; clara; dave ]
     // Prints nothing
     // Displays Ann, Brian, Clara, Dave
     // The item with Id = 1 is already rendered as Brian,
@@ -1071,7 +1071,7 @@ There are different versions of these functions, which differ in how they decide
 * [`View.MapSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> 'V) -> View<seq<'V>>](/api/v4.1/WebSharper.UI.View#MapSeqCachedViewBy) covers the situation where items are identified by a key function and can be updated. Instead of passing the item's value to the mapping function, it passes a View of it, so you can react to the changes.
 
     ```fsharp
-    varNums.View
+    varPeople.View
     |> View.MapSeqCachedViewBy (fun p -> p.Id) (fun pid vp -> 
         Console.Log pid
         p [] [ textView (vp |> View.Map (fun p -> string p.Name)) ]
@@ -1081,12 +1081,12 @@ There are different versions of these functions, which differ in how they decide
     // Prints 1, 2, 3
     // Displays Ann, Brian, Clara
     
-    varNums.Value <- [ ann; brian; clara; dave ]
+    varPeople.Value <- [ ann; brian; clara; dave ]
     // Prints 4
     // Displays Ann, Brian, Clara, Dave
     // Note: the existing <p> tags remain, they aren't recreated.
     
-    varNums.Value <- [ ann; bobby; clara; dave ]
+    varPeople.Value <- [ ann; bobby; clara; dave ]
     // Prints nothing
     // Displays Ann, Bobby, Clara, Dave
     // The item with Id = 1 is already rendered as Brian,
