@@ -1,6 +1,6 @@
 # Project Variables
 
-WebSharper introduces unique project file variables in `.fsproj` files. They are used to
+WebSharper introduces unique project file variables in `.csproj`/`.fsproj` files. They are used to
 communicate e.g. the project type, the output directory, and optimizations to the WebSharper
 compiler. These parameters are the following:
 
@@ -16,7 +16,7 @@ compiler. These parameters are the following:
 * `WebSharperAnalyzeClosures`
 
 You can set these variables by inserting e.g. `<WebSharperSourceMap>True</WebSharperSourceMap>` into a
-`<PropertyGroup></PropertyGroup>` in your `.fsproj` project file.
+`<PropertyGroup></PropertyGroup>` in your project file.
 
 ## WebSharperProject
 
@@ -57,6 +57,7 @@ Console argument: `--wsoutput:folder`
 
 Specifies the path of the compilation output directory relative to the project file when
 the project type is *Single Page Application*.
+Default folder is `/Content`;
 
 Console argument: `--wsoutput:folder`
 
@@ -66,6 +67,7 @@ Console argument: `--wsoutput:folder`
 
 Specifies the relative path of the compilation output directory when the project
 type is *HTML Application*.
+Default folder is `/bin/html`;
 
 Console argument: `--wsoutput:folder`
 
