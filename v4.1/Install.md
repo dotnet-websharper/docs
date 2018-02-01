@@ -14,9 +14,9 @@ you install WebSharper), making it easy to get started with new projects.
 ## Visual Studio templates
 
 Once you installed WebSharper and, if needed, restarted Visual Studio, you should see the main WebSharper templates in the New Project dialog.
+A separate `WebSharper` section exists under both `Visual C#` and `Visual F#`.
 
-![Visual Studio templates](images/VisualStudioTemplates.png)
-
+![Visual Studio templates](https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/VisualStudioTemplates41.png)
 
 ## Updating WebSharper in existing projects
 

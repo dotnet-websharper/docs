@@ -75,7 +75,7 @@ This table summarizes the capabilities of the available application/helper proje
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
-            <td>Single-Page App<span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -83,7 +83,7 @@ This table summarizes the capabilities of the available application/helper proje
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
-            <td>Single-Page App<span style="color:#888;font-size:smaller">Packaging for mobile</span></td>
+            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">Packaging for mobile</span></td>
             <td></td>
             <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
