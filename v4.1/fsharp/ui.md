@@ -724,7 +724,7 @@ In a server-side template, you must specify the location of where WebSharper can
 Three special placeholders are provided to include client-side content in the page:
 
 * `scripts` is replaced with the JavaScript files required by the client-side code included in the page (including WebSharper-generated `.js` files). Usage: `<script ws-replace="scripts"></script>`
-* `styles` is replaced with the CSS files required by the client-side code included in the page. Usage: `<script ws-replace="scripts"></script>`
+* `styles` is replaced with the CSS files required by the client-side code included in the page. Usage: `<link ws-replace="styles" />`
 * `meta` is replaced with a `<meta>` tag that contains initialization data for client-side controls. Usage: `<meta ws-replace="meta" />`
 
 The `scripts` hole is necessary for correct working of the served page if it contains any client-side WebSharper functionality.
