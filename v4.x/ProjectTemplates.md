@@ -53,10 +53,10 @@ This table summarizes the capabilities of the available application/helper proje
             <th class="last">Remote</th>
         </tr>
         <tr class="header">
-            <th colspan="6">Applications</th>
+            <th colspan="7">Applications</th>
         </tr>
         <tr>
-            <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET / Core</span></td>
             <td><code>websharper-web</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -83,7 +83,7 @@ This table summarizes the capabilities of the available application/helper proje
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
-            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET / Core</span></td>
             <td><code>websharper-spa</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
@@ -101,7 +101,7 @@ This table summarizes the capabilities of the available application/helper proje
             <td></td>
         </tr>
         <tr class="header">
-            <th colspan="6">Helpers</th>
+            <th colspan="7">Helpers</th>
         </tr>
         <tr>
             <td>Library</td>

@@ -26,7 +26,7 @@ Run `dotnet new -i WebSharper.Templates`.
 
 Use `dotnet new` to list available templates.
 
-![.NET Core templates](https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/NetCoreTemplates42.png)
+![.NET Core templates](https://raw.githubusercontent.com/dotnet-websharper/docs/websharper42/images/NetCoreTemplates42.png)
 
 Instantiate templates with `dotnet new templatename`, for example `dotnet new websharper-web`.
 Default language is C#, use `dotnet new templatename -lang F#` to create an F# template.
