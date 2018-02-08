@@ -33,6 +33,10 @@ The following helper projects are also available:
 
  5. **Suave-hosted Site** - a client-server application with [Suave](https://github.com/SuaveIO/suave) hosting.
 
+## .NET Core
+
+Some templates are available for .NET Core/Standard, see [Installing WebSharper Templates for .NET Core/Standard](Install.md#netcore)
+
 ## Capabilities
 
 This table summarizes the capabilities of the available application/helper project templates:
@@ -41,6 +45,7 @@ This table summarizes the capabilities of the available application/helper proje
     <tbody>
         <tr class="header">
             <td style="border:none;">Template</td>
+            <td><code>dotnet new</code></td>
             <th class="first">C# available</th>
             <th>Is Sitelet?</th>
             <th>Client</th>
@@ -52,6 +57,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td><code>websharper-web</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -61,6 +67,7 @@ This table summarizes the capabilities of the available application/helper proje
         <tr>
             <td>Client-Server App<br/><span style="color:#888;font-size:smaller">Hosted via OWIN or Suave</span></td>
             <td></td>
+            <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -68,6 +75,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>HTML App</td>
+            <td><code>websharper-html</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -76,6 +84,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td><code>websharper-spa</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -84,6 +93,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Single-Page App<br/><span style="color:#888;font-size:smaller">Packaging for mobile</span></td>
+            <td></td>
             <td></td>
             <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -95,6 +105,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Library</td>
+            <td><code>websharper-lib</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td></td>
@@ -103,6 +114,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Extension</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
