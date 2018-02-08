@@ -2,7 +2,7 @@
 
 To use WebSharper features in an ASP.NET Core web application,
 you will need the packages `WebSharper`, `WebSharper.FSharp` and `WebSharper.AspNetCore`.
-Easiest way to get started is to use one of the [templates](../Install.md#netcore).
+Easiest way to get started is to use one of the [templates](Install.md#netcore).
 
 ## IApplicationBuilder extension methods
 
@@ -12,7 +12,7 @@ to install the middlewares for WebSharper runtime.
 Basic setup in `Configure` method for serving a [Sitelet](sitelets.md) application:
 
 ```fsharp
-    app.UseWebSharper(env, Website.Main)
+app.UseWebSharper(env, Website.Main)
 ```
 
 There is no automatic discovery for Sitelet definition as in ASP.NET core.
@@ -25,13 +25,13 @@ The `config` parameter accepts an `IConfiguration` object for WebSharper to use 
 A standard way to set it up is:
 
 ```fsharp
-    let config =
-        ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appsettings.json")
-            .Build()
+let config =
+    ConfigurationBuilder()
+        .SetBasePath(env.ContentRootPath)
+        .AddJsonFile("appsettings.json")
+        .Build()
 
-    app.UseWebSharper(env, Website.Main, config.GetSection("websharper"))
+app.UseWebSharper(env, Website.Main, config.GetSection("websharper"))
 ````
 
 These configurations include setting up overrides for [resource links](Resources.md#override) 
@@ -47,9 +47,9 @@ Default is the directory of the executing assembly calling `UseWebSharper`.
 To use WebSharper's user sessions, add this to your `ConfigureServices` method:
 
 ```fsharp
-    services
-        .AddAuthentication("WebSharper")
-        .AddCookie("WebSharper") |> ignore
+services
+    .AddAuthentication("WebSharper")
+    .AddCookie("WebSharper") |> ignore
 ```
 
 and also `app.UseAuthentication()` to `Configure`.
