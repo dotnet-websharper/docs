@@ -132,7 +132,9 @@ This table summarizes the capabilities of the available application/helper proje
 
 ## MSBuild Project File Configuration
 
-WebSharper project files must include the file `WebSharper.targets`, which defines the necessary compilation tasks. The type of project is driven by the property `WebSharperProject`. Here are the possible values:
+The WebSharper compiler is included in the NuGet packages `WebSharper.CSharp` and `WebSharper.FSharp`.
+The type of project is driven by the `Project` value in a `wsconfig.json` file, 
+or the property `WebSharperProject` in the `.csproj`/`.fsproj`. Here are the possible values:
 
 * `Site`: for Client-Server Applications.
     * Compiles JavaScript-annotated code;
@@ -150,4 +152,4 @@ WebSharper project files must include the file `WebSharper.targets`, which defin
 * `InterfaceGenerator`: For Extensions.
     * Compiles the classes defined using WIG into an assembly.
 
-The other MSBuild project variables are fully documented [here](ProjectVariables.md).
+The other compilation settings are fully documented [here](Configuration.md).
