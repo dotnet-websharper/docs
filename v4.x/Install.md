@@ -18,6 +18,19 @@ A separate `WebSharper` section exists under both `Visual C#` and `Visual F#`.
 
 ![Visual Studio templates](https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/VisualStudioTemplates41.png)
 
+<a name="netcore"></a>
+# Installing WebSharper Templates for .NET Core/Standard
+
+Install [.NET Core SDK 2.0+](https://www.microsoft.com/net/download/windows) if you don't have it.
+Run `dotnet new -i WebSharper.Templates`.
+
+Use `dotnet new` to list available templates.
+
+![.NET Core templates](https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/NetCoreTemplates42.png)
+
+Instantiate templates with `dotnet new templatename`, for example `dotnet new websharper-web`.
+Default language is C#, use `dotnet new templatename -lang F#` to create an F# template.
+
 ## Updating WebSharper in existing projects
 
 When you create a new WebSharper project from a Visual Studio template,

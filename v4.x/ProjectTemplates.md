@@ -33,6 +33,10 @@ The following helper projects are also available:
 
  5. **Suave-hosted Site** - a client-server application with [Suave](https://github.com/SuaveIO/suave) hosting.
 
+## .NET Core
+
+Some templates are available for .NET Core/Standard, see [Installing WebSharper Templates for .NET Core/Standard](Install.md#netcore)
+
 ## Capabilities
 
 This table summarizes the capabilities of the available application/helper project templates:
@@ -41,6 +45,7 @@ This table summarizes the capabilities of the available application/helper proje
     <tbody>
         <tr class="header">
             <td style="border:none;">Template</td>
+            <td><code>dotnet new</code></td>
             <th class="first">C# available</th>
             <th>Is Sitelet?</th>
             <th>Client</th>
@@ -48,10 +53,11 @@ This table summarizes the capabilities of the available application/helper proje
             <th class="last">Remote</th>
         </tr>
         <tr class="header">
-            <th colspan="6">Applications</th>
+            <th colspan="7">Applications</th>
         </tr>
         <tr>
-            <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td>Client-Server App<br/><span style="color:#888;font-size:smaller">ASP.NET / Core</span></td>
+            <td><code>websharper-web</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -61,6 +67,7 @@ This table summarizes the capabilities of the available application/helper proje
         <tr>
             <td>Client-Server App<br/><span style="color:#888;font-size:smaller">Hosted via OWIN or Suave</span></td>
             <td></td>
+            <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -68,6 +75,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>HTML App</td>
+            <td><code>websharper-html</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -75,7 +83,8 @@ This table summarizes the capabilities of the available application/helper proje
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
         </tr>
         <tr>
-            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET-based</span></td>
+            <td>Single-Page App<br/><span style="color:#888;font-size:smaller">ASP.NET / Core</span></td>
+            <td><code>websharper-spa</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
@@ -86,15 +95,17 @@ This table summarizes the capabilities of the available application/helper proje
             <td>Single-Page App<br/><span style="color:#888;font-size:smaller">Packaging for mobile</span></td>
             <td></td>
             <td></td>
+            <td></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td></td>
         </tr>
         <tr class="header">
-            <th colspan="6">Helpers</th>
+            <th colspan="7">Helpers</th>
         </tr>
         <tr>
             <td>Library</td>
+            <td><code>websharper-lib</code></td>
             <td><img src="https://raw.githubusercontent.com/dotnet-websharper/docs/master/images/ok.png" alt="X"/></td>
             <td></td>
             <td></td>
@@ -103,6 +114,7 @@ This table summarizes the capabilities of the available application/helper proje
         </tr>
         <tr>
             <td>Extension</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -120,7 +132,9 @@ This table summarizes the capabilities of the available application/helper proje
 
 ## MSBuild Project File Configuration
 
-WebSharper project files must include the file `WebSharper.targets`, which defines the necessary compilation tasks. The type of project is driven by the property `WebSharperProject`. Here are the possible values:
+The WebSharper compiler is included in the NuGet packages `WebSharper.CSharp` and `WebSharper.FSharp`.
+The type of project is driven by the `Project` value in a `wsconfig.json` file, 
+or the property `WebSharperProject` in the `.csproj`/`.fsproj`. Here are the possible values:
 
 * `Site`: for Client-Server Applications.
     * Compiles JavaScript-annotated code;
@@ -138,4 +152,4 @@ WebSharper project files must include the file `WebSharper.targets`, which defin
 * `InterfaceGenerator`: For Extensions.
     * Compiles the classes defined using WIG into an assembly.
 
-The other MSBuild project variables are fully documented [here](ProjectVariables.md).
+The other compilation settings are fully documented [here](Configuration.md).

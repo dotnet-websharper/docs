@@ -16,8 +16,12 @@ If a class is marked, it is automatically inherited to nested classes and all me
 If a class is marked with `[JavaScript(false)]`, you can re-include a member with `[JavaScript]`.
 
 You can also set it on the assembly-level, `[assembly:JavaScript]` makes the entire project to be compiled.
+
 Using `[assembly:JavaScript("filename.cs")]` marks a file name for compilation, from anywhere in the project.
 If there are multiple files with the same name in the project, all are affected.
+
+Using `[assembly:JavaScript("TypeName")]` marks a type for compilation, from anywhere in the project.
+Type name must be fully qualified, nested types are using `+` and include generics too, for example ``MyNamespace.MyType+NestedType`2``.
 
 ### Constant
 
