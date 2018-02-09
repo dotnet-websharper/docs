@@ -13,9 +13,11 @@ same setting is provided in both places.
 
 # Settings
 
-## Project (string)
+## Project
 
 **Obligatory** (\*either this or `OutputDir` is needed)
+
+**Type**: string (see below)
 
 Specifies the WebSharper project type. The valid values and their corresponding project types
 are listed below.
@@ -37,18 +39,9 @@ Project property: `WebSharperProject`
 
 Console argument: `--ws:projecttype`
 
-## OutputDir (string)
+## OutputDir
 
-**Obligatory** (\*either this or `Project` is needed in cases of _web projects_)
-
-Specifies the compilation output directory when no project type is specified.
-Only needed when the project type is *Client-Server Application*.
-
-Project property: `WebSharperOutputDir`
-
-Console argument: `--wsoutput:folder`
-
-## OutputDir (string)
+**Type**: string (relative or absolute folder path)
 
 Specifies the path of the compilation output directory relative to the project file when
 the project type is *Single Page Application* or *HTML Application*.
@@ -58,7 +51,9 @@ Project property: `WebSharperBundleOutputDir` and `WebSharperHtmlDirectory`
 
 Console argument: `--wsoutput:folder`
 
-## SourceMap (bool)
+## SourceMap
+
+**Type**: bool (default is `false`)
 
 If the value is `true`, the compiler will include source maps and the required source files
 in a WebSharper assembly.
@@ -71,7 +66,9 @@ Project property: `WebSharperSourceMap`
 
 Console argument: `--jsmap`
 
-## WarnOnly (bool)
+## WarnOnly
+
+**Type**: bool (default is `false`)
 
 If the value is `true`, WebSharper compiler errors will be treated as warnings.
 
@@ -79,10 +76,11 @@ Project property: `WebSharperErrorsAsWarnings`
 
 Console argument: `--wswarnonly`
 
-## DCE (bool)
+## DCE
 
-Set the value to `false` to turn off dead code elimination (it is on for Single Page Applications
-by default.)
+**Type**: bool (default is `true`, only affects Bundle projects)
+
+Set the value to `false` to turn off dead code elimination.
 
 If dead code elimination and source mapping are both turned off for a `Bundle`/`BundleOnly` project,
 then bundling does not rewrite the JavaScript code of referenced assemblies into one scope, just
@@ -92,7 +90,9 @@ Project property: `WebSharperDeadCodeElimination`
 
 Console argument: `--dce+`/`--dce-` (default is `--dce+`)
 
-## DownloadResources (bool)
+## DownloadResources
+
+**Type**: bool (default is `false`)
 
 Currently implemented for Sitelet projects. Set to `true` to have WebSharper download all 
 remote `js`/`css` resources defined in the current project and all references.
@@ -104,7 +104,9 @@ Project property: `WebSharperDownloadResources`
 
 Console argument: `--dlres`
 
-## AnalyzeClosures (bool or string)
+## AnalyzeClosures
+
+**Type**: bool or `"MoveToTop"` (default is `false`)
 
 There is an inconvenient source of memory leaks in most JavaScript engines which is
 [described here](http://point.davidglasser.net/2013/06/27/surprising-javascript-memory-leak.html).
@@ -120,7 +122,9 @@ Project property: `WebSharperAnalyzeClosures`
 
 Console argument: `--closures:true`/`--closures:movetotop`
 
-## JavaScript (bool or array of strings)
+## JavaScript
+
+**Type**: bool or array of strings (default is `false`)
 
 Setting this to `true` is equivalent to having a `JavaScript` attribute on the assembly level:
 it marks the entire assembly for JavaScript compilation.
@@ -129,10 +133,14 @@ You can still exclude types by using the `JavaScript(false)` attribute.
 Alternatively, you can pass an array of strings, containing file or type names. 
 This is marking the given files or types for JavaScript compilation.
 
-## JsOutput (string)
+## JsOutput
+
+**Type**: string (relative or absolute file path)
 
 Provide a path to a file to make WebSharper write the `.js` output for the project.
 
-## MinJsOutput (string)
+## MinJsOutput
+
+**Type**: string (relative or absolute file path)
 
 Provide a path to a file make WebSharper write the `.min.js` output for the project.
