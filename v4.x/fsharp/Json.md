@@ -290,6 +290,8 @@ public class User
     Name name;
     int age;
     
+    public User() { }
+
     public User(Name name, int age)
     {
         this.name = name;
@@ -297,21 +299,28 @@ public class User
     }
 }
 
+[Serializable]
 public class Name
 {
     [Name("first-name")] string firstName;
     string lastName;
     
+    public Name() { }
+
     public Name(string firstName, string lastName)
     {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 }
+```
 
-Content.Json(new User(new Name("John", "Doe"), 36));
+Then from F#:
 
-// Output: {"name": {"firstName": "John", "last-name": "Doe"}, "age": 36}
+```fsharp
+Content.Json (User(Name("John", "Doe"), 36));
+
+// Output: {"name": {"first-name": "John", "lastName": "Doe"}, "age": 36}
 ```
 
 ### DateTimes
