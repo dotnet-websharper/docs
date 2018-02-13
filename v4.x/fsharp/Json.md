@@ -9,16 +9,17 @@ WebSharper Sitelets provide facilities to both parse JSON from HTTP requests and
 * Parsing: [using the `[<Json>]` attribute](Sitelets.md#json-request).
 * Writing: [using Content.Json](Sitelets.md#json-response).
 
-The module `WebSharper.Json` provides the following functions:
+The `WebSharper.Json` module provides the following functions:
 * `Serialize : 'T -> string` serializes a value to string.
 * `Deserialize : string -> 'T` deserializes a value from a string.
 
 ## Using JSON on the client
 
-JSON serialization is also available on the client. The module `WebSharper.Json` provides the following functions:
+JSON serialization is also available on the client.
+Two modules both named `WebSharper.Json` provide the following functions:
 
-* `Serialize : 'T -> string` serializes a value to string.
-* `Deserialize : string -> 'T` deserializes a value from a string.
+* `Parse : string -> obj` uses JavaScript's `JSON.parse` to convert a string to a value (no attribute-based transformations).
+* `Stringify :obj -> string` uses JavaScript's `JSON.stringify` to convert a value to a string (no attribute-based transformations).
 * `Encode : 'T -> obj` converts a value to a JavaScript object, such that `Json.Stringify (Json.Encode x) = Json.Serialize x`.
 * `Decode : obj -> 'T` converts a JavaScript object to a value, such that `Json.Decode (Json.Parse s) = Json.Deserialize s`.
 

@@ -9,18 +9,24 @@ WebSharper Sitelets provide facilities to both parse JSON from HTTP requests and
 * Parsing: [using the `[Json]` attribute](Sitelets.md#json-request).
 * Writing: [using Content.Json](Sitelets.md#json-response).
 
-The module `WebSharper.Json` provides the following functions:
+The `WebSharper.TypedJson` class provides the following static methods:
 * `string Serialize(T)` serializes a value to string.
 * `string Deserialize(T)` deserializes a value from a string.
 
 ## Using JSON on the client
 
-JSON serialization is also available on the client. The module `WebSharper.Json` provides the following functions:
+JSON serialization is also available on the client.
 
-* `string Serialize(T)` serializes a value to string.
-* `T Deserialize(string)` deserializes a value from a string.
-* `obj Encode(T)` converts a value to a JavaScript object, such that `Json.Stringify(Json.Encode(x)) == Json.Serialize(x)`.
-* `T Decode(obj)` converts a JavaScript object to a value, such that `Json.Decode(Json.Parse(s)) == Json.Deserialize(s)`.
+The `WebSharper.Json` class provides static methods for converting between a string and a plain JavaScript object (no custom de/serialization).
+
+* `obj Parse(string)` uses JavaScript's `JSON.parse` to convert a string to a value.
+* `string Stringify(obj)` uses JavaScript's `JSON.stringify` to convert a value to a string.
+
+The `Serialize`/`Deserialize` methods of `WebSharper.TypedJson` are also working in on the client, 
+and there are two additional static methods that are only working on the client:
+
+* `obj Encode(T)` converts a value to a JavaScript object, such that `Json.Stringify(TypedJson.Encode(x)) == TypedJson.Serialize(x)`.
+* `T Decode(obj)` converts a JavaScript object to a value, such that `TypedJson.Decode(Json.Parse(s)) == TypedJson.Deserialize(s)`.
 
 ## Format
 
