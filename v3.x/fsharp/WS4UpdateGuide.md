@@ -18,6 +18,8 @@ During the beta period packages were released under codename `Zafir`.
 If you were using the WebSharper 4 pre-releases, uninstall all `Zafir.*`
 packages, and install their `WebSharper.*` counterparts.
 
+`WebSharper.UI.Next` package should be replaced with `WebSharper.UI`, and the code changed accordingly (check "UI.Next Changes" section bellow for further details).
+
 ### JavaScript Attribute changes
 
 The `JavaScript` attribute is no longer an alias for `ReflectedDefinition`.
@@ -138,3 +140,9 @@ Instead of using the `CompiledName` attribute to specify JSON-serialized name of
 * TypeScript definition output (was outdated and under-tested)
 * `WebSharper.Warp` has not been released yet for WS4 (compiling from `ReflectedDefinition`s in FSI)
 * Clean does not remove unpacked code 
+
+### UI.Next Changes
+
+* all elementAttr and element functions have been replaced, please now use the element function and pass an extra empty list for the attributes, or replace elementAttr with element (element being the name of the function, for example `div` or `p`)
+* templates that used the special `data-` prefixed attributes should replace them to use `ws-` prefix instead
+* instanciation of templates should be done with constructor instead of `.Doc` and passing values in chained method calls, and suffixed with a final call to `.Doc()`
