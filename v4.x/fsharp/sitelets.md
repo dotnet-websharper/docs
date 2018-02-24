@@ -1114,8 +1114,8 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Slice`: restricts a router to parse/write values only that can be mapped to a new value. Equivalent to using `Filter` first to restrict the set of values and then `Map` to convert to a type that is a better representation of the restricted values.
 * `Router.TryMap`: a combination of `Slice` and `Embed`, a mapping from a subset of source values to a subset of target values. Both the encode and decode functions must return `None` if there is no mapping to a value of the other type.
 * `Router.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which inclide primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
-* `Router.QueryOption`: Modifies a router to read an optional query value as an F# option. Creates a `Router<option<'T>`, same restrictions apply as to `Query`.
-* `Router.QueryNullable`: Modifies a router to read an optional query value as a `System.Nullable`. Creates a `Router<Nullable<'T>`, same restrictions apply as to `Query`.
+* `Router.QueryOption`: Modifies a router to read an optional query value as an F# option. Creates a `Router<option<'T>>`, same restrictions apply as to `Query`.
+* `Router.QueryNullable`: Modifies a router to read an optional query value as a `System.Nullable`. Creates a `Router<Nullable<'T>>`, same restrictions apply as to `Query`.
 * `Router.Box`: Converts a `Router<'T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `'T` so it can be passed to underlying router.
 * `Router.Unbox`:  Converts a `Router<obj>` to a `Router<'T>`. When parsing, it uses a type check to see if the object is of type `'T` so that the parsed value can be represented in `'T`.
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
