@@ -66,13 +66,13 @@ WebSharper Sitelets abstract away URLs and request parsing by using an endpoint 
 [EndPoint("/")]
 public class Index { }
 
-[EndPoint("/stats")]
+[EndPoint("/stats/{username}")]
 public class Stats
 {
     public string username;
 }
 
-[EndPoint("/blog")]
+[EndPoint("/blog/{id}/{slug}")]
 public class BlogArticle
 {
     public int id;
@@ -227,7 +227,7 @@ class T
 * Objects with an `[EndPoint]` attribute are prefixed with the given path segment.
 
 ```csharp
-[EndPoint("/test")]
+[EndPoint("/test/{number}/{name}")]
 class T
 {
     int number;
@@ -292,7 +292,7 @@ SiteletBuilder().With<PostArticle>(/* ... */)
 * If an endpoint accepts only one method, then a more concise way to specify it is directly in the `[EndPoint]` attribute:
 
 ```csharp
-[EndPoint("POST /article")]
+[EndPoint("POST /article/{id}")]
 class PostArticle
 {
     int id;
@@ -324,13 +324,13 @@ SiteletBuilder().With<Home>(/* ... */)
 [EndPoint("GET /blog")]
 class AllArticles { }
 
-[EndPoint("GET /blog")]
+[EndPoint("GET /blog/{id}")]
 class ArticleById
 {
     int id;
 }
 
-[EndPoint("GET /blog")]
+[EndPoint("GET /blog/{slug}")]
 class ArticleBySlug
 {
     string slug;
@@ -380,7 +380,7 @@ SiteletBuilder().With<Article>(/* ... */)
 * You can of course mix Query and non-Query parameters.
 
 ```csharp
-[EndPoint]
+[EndPoint("{id}")]
 class Article
 {
     int id;
@@ -402,7 +402,7 @@ SiteletBuilder().With<Article>(/* ... */)
     [Learn more about JSON parsing.](Json.md)
 
 ```csharp
-[EndPoint("POST /article")]
+[EndPoint("POST /article/{id}")]
 class PostArticle
 {
     int id;
@@ -434,7 +434,7 @@ SiteletBuilder().With<PostArticle>(/* ... */)
 * `[Wildcard]` on a field indicates that it represents the remainder of the url's path. That field can be a `T[]` or a `string`. If an endpoint type contains several `[Wildcard]` fields, a runtime error is thrown.
 
 ```csharp
-[EndPoint("/articles")]
+[EndPoint("/articles/{id}")]
 class Articles
 {
     int pageId;
@@ -565,7 +565,7 @@ Given a predicate on the user name and a `Func<EndPoint, EndPoint>`, `Protect` r
 * `.Map` converts a Sitelet to a different endpoint type using mapping functions in both directions.
 
 ```csharp
-[EndPoint("/article")]
+[EndPoint("/article/{Title}")]
 public class Article {
     public string Title;
 }
@@ -576,7 +576,7 @@ Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, a =>
 The mapping functions can also be partial, so one or both of them can return `null` on some inputs. The only important thing is that the two functions are the inverse of each other on valid values, so `decode(encode(x)) = x` for all values of `x`. Also, `null` should never be a valid endpoint value for this to work.
 
 ```csharp
-[EndPoint("/article")]
+[EndPoint("/article/{Title}")]
 public class Article : Home {
     public string Title;
 }
@@ -644,7 +644,7 @@ The optional named arguments `Title`, `Head`, `Body` and `Doctype` set the corre
 If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to `Content.Json`, and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](Json.md)
 
 ```csharp
-[EndPoint("/article")]
+[EndPoint("/article/{id}")]
 class GetArticle
 {
     int id;
@@ -763,7 +763,7 @@ The method `SiteletBuilder.With()` provides a context of type `Context`. This co
 Since every accepted URL is uniquely mapped to an action value, it is also possible to generate internal links from an action value. For this, you can use the function `context.Link`.
 
 ```csharp
-[EndPoint("/article")]
+[EndPoint("/article/{id}/{slug}")]
 class Article
 {
     public int id;
