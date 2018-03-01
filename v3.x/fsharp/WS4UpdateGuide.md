@@ -18,6 +18,8 @@ During the beta period packages were released under codename `Zafir`.
 If you were using the WebSharper 4 pre-releases, uninstall all `Zafir.*`
 packages, and install their `WebSharper.*` counterparts.
 
+`WebSharper.UI.Next` package should be replaced with `WebSharper.UI`, and the code changed accordingly (check "UI.Next changes to UI" section bellow for further details).
+
 ### JavaScript Attribute changes
 
 The `JavaScript` attribute is no longer an alias for `ReflectedDefinition`.
@@ -132,7 +134,23 @@ In general, tranlation that relies on type information is delayed within inlines
 Instead of using the `CompiledName` attribute to specify JSON-serialized name of an F# union case, use WebSharper's `Name` attribute.
 
 `Json.SerializeWith` and similar functions taking a custom serializer object have been removed.
- 
+
+### UI.Next changes to UI
+
+The package WebSharper.UI.Next has been renamed to WebSharper.UI. A legacy package named "WebSharper.UI.Next" still exists to help smoothen the transition, but it is recommended to switch to WebSharper.UI.
+
+* Namespaces are renamed from `WebSharper.UI.Next` to `WebSharper.UI`.
+* All `elementAttr` and `element` functions have been merged: there is now a single `element` function which takes attributes and child elements. So for example, a call to `div [children]` becomes `div [] [children]`, and a call to `divAttr [attrs] [children]` becomes `div [attrs] [children]`.
+* Templates that used the special `data-` prefixed attributes should replace them to use `ws-` prefix instead.
+* Instanciation of templates should be done with constructor instead of `.Doc` and passing values in chained method calls, and suffixed with a final call to `.Doc()`. So a call like
+    ```fsharp
+    MyTemplate.Doc(Hole1 = "value1", Hole2 = "value2")
+    ```
+    becomes
+    ```fsharp
+    MyTemplate().Hole1("value1").Hole2("value2").Doc()
+    ```
+
 ## Missing features compared to WebSharper 3
 
 * TypeScript definition output (was outdated and under-tested)
