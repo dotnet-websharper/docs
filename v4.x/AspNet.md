@@ -1,8 +1,8 @@
-# Using WebSharper with ASP.NET or ASP.NET MVC
+# Using WebSharper with ASP.NET
 
-WebSharper is self-sufficient and can run as the single component of a web application, but it can also be integrated into an existing ASP.NET or ASP.NET MVC application. This integration is twofold:
+WebSharper is self-sufficient and can run as the single component of a web application, but it can also be integrated into an existing ASP.NET application. This integration is twofold:
 
-* Client-side WebSharper controls can be used within an ASPX or Razor page. This allows you to use C#/F#-compiled-to-JavaScript directly within an existing page, and take advantage of client-side generated markup with UI.Next and easy remote calls.
+* Client-side WebSharper controls can be used within an ASPX page. This allows you to use C#/F#-compiled-to-JavaScript directly within an existing page, and take advantage of client-side reactive markup with WebSharper UI and easy remote calls.
 
 * Full WebSharper [sitelets](Sitelets.md) can run alongside an ASP.NET application, sharing the same URL space, as well as the same server state, sessions, etc.
 
@@ -10,11 +10,11 @@ In any case, you need to add the following references to your ASP.NET web projec
 
 * Your WebSharper project;
 
-* [The WebSharper NuGet package](http://www.nuget.org/packages/WebSharper/);
+* [The WebSharper.CSharp NuGet package](http://www.nuget.org/packages/WebSharper.CSharp/);
 
-* FSharp.Core. You can find it under Assemblies / Extensions in Visual Studio's "Add Reference" dialog, or [get it from NuGet](http://www.nuget.org/packages/FSharp.Core/) if you prefer.
+* FSharp.Core. We recommend using [the NuGet package](http://www.nuget.org/packages/FSharp.Core/).
 
-    If you use F# 3.1 or more recent (most likely), then you also need to add a binding redirect to your `Web.config`:
+    For the latest FSharp.Core 4.3.x, you also need to add the following assembly redirection in your Web.config:
 
     ```xml
     <configuration>
@@ -22,97 +22,82 @@ In any case, you need to add the following references to your ASP.NET web projec
         <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
           <dependentAssembly>
             <assemblyIdentity name="FSharp.Core" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
-            <!-- For F# 3.1:
-            <bindingRedirect oldVersion="0.0.0.0-4.3.1.0" newVersion="4.3.1.0" />
-            -->
-            <!-- For F# 4.0: -->
-            <bindingRedirect oldVersion="0.0.0.0-4.4.0.0" newVersion="4.4.0.0" />
+            <bindingRedirect oldVersion="0.0.0.0-4.4.3.0" newVersion="4.4.3.0" />
           </dependentAssembly>
           ...
     ```
 
-* [The WebSharper.AspNetMvc package](http://www.nuget.org/packages/WebSharper.AspNetMvc), if you are using ASP.NET MVC and/or the Razor view engine.
-
 ## Integrating client-side controls in ASP.NET pages
 
-Ordinary ASP.NET applications are heavily server-based: content is rendered on the server
-and sent to the client, and any client interaction typically involves a server roundtrip.
-This can be eased somewhat using Ajax techniques on the client, where content or data is
-retrieved from the server asynchronously. Such content then is integrated into the
-presentation layer (on the client) once it becomes available after the call.
+Ordinary ASP.NET applications are heavily server-based: content is rendered on the server and sent to the client, and any client interaction typically involves a server roundtrip. This can be eased somewhat using Ajax techniques on the client, where content or data is retrieved from the server asynchronously. Such content then is integrated into the presentation layer (on the client) once it becomes available after the call.
 
-WebSharper makes it even easier to communicate with the server by enabling clients to make
-RPC calls seamlessly, as easily as making a client-side call.
-Here is a snippet to illustrate this in both languages:
+WebSharper makes it even easier to communicate with the server by enabling clients to make RPC calls seamlessly, as easily as making a client-side call. Here is a snippet to illustrate this in both languages (using `WebSharper.UI`):
 
-* Define a remote method and a client-side `Web.Control` in C#
+* Define a remote method and a client-side `Web.Control` in C#:
 
-```csharp
-public static class Server
-{
-    [Remote]
-    public static Task<int[]> GetData()
+    ```csharp
+    public static class Server
     {
-        return Task.FromResult(new[] { 1, 2, 3});
-    }
-}
-
-[Serializable]
-public class SimpleClientServerControl : WebSharper.Web.Control
-{
-    [JavaScript]
-    public override IControlBody Body
-    {
-        get
+        [Remote]
+        public static Task<int[]> GetData()
         {
-            var model = new ListModel<int, int>(x => x);
-            // call the server-side asynchronously, insert response items to ListModel
-            Task.Run(async () =>
-            {
-                foreach (var n in await Server.GetData())
-                    model.Add(n);
-            });
-            return ul(model.View.DocSeqCached((int x) => li("Value= ", x)));
+            return Task.FromResult(new[] { 1, 2, 3});
         }
     }
-}
-```
 
-* Define a remote method and a client-side `Web.Control` in F#
+    [Serializable]
+    public class SimpleClientServerControl : WebSharper.Web.Control
+    {
+        [JavaScript]
+        public override IControlBody Body
+        {
+            get
+            {
+                var model = new ListModel<int, int>(x => x);
+                // call the server-side asynchronously, insert response items to ListModel
+                Task.Run(async () =>
+                {
+                    var data = await Server.GetData();
+                    model.AppendMany(data);
+                });
+                return ul(model.View.DocSeqCached((int x) => li("Value= ", x)));
+            }
+        }
+    }
+    ```
 
-``` fsharp
-namespace WebSharperProject
-    
-open WebSharper
+* Define a remote method and a client-side `Web.Control` in F#:
 
-module Server =
-    [<Rpc>]
-    let GetData () = async { return [1; 2; 3] }
+    ``` fsharp
+    namespace WebSharperProject
 
-module Client =
-    open WebSharper.Html.Client
+    open WebSharper
 
-    [<JavaScript>]
-    let Main () =
-        let ul = UL
-        // call the server-side asynchronously, insert response items to DOM
-        async {
-            let! data = Server.GetData ()
-            for i in data do
-                ul.Append(LI [Text ("Value= " + i)])
-        } |> Async.Start
-        ul
-    
-type SimpleClientServerControl() =
-    inherit Web.Control()
-    
-    [<JavaScript>]
-    override this.Body = Client.Main () :> _
-```
+    module Server =
+        [<Rpc>]
+        let GetData () = 
+            async { return [1; 2; 3] }
 
-Here is how to integrate the above client-side control in your ASPX or Razor page.
+    type SimpleClientServerControl() =
+        inherit Web.Control()
 
-### Integrating client-side controls in ASPX pages
+        [<JavaScript>]
+        override this.Body =
+            let model = ListModel.FromSeq []
+            // call the server-side asynchronously, insert response items to ListModel
+            async {
+                let! data = Server.GetData()
+                model.AppendMany(i)
+            }
+            |> Async.Start
+            ul [] [
+                model.Doc(fun i -> li [] [text ("Value = " + string i)])
+            ] :> _
+    ```
+
+Here is how to integrate the above client-side control in your ASPX page.
+
+### Integrating a client-side control in an ASPX page
 
 The class `Web.Control` used in the above snippet inherits from `System.Web.UI.Control`, which means
 that it can be included directly in an ASPX page. Here are the necessary steps:
@@ -152,37 +137,6 @@ that it can be included directly in an ASPX page. Here are the necessary steps:
     
     Even though it may seem that your WebSharper control runs on the server (as would be indicated by the `runat="server"` attribute in your ASPX markup), this is not the case. Instead, this server control embeds a placeholder in your host page, and the WebSharper ScriptManager control takes care of "bringing it to life" by populating it when your page loads on the client, also referencing any dependencies it may have to ensure correct behavior.
 
-### Integrating client-side controls in Razor pages
-
-Razor integration is provided by WebSharper.AspNetMvc. Here are the necessary steps:
-
-* In your main razor layout, inside the head tag, add the following:
-
-    ``` csharp
-    @WebSharper.AspNetMvc.ScriptManager.Head()
-    ```
-
-    This will include all the CSS and scripts needed by the controls on your page.
-
-* To insert a control in a view, first create it at the top of the view:
-
-    ``` csharp
-    @{
-        var myControl = WebSharper.AspNetMvc.ScriptManager.Register(new MyControl());
-    }
-    ```
-
-    and then you can insert it in the view, eg:
-
-    ``` xml
-    <div>
-        <h1>My control:</h1>
-        @myControl
-    </div>
-    ```
-
-    It is important to create the control before the view starts rendering, or else `ScriptManager.Head()` will already have been rendered without this control's dependencies.
-
 ### Using remoting
 
 To enable WebSharper remoting, `Web.Config` must contain the declaration for the WebSharper HTTP module. This module is responsible for all RPC communication and comes already configured in the WebSharper Visual Studio project templates for ASP.NET. You should see something like this:
@@ -210,16 +164,6 @@ To enable WebSharper remoting, `Web.Config` must contain the declaration for the
         </httpModules>
         ...
     ```
-
-In addition, if you are using ASP.NET MVC, you need to add WebSharper to your filters configuration, located in `App_Start/FilterConfig.cs` in a default ASP.NET MVC application:
-
-``` csharp
-public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-{
-    filters.Add(new WebSharper.AspNetMvc.Filter());
-}
-```
-
 
 ## Running Sitelets alongside ASP.NET
 
@@ -259,21 +203,6 @@ to your `Web.config` file:
         </httpModules>
         ...
     ```
-
-In addition, just like with remoting, if you are using ASP.NET MVC, you need to add WebSharper to your filters configuration, located in `App_Start/FilterConfig.cs` in a default ASP.NET MVC application:
-
-``` csharp
-public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-{
-    filters.Add(new WebSharper.AspNetMvc.Filter());
-}
-```
-
-Note that you can specify which of ASP.NET MVC or WebSharper Sitelets' routing takes precedence in case their URL space overlaps. By default, WebSharper takes precedence.
-
-``` csharp
-    filters.Add(new WebSharper.AspNetMvc.Filter { SiteletsOverrideMvc = false });
-```
 
 ### In a new ASP.NET project
 
