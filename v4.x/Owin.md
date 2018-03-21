@@ -50,7 +50,7 @@ The middleware classes are:
 
 * The `RemotingMiddleware` should always appear *before* any self-contained application in the stack. In particular, it should appear before `SiteletMiddleware`.
 
-* `SiteletMiddleware` does not serve any static files, and in particular it does not serve the WebSharper-generated JavaScript files. You need to use a file system middleware such as `Microsoft.Owin.StaticFiles`, as shown in the [Self-Hosted Client-Server Web Application project template](https://github.com/intellifactory/websharper.visualstudio/blob/master/templates/owin-selfhost/Main.fs).
+* `SiteletMiddleware` does not serve any static files, and in particular it does not serve the WebSharper-generated JavaScript files. You need to use a file system middleware such as `Microsoft.Owin.StaticFiles`, as shown in the [Self-Hosted Client-Server Web Application project template](https://github.com/dotnet-websharper/templates/blob/master/FSharp/Owin/Main.fs).
 
 ## Katana IAppBuilder extension methods
 
