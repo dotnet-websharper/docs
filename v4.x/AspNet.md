@@ -22,6 +22,7 @@ In any case, you need to add the following references to your ASP.NET web projec
         <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
           <dependentAssembly>
             <assemblyIdentity name="FSharp.Core" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+            <!-- Watch out: FSharp.Core's 4.3.x NuGet package contains the 4.4.3.0 assembly -->
             <bindingRedirect oldVersion="0.0.0.0-4.4.3.0" newVersion="4.4.3.0" />
           </dependentAssembly>
           ...
