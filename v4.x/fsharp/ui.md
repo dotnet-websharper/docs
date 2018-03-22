@@ -389,7 +389,7 @@ You can also declare a template from multiple files at once using a comma-separa
 
 open WebSharper.UI.Templating
 
-type MyTemplate = Template<"my-template.html">
+type MyTemplate = Template<"my-template.html, second-template.html">
 
 let myPage =
     Doc.Concat [
@@ -1603,7 +1603,7 @@ let GetContactDetails p = async { ... }
 let ContactMain() =    
     let location = // ...
     let contactDetails = location.View |> View.MapAsync GetContactDetails
-    contactDetails.View.Doc(fun p -> 
+    contactDetails.Doc(fun p -> 
         // show contact details
     )
 ```
