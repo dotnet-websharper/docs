@@ -391,6 +391,8 @@ let myPage = MyTemplate().Doc()
 
 Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](#inner-templates).
 
+If the template comprises a single HTML element, then an additional method `.Elt()` is available. It is identical to `.Doc()`, except its return value has type `Elt` instead of `Doc`.
+
 You can also declare a template from multiple files at once using a comma-separated list of file names. In this case, the template for each file is a nested class named after the file, truncated of its file extension.
 
 ```fsharp
@@ -698,18 +700,125 @@ The possible values for `clientLoad` are:
 * `ClientLoad.Inline` (default): The template is included in the compiled JavaScript code, and any change to `my-template.html` requires a recompilation to be reflected in the application.
 * `ClientLoad.FromDocument`: The template is loaded from the DOM. This means that `my-template.html` *must* be the document in which the code is run: either directly served as a Single-Page Application, or passed to `Content.Page` in a Client-Server Application.
 
+    In this mode, it doesn't make sense for client-side code to instantiate the full template, since you are already inside the document. But the following are possible:
+    * [Instantiating inner templates.](#inner-templates)
+    * [Binding directly to the DOM.](#binding-dom)
+
 The possible values for `serverLoad` are:
 
 * `ServerLoad.WhenChanged` (default): The runtime sets up a file watcher on the template file, and reloads it whenever it is edited.
+
 * `ServerLoad.Once`: The template file is loaded on first use and never reloaded.
+
 * `ServerLoad.PerRequest`: The template file is reloaded every time it is needed. We recommend against this option for performance reasons.
+
+<a name="binding-dom"></a>
+### Binding directly to the DOM
+
+When using a template from the client side that is declared with `clientLoad = ClientLoad.FromDocument`, you can directly bind content, Vars, etc. to the DOM. Instead of calling `.Doc()` to create a Doc, use `.Bind()`, which returns `unit`, to just apply the template to the current document.
+
+```fsharp
+// index.html:
+// <html>
+//   <head>
+//     <title>Welcome!</title>
+//   </head>
+//   <body>
+//     <h1>Welcome!</h1>
+//     <div ws-replace="Paragraph"></div>
+//     <button ws-onclick="ClickMe">${ClickText}</button>
+//   </body>
+// </html>
+
+type Index = Template<"index.html", ClientLoad.FromDocument>
+
+Index()
+    .Paragraph(p [] [text "Welcome to my site."])
+    .ClickMe(fun _ -> JS.Alert "Clicked!")
+    .ClickText("Click me!")
+    .Bind()
+
+// result:
+// <html>
+//   <head>
+//     <title>Welcome!</title>
+//   </head>
+//   <body>
+//     <h1>Welcome!</h1>
+//     <p>Welcome to my site.</p>
+//     <button>Click me!</button>
+//   </body>
+// </html>
+```
+
+Note that for `Bind()` to work correctly, the holes need to be present in the document itself. This is not a problem if your project is an SPA. But you can also serve the page from a Sitelet, using the same template on the server side. You can fill some holes on the server side and leave some to be filled by the client side. However, by default, the server-side engine removes unfilled holes from the served document. This is correct behavior in most cases, but here, the client does need the unfilled hole markers like `ws-replace` or `${...}` to be present. So this behavior can be overridden by the optional boolean argument `keepUnfilled` of the `.Doc()` and `.Elt()` methods.
+
+```fsharp
+// index.html:
+// <html>
+//   <head>
+//     <title>Welcome!</title>
+//   </head>
+//   <body>
+//     <h1>Welcome!</h1>
+//     <div ws-replace="Paragraph"></div>
+//     <button ws-onclick="ClickMe">${ClickText}</button>
+//   </body>
+// </html>
+
+type Index = Template<"index.html", ClientLoad.FromDocument>
+
+[<JavaScript>]
+module Client =
+
+    let Startup() =
+        Index()
+            .ClickMe(fun _ -> JS.Alert "Clicked!")
+            .ClickText("Click me!")
+            .Bind()
+
+module Server =
+    open WebSharper.UI.Server
+
+    let MyPage() =
+        Content.Page(
+            Index()
+                .Paragraph(p [] [text "Welcome to my site."])
+                .Elt(keepUnfilled = true)
+                .OnAfterRender(fun _ -> Client.Startup())
+        )
+
+// served page:
+// <html>
+//   <head>
+//     <title>Welcome!</title>
+//   </head>
+//   <body>
+//     <h1>Welcome!</h1>
+//     <p>Welcome to my site.</p>
+//     <button ws-onclick="ClickMe">${ClickText}</button>
+//   </body>
+// </html>
+
+// result after Client.Startup() has run:
+// <html>
+//   <head>
+//     <title>Welcome!</title>
+//   </head>
+//   <body>
+//     <h1>Welcome!</h1>
+//     <p>Welcome to my site.</p>
+//     <button>Click me!</button>
+//   </body>
+// </html>
+```
 
 ### Accessing the template's model
 
 Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
 
 * In event handlers, it is available as the `Vars` property of the handler argument.
-* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars.
+* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars. This method is only available when instantiating the template from the client side.
 
     ```fsharp
     // my-template.html:
