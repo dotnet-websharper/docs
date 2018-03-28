@@ -326,6 +326,25 @@ let MyPage (ctx: Context<EndPoint>) =
 
 To include client-side elements inside a page, use the `client` method, from inside `WebSharper.UI.Html`.
 
+```fsharp
+[<JavaScript>]
+module Client =
+
+    let MyControl() =
+        button [ on.click (fun el ev -> JS.Alert "Hi!") ] [ text "Click me!" ]
+
+module Server =
+
+    let MyPage (ctx: Context<EndPoint>) =
+        Content.Page(
+            Title = "Welcome!",
+            Body = [
+                h1 [] [ text "Welcome!" ]
+                p [] [ client <@ Client.MyControl() @> ]
+            ]
+        )
+```
+
 <a name="templating"></a>
 ## HTML Templates
 
