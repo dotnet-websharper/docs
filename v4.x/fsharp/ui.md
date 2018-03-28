@@ -315,6 +315,8 @@ let myButton =
     ] [ text "Click me!" ]
 ```
 
+In addition to the standard HTML events, `on.afterRender` is a special handler that is called by WebSharper after inserting the element into the DOM.
+
 ### HTML on the client
 
 To insert a Doc into the document on the client side, use the `Doc.Run*` family of functions from the module [`WebSharper.UI.Client`](/api/v4.1/WebSharper.UI.Client). Each of these functions has two variants: one directly taking a DOM [`Element`](/api/v4.1/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/v4.1/WebSharper.JavaScript.Dom.Node), and the other suffixed with `ById` taking the id of an element as a string.
@@ -978,6 +980,8 @@ It is possible to include some client-side functionality when creating a templat
 * If you use `ws-var="VarName"`, the corresponding Var will be created on the client on page startup. However, passing a Var using `.VarName(myVar)` is not possible, since it would be a server-side Var.
 
 * Event handlers (such as `ws-onclick="EventName"`) work fully if you pass an anonymous function: `.EventName(fun e -> ...)`. The body of this function will be compiled to JavaScript. You can also pass a top-level function, in this case it must be declared with `[<JavaScript>]`.
+
+    This also includes `ws-onafterrender`, which causes the given function to be called on page startup.
 
 ### Special holes in server-side templates
 
