@@ -33,15 +33,19 @@ let myDoc =
             li [] [ text "..." ]
         ]
     ]
+```
 
-// <div>
-//   <h1>Functional Reactive Programming and HTML</h1>
-//   <p>WebSharper.UI is a library providing a novel, pragmatic and convenient
-//      approach to UI reactivity. It includes:</p>
-//   <ul>
-//     <li>...</li>
-//   </ul>
-// </div>
+Result:
+
+```html
+<div>
+  <h1>Functional Reactive Programming and HTML</h1>
+  <p>WebSharper.UI is a library providing a novel, pragmatic and convenient
+     approach to UI reactivity. It includes:</p>
+  <ul>
+    <li>...</li>
+  </ul>
+</div>
 ```
 
 Some HTML tags, such as `option`, collide with standard library names and are therefore only located in the [`Tags`](/api/v4.1/WebSharper.UI.Html.Tags) submodule.
@@ -53,12 +57,15 @@ let myDropdown =
         Tags.option [] [ text "Second choice" ]
         Tags.option [] [ text "Third choice" ]
     ]
+```
+Result:
 
-// <select>
-//   <option>First choice</option>
-//   <option>Second choice</option>
-//   <option>Third choice</option>
-// </select>
+```html
+<select>
+  <option>First choice</option>
+  <option>Second choice</option>
+  <option>Third choice</option>
+</select>
 ```
 
 One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/v4.1/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as [`Dom`](/api/v4.1/WebSharper.UI.Elt#Dom) to get the underlying `Dom.Element`. This subtyping means that you will sometimes need to upcast the result of such a function with `:> Doc` to appease the compiler; you can see an example of this below in the example for `Doc.Empty`.
@@ -73,17 +80,21 @@ Additional functions in the [`Doc`](/api/v4.1/WebSharper.UI.Doc) can create or c
             input [ attr.name "name" ] []
             (if withDropdown then myDropdown :> Doc else Doc.Empty)
         ]
-        
-    // <form>
-    //   <input name="name" />
-    // </form>
-    //
-    // or:
-    //
-    // <form>
-    //   <input name="name" />
-    //   <!-- ... contents of myDropdown here ... -->
-    // </form>
+    ```
+    
+    Result:
+
+    ```html
+    <form>
+      <input name="name" />
+    </form>
+    
+    or:
+    
+    <form>
+      <input name="name" />
+      <!-- ... contents of myDropdown here ... -->
+    </form>
     ```
 
 * [`Doc.Append`](/api/v4.1/WebSharper.UI.Doc#Append) creates a Doc consisting of the concatenation of two Docs.
@@ -93,9 +104,13 @@ Additional functions in the [`Doc`](/api/v4.1/WebSharper.UI.Doc) can create or c
         Doc.Append
             (h1 [] [ text "Functional Reactive Programming and HTML" ])
             (p [] [ text "WebSharper.UI is a library providing ..." ])
-            
-    // <h1>Functional Reactive Programming and HTML</h1>
-    // <p>WebSharper.UI is a library providing ...</p>
+    ```
+    
+    Result:
+
+    ```html
+    <h1>Functional Reactive Programming and HTML</h1>
+    <p>WebSharper.UI is a library providing ...</p>
     ```
 
 For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make Docs a monoid.
@@ -111,12 +126,16 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
                 li [] [ text "..." ]
             ]
         ]
+    ```
+    
+    Result:
         
-    // <h1>Functional Reactive Programming and HTML</h1>
-    // <p>WebSharper.UI is a library providing ...</p>
-    // <ul>
-    //   <li>...</li>
-    // </ul>
+    ```html
+    <h1>Functional Reactive Programming and HTML</h1>
+    <p>WebSharper.UI is a library providing ...</p>
+    <ul>
+      <li>...</li>
+    </ul>
     ```
 
 * [`Doc.Element`](/api/v4.1/WebSharper.UI.Doc#Element) creates an element with the given name, attributes and children. It is equivalent to the function with the same name from the `Html` module. This function is useful if the tag name is only known at runtime, or if you want to create a non-standard element that isn't available in `Html`. The following example creates a header tag of a given level (`h1`, `h2`, etc).
@@ -124,11 +143,15 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
     ```fsharp
     let makeHeader (level: int) (content: string) =
         Doc.Element ("h" + string level) [] [ text content ]
+    ```
+    
+    Result:
         
-    // <h1>content...</h1>
-    // or
-    // <h2>content...</h2>
-    // or etc.
+    ```html
+    <h1>content...</h1>
+    or
+    <h2>content...</h2>
+    or etc.
     ```
 
 * [`Doc.Verbatim`](/api/v4.1/WebSharper.UI.Doc#Verbatim) creates a Doc from plain HTML text.  
@@ -140,10 +163,14 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
             <h1 onclick=\"alert('And it is unsafe!')\">
                 This is plain HTML!
             </h1>"
+    ```
+    
+    Result:
 
-    // <h1 onclick="alert('And it is unsafe!')">
-    //     This is plain HTML!
-    // </h1>
+    ```html
+    <h1 onclick="alert('And it is unsafe!')">
+        This is plain HTML!
+    </h1>
     ```
 
 <a name="attr"></a>
@@ -161,12 +188,16 @@ let myFormControl =
             attr.selected "selected"
         ] [ text "Third choice" ]
     ]
+```
 
-// <select name="mySelect">
-//   <option value="first">First choice</option>
-//   <option value="second">Second choice</option>
-//   <option value="third" selected="selected">Third choice</option>
-// </select>
+Result:
+
+```html
+<select name="mySelect">
+  <option value="first">First choice</option>
+  <option value="second">Second choice</option>
+  <option value="third" selected="selected">Third choice</option>
+</select>
 ```
 
 Some attributes, notably `class` and `type`, are also F# keywords, so they need to be wrapped in double backquotes.
@@ -174,8 +205,12 @@ Some attributes, notably `class` and `type`, are also F# keywords, so they need 
 ```fsharp
 let myMain =
     div [ attr.``class`` "main" ] [ text "..." ]
+```
 
-// <div class="main">...</div>
+Result:
+
+```html
+<div class="main">...</div>
 ```
 
 HTML5 also defines any attribute whose names starts with `data-` as a valid custom attribute. You can create such an attribute using the function `data-` from module `attr` (backquoted since it contains a non-standard character).
@@ -183,8 +218,12 @@ HTML5 also defines any attribute whose names starts with `data-` as a valid cust
 ```fsharp
 let myEltWithData =
     div [ attr.``data-`` "uid" "myDiv" ] [ text "..." ]
+```
 
-// <div data-uid="myDiv">...</div>
+Result:
+
+```html
+<div data-uid="myDiv">...</div>
 ```
 
 Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. The functions in the [`Attr`](/api/v4.1/WebSharper.UI.Attr) module can create such non-singleton attributes.
@@ -198,10 +237,14 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
             | Some v -> attr.value v
             | None -> Attr.Empty
         input [ valueAttr ] []
+    ```
+    
+    Result:
         
-    // <input value="initialValue..." />
-    // or
-    // <input />
+    ```html
+    <input value="initialValue..." />
+    or
+    <input />
     ```
 
 * [`Attr.Append`](/api/v4.1/WebSharper.UI.Attr#Append) combines two attributes.
@@ -209,8 +252,12 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     ```fsharp
     let passwordAttr =
         Attr.Append (attr.``type`` "password") (attr.placeholder "Password")
+    ```
+    
+    Result:
 
-    // type="password" placeholder="Password"
+    ```html
+    type="password" placeholder="Password"
     ```
 
 * [`Attr.Concat`](/api/v4.1/WebSharper.UI.Attr#Concat) combines a sequence of attributes.
@@ -222,8 +269,12 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
             attr.placeholder "Password"
             attr.``class`` "pw-input"
         ]
+    ```
+    
+    Result:
 
-    // type="password" placeholder="Password" class="pw-input"
+    ```html
+    type="password" placeholder="Password" class="pw-input"
     ```
 
 * [`Attr.Create`](/api/v4.1/WebSharper.UI.Attr#Create) creates a single attribute. It is equivalent to the function with the same name from the `attr` module. This function is useful if the attribute name is only known at runtime, or if you want to create a non-standard attribute that isn't available in `attr`.
@@ -231,8 +282,12 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     ```fsharp
     let eltWithNonStandardAttr =
         div [ Attr.Create "my-attr" "my-value" ] [ text "..." ]
+    ```
+    
+    Result:
         
-    // <div my-attr="my-value">...</div>
+    ```html
+    <div my-attr="my-value">...</div>
     ```
 
 #### Event handlers
@@ -368,25 +423,31 @@ type MyTemplate = Template<"my-template.html">
 
 To instantiate it, call your type's constructor and then its `.Doc()` method.
 
-```fsharp
-// my-template.html:
-// <div>
-//   <h1>Welcome!</h1>
-//   <p>Welcome to my site.</p>
-// </div>
+my-template.html:
 
+```html
+<div>
+  <h1>Welcome!</h1>
+  <p>Welcome to my site.</p>
+</div>
+```
+
+```fsharp
 open WebSharper.UI.Templating
 
 type MyTemplate = Template<"my-template.html">
 
 let myPage = MyTemplate().Doc()
+```
 
-// equivalent to:
-// let myPage =
-//     div [] [
-//         h1 [] [ text "Welcome!" ]
-//         p [] [ text "Welcome to my site." ]
-//     ]
+equivalent to:
+
+```html
+let myPage =
+    div [] [
+        h1 [] [ text "Welcome!" ]
+        p [] [ text "Welcome to my site." ]
+    ]
 ```
 
 Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](#inner-templates).
@@ -395,19 +456,25 @@ If the template comprises a single HTML element, then an additional method `.Elt
 
 You can also declare a template from multiple files at once using a comma-separated list of file names. In this case, the template for each file is a nested class named after the file, truncated of its file extension.
 
+my-template.html:
+
+```html
+<div>
+  <h1>Welcome!</h1>
+  <p>Welcome to my site.</p>
+</div>
+```
+
+second-template.html:
+
+```html
+<div>
+  <h2>This is a section.</h2>
+  <p>And this is its content.</p>
+</div>
+```
+
 ```fsharp
-// my-template.html:
-// <div>
-//   <h1>Welcome!</h1>
-//   <p>Welcome to my site.</p>
-// </div>
-
-// second-template.html:
-// <div>
-//   <h2>This is a section.</h2>
-//   <p>And this is its content.</p>
-// </div>
-
 open WebSharper.UI.Templating
 
 type MyTemplate = Template<"my-template.html, second-template.html">
@@ -417,19 +484,22 @@ let myPage =
         MyTemplate.``my-template``().Doc()
         MyTemplate.``second-template``().Doc()
     ]
+```
 
-// equivalent to:
-// let myPage =
-//     Doc.Concat [
-//         div [] [
-//             h1 [] [ text "Welcome!" ]
-//             p [] [ text "Welcome to my site." ]
-//         ]
-//         div [] [
-//             h2 [] [ text "This is a section." ]
-//             p [] [ text "And this is its content." ]
-//         ]
-//    ]
+equivalent to:
+
+```html
+let myPage =
+    Doc.Concat [
+        div [] [
+            h1 [] [ text "Welcome!" ]
+            p [] [ text "Welcome to my site." ]
+        ]
+        div [] [
+            h2 [] [ text "This is a section." ]
+            p [] [ text "And this is its content." ]
+        ]
+   ]
 ```
 
 ### Holes
@@ -438,95 +508,119 @@ You can add holes to your template that will be filled by F# code. Each hole has
 
 * `${HoleName}` creates a `string` hole. You can use it in text or in the value of an attribute.
 
+    my-template.html:
+
+    ```html
+    <div style="background-color: ${Color}">
+      <h1>Welcome, ${Name}!</h1>
+      <!-- You can use the same hole name multiple times,
+           and they will all be filled with the same F# value. -->
+      <p>This div's color is ${Color}.</p>
+    </div>
+    ```
+
     ```fsharp
-    // my-template.html:
-    // <div style="background-color: ${Color}">
-    //   <h1>Welcome, ${Name}!</h1>
-    //   <!-- You can use the same hole name multiple times,
-    //        and they will all be filled with the same F# value. -->
-    //   <p>This div's color is ${Color}.</p>
-    // </div>
-    
     let myPage =
         MyTemplate()
             .Color("red")
             .Name("my friend")
             .Doc()
+    ```
 
-    // result:
-    // <div style="background-color: red">
-    //   <h1>Welcome, my friend!</h1>
-    //   <!-- You can use the same hole name multiple times,
-    //        and they will all be filled with the same F# value. -->
-    //   <p>This div's color is red.</p>
-    // </div>
+    Result:
+
+    ```html
+    <div style="background-color: red">
+      <h1>Welcome, my friend!</h1>
+      <!-- You can use the same hole name multiple times,
+           and they will all be filled with the same F# value. -->
+      <p>This div's color is red.</p>
+    </div>
     ```
     
     On the client side, this hole can also be filled with a `View<string>` (see [reactive](#reactive)) to include dynamically updated text content.
 
 * The attribute `ws-replace` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will be replaced with the provided Doc(s). The name of the hole is the value of the `ws-replace` attribute.
 
+    my-template.html:
+
+    ```html
+    <div>
+      <h1>Welcome!</h1>
+      <div ws-replace="Content"></div>
+    </div>
+    ```
+
     ```fsharp
-    // my-template.html:
-    // <div>
-    //   <h1>Welcome!</h1>
-    //   <div ws-replace="Content"></div>
-    // </div>
-    
     let myPage =
         MyTemplate()
             .Content(p [] [ text "Welcome to my site." ])
             .Doc()
+    ```
 
-    // result:
-    // <div>
-    //   <h1>Welcome!</h1>
-    //   <p>Welcome to my site.</p>
-    // </div>
+    Result:
+
+    ```html
+    <div>
+      <h1>Welcome!</h1>
+      <p>Welcome to my site.</p>
+    </div>
     ```
 
 * The attribute `ws-hole` creates a `Doc` or `seq<Doc>` hole. The element on which this attribute is set will have its _contents_ replaced with the provided Doc(s). The name of the hole is the value of the `ws-hole` attribute.
 
+    my-template.html:
+
+    ```html
+    <div>
+      <h1>Welcome!</h1>
+      <div ws-hole="Content"></div>
+    </div>
+    ```
+
     ```fsharp
-    // my-template.html:
-    // <div>
-    //   <h1>Welcome!</h1>
-    //   <div ws-hole="Content"></div>
-    // </div>
-    
     let myPage =
         MyTemplate()
             .Content(p [] [ text "Welcome to my site." ])
             .Doc()
+    ```
 
-    // result:
-    // <div>
-    //   <h1>Welcome!</h1>
-    //   <div>
-    //       <p>Welcome to my site.</p>
-    //   </div>
-    // </div>
+    Result:
+
+    ```html
+    <div>
+      <h1>Welcome!</h1>
+      <div>
+          <p>Welcome to my site.</p>
+      </div>
+    </div>
     ```
 
 * The attribute `ws-attr` creates an `Attr` or `seq<Attr>` hole. The name of the hole is the value of the `ws-attr` attribute.
 
+    my-template.html:
+
+    ```html
+    <div ws-attr="MainDivAttr">
+      <h1>Welcome!</h1>
+      <p>Welcome to my site.</p>
+    </div>
+    ```
+
     ```fsharp
-    // my-template.html:
-    // <div ws-attr="MainDivAttr">
-    //   <h1>Welcome!</h1>
-    //   <p>Welcome to my site.</p>
-    // </div>
-    
     let myPage =
         MyTemplate()
             .MainDivAttr(attr.``class`` "main")
             .Doc()
+    ```
 
-    // result:
-    // <div class="main">
-    //   <h1>Welcome!</h1>
-    //   <p>Welcome to my site.</p>
-    // </div>
+    Result:
+
+    ```html
+    <div class="main">
+      <h1>Welcome!</h1>
+      <p>Welcome to my site.</p>
+    </div>
     ```
 
 * The attribute `ws-var` creates a `Var` hole (see [reactive](#reactive)) that is bound to the element. It can be used on the following elements:
@@ -537,24 +631,30 @@ You can add holes to your template that will be filled by F# code. Each hole has
 
     The name of the hole is the value of the `ws-attr` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
 
-    ```fsharp
-    // my-template.html:
-    // <div>
-    //   <input ws-var="Name" />
-    //   <div>Hi, ${Name}!</div>
-    // </div>
+    my-template.html:
 
+    ```html
+    <div>
+      <input ws-var="Name" />
+      <div>Hi, ${Name}!</div>
+    </div>
+    ```
+
+    ```fsharp
     let myPage =
         let varName = Var.Create ""
         MyTemplate()
             .Name(varName)
             .Doc()
+    ```
 
-    // result:
-    // <div class="main">
-    //   <input />
-    //   <div>Hi, [value of above input]!</div>
-    // </div>
+    Result:
+
+    ```html
+    <div class="main">
+      <input />
+      <div>Hi, [value of above input]!</div>
+    </div>
     ```
 
     If you don't fill the hole (ie you don't call `.Name(varName)` above), the `Var` will be implicitly created, so `${Name}` will still be dynamically updated from the user's input.
@@ -565,13 +665,16 @@ You can add holes to your template that will be filled by F# code. Each hole has
     * `Event: Dom.Event` is the event triggered.
     * `Vars` has a field for each of the `Var`s associated to `ws-var`s in the template.
 
+    my-template.html:
+
+    ```html
+    <div>
+      <input ws-var="Name" />
+      <button ws-onclick="Click">Ok</button>
+    </div>
+    ```
+
     ```fsharp
-    // my-template.html:
-    // <div>
-    //   <input ws-var="Name" />
-    //   <button ws-onclick="Click">Ok</button>
-    // </div>
-    
     let myPage =
         MyTemplate()
             .Click(fun t -> JS.Alert("Hi, " + t.Vars.Name.Value))
@@ -588,16 +691,19 @@ To create a template for a widget (as opposed to a full page), you can put it in
 
 Inner templates are available in F# as a nested class under the main provided type.
 
-```fsharp
-// my-template.html:
-// <div ws-attr="MainAttr">
-//   <div ws-replace="InputFields"></div>
-//   <div ws-template="Field" class="field-wrapper">
-//     <label for="${Id}">${Which} Name: </label>
-//     <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
-//   </div>
-// </div>
+my-template.html:
 
+```html
+<div ws-attr="MainAttr">
+  <div ws-replace="InputFields"></div>
+  <div ws-template="Field" class="field-wrapper">
+    <label for="${Id}">${Which} Name: </label>
+    <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
+  </div>
+</div>
+```
+
+```fsharp
 type MyTemplate = Template<"my-template.html">
 
 let inputField (id: string) (which: string) (var: Var<string>) =
@@ -619,18 +725,21 @@ let myForm =
             ]
         )
         .Doc()
+```
 
-// result:
-// <div class="my-form">
-//   <div class="field-wrapper">
-//     <label for="first">First Name: </label>
-//     <input placeholder="First Name" name="first" />
-//   </div>
-//   <div class="field-wrapper">
-//     <label for="last">Last Name: </label>
-//     <input placeholder="Last Name" name="last" />
-//   </div>
-// </div>
+Result:
+
+```html
+<div class="my-form">
+  <div class="field-wrapper">
+    <label for="first">First Name: </label>
+    <input placeholder="First Name" name="first" />
+  </div>
+  <div class="field-wrapper">
+    <label for="last">Last Name: </label>
+    <input placeholder="Last Name" name="last" />
+  </div>
+</div>
 ```
 
 ### Instantiating templates in HTML
@@ -652,27 +761,30 @@ Any holes that are neither mapped by an attribute nor filled by a child element 
 
 The following example is equivalent to the example from [Inner Templates](#inner-templates):
 
-```fsharp
-// my-template.html:
-// <div ws-attr="MainAttr">
-//   <!-- Instantiate the template for input fields. -->
-//   <!-- Creates the holes FirstVar and SecondVar for the main template. -->
-//   <!-- Fills the holes Id, Which and Var of Field in both instantiations. -->
-//   <ws-Field Var="FirstVar">
-//     <Id>first</Id>
-//     <Which>First</Which>
-//   </ws-field>
-//   <ws-Field Var="SecondVar">
-//     <Id>second</Id>
-//     <Which>Second</Which>
-//   </ws-field>
-// </div>
-// <!-- Declare the template for input fields -->
-// <div ws-template="Field" class="field-wrapper">
-//   <label for="${Id}">${Which} Name: </label>
-//   <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
-// </div>
+my-template.html:
 
+```html
+<div ws-attr="MainAttr">
+  <!-- Instantiate the template for input fields. -->
+  <!-- Creates the holes FirstVar and SecondVar for the main template. -->
+  <!-- Fills the holes Id, Which and Var of Field in both instantiations. -->
+  <ws-Field Var="FirstVar">
+    <Id>first</Id>
+    <Which>First</Which>
+  </ws-field>
+  <ws-Field Var="SecondVar">
+    <Id>second</Id>
+    <Which>Second</Which>
+  </ws-field>
+</div>
+<!-- Declare the template for input fields -->
+<div ws-template="Field" class="field-wrapper">
+  <label for="${Id}">${Which} Name: </label>
+  <input ws-var="Var" placeholder="${Which} Name" name="${Id}" />
+</div>
+```
+
+```fsharp
 type MyTemplate = Template<"my-template.html">
 
 let myForm =
@@ -717,19 +829,22 @@ The possible values for `serverLoad` are:
 
 When using a template from the client side that is declared with `clientLoad = ClientLoad.FromDocument`, you can directly bind content, Vars, etc. to the DOM. Instead of calling `.Doc()` to create a Doc, use `.Bind()`, which returns `unit`, to just apply the template to the current document.
 
-```fsharp
-// index.html:
-// <html>
-//   <head>
-//     <title>Welcome!</title>
-//   </head>
-//   <body>
-//     <h1>Welcome!</h1>
-//     <div ws-replace="Paragraph"></div>
-//     <button ws-onclick="ClickMe">${ClickText}</button>
-//   </body>
-// </html>
+index.html:
 
+```html
+<html>
+  <head>
+    <title>Welcome!</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <div ws-replace="Paragraph"></div>
+    <button ws-onclick="ClickMe">${ClickText}</button>
+  </body>
+</html>
+```
+
+```fsharp
 type Index = Template<"index.html", ClientLoad.FromDocument>
 
 Index()
@@ -737,35 +852,41 @@ Index()
     .ClickMe(fun _ -> JS.Alert "Clicked!")
     .ClickText("Click me!")
     .Bind()
+```
 
-// result:
-// <html>
-//   <head>
-//     <title>Welcome!</title>
-//   </head>
-//   <body>
-//     <h1>Welcome!</h1>
-//     <p>Welcome to my site.</p>
-//     <button>Click me!</button>
-//   </body>
-// </html>
+Result:
+
+```html
+<html>
+  <head>
+    <title>Welcome!</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <p>Welcome to my site.</p>
+    <button>Click me!</button>
+  </body>
+</html>
 ```
 
 Note that for `Bind()` to work correctly, the holes need to be present in the document itself. This is not a problem if your project is an SPA. But you can also serve the page from a Sitelet, using the same template on the server side. You can fill some holes on the server side and leave some to be filled by the client side. However, by default, the server-side engine removes unfilled holes from the served document. This is correct behavior in most cases, but here, the client does need the unfilled hole markers like `ws-replace` or `${...}` to be present. So this behavior can be overridden by the optional boolean argument `keepUnfilled` of the `.Doc()` and `.Elt()` methods.
 
-```fsharp
-// index.html:
-// <html>
-//   <head>
-//     <title>Welcome!</title>
-//   </head>
-//   <body>
-//     <h1>Welcome!</h1>
-//     <div ws-replace="Paragraph"></div>
-//     <button ws-onclick="ClickMe">${ClickText}</button>
-//   </body>
-// </html>
+index.html:
 
+```html
+<html>
+  <head>
+    <title>Welcome!</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <div ws-replace="Paragraph"></div>
+    <button ws-onclick="ClickMe">${ClickText}</button>
+  </body>
+</html>
+```
+
+```fsharp
 type Index = Template<"index.html", ClientLoad.FromDocument>
 
 [<JavaScript>]
@@ -787,30 +908,36 @@ module Server =
                 .Elt(keepUnfilled = true)
                 .OnAfterRender(fun _ -> Client.Startup())
         )
+```
 
-// served page:
-// <html>
-//   <head>
-//     <title>Welcome!</title>
-//   </head>
-//   <body>
-//     <h1>Welcome!</h1>
-//     <p>Welcome to my site.</p>
-//     <button ws-onclick="ClickMe">${ClickText}</button>
-//   </body>
-// </html>
+Served page:
 
-// result after Client.Startup() has run:
-// <html>
-//   <head>
-//     <title>Welcome!</title>
-//   </head>
-//   <body>
-//     <h1>Welcome!</h1>
-//     <p>Welcome to my site.</p>
-//     <button>Click me!</button>
-//   </body>
-// </html>
+```html
+<html>
+  <head>
+    <title>Welcome!</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <p>Welcome to my site.</p>
+    <button ws-onclick="ClickMe">${ClickText}</button>
+  </body>
+</html>
+```
+
+Result after Client.Startup() has run:
+
+```html
+<html>
+  <head>
+    <title>Welcome!</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <p>Welcome to my site.</p>
+    <button>Click me!</button>
+  </body>
+</html>
 ```
 
 ### Accessing the template's model
@@ -820,22 +947,28 @@ Templates allow you to access their "model", ie the set of all the reactive `Var
 * In event handlers, it is available as the `Vars` property of the handler argument.
 * From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars. This method is only available when instantiating the template from the client side.
 
-    ```fsharp
-    // my-template.html:
-    // <div>
-    //   <input ws-var="Name" />
-    //   <div>Hi, ${Name}!</div>
-    // </div>
+    my-template.html:
 
+    ```html
+    <div>
+      <input ws-var="Name" />
+      <div>Hi, ${Name}!</div>
+    </div>
+    ```
+
+    ```fsharp
     let myInstance = MyTemplate().Create()
     myInstance.Vars.Name <- "John Doe"
     let myDoc = myInstance.Doc
+    ```
 
-    // result:
-    // <div>
-    //   <input value="John Doe" />
-    //   <div>Hi, John Doe!</div>
-    // </div>
+    Result:
+
+    ```html
+    <div>
+      <input value="John Doe" />
+      <div>Hi, John Doe!</div>
+    </div>
     ```
 
 ### Mixing client code in server-side templates
@@ -918,15 +1051,19 @@ The following are available from `WebSharper.UI.Client`:
                 text " Select Blue"
             ]
         ]
-        
-    // Result:
-    // <div>
-    //   <label><input type="checkbox" /> Select Red</label>
-    //   <label><input type="checkbox" checked /> Select Green</label>
-    //   <label><input type="checkbox" checked /> Select Blue</label>
-    // </div>
-    // Plus varColor is bound to contain the list of ticked checkboxes.
     ```
+        
+    Result:
+    
+    ```html
+    <div>
+      <label><input type="checkbox" /> Select Red</label>
+      <label><input type="checkbox" checked /> Select Green</label>
+      <label><input type="checkbox" checked /> Select Blue</label>
+    </div>
+    ```
+
+    Plus varColor is bound to contain the list of ticked checkboxes.
 
 * [`Doc.Select`](/api/v4.1/WebSharper.UI.Client.Doc#Select) creates a dropdown `<select>` given a list of values to select from. The label of every `<option>` is determined by the given print function for the associated value.
 
@@ -942,15 +1079,19 @@ The following are available from `WebSharper.UI.Client`:
 
     let mySelector =
         Doc.Select [] showColor [ Red; Green; Blue ] varColor
-        
-    // Result:
-    // <select>
-    //   <option>Red</option>
-    //   <option>Green</option>
-    //   <option>Blue</option>
-    // </select>
-    // Plus varColor is bound to contain the selected color.
     ```
+        
+    Result:
+    
+    ```html
+    <select>
+      <option>Red</option>
+      <option>Green</option>
+      <option>Blue</option>
+    </select>
+    ```
+
+    Plus varColor is bound to contain the selected color.
 
 * [`Doc.Radio`](/api/v4.1/WebSharper.UI.Client.Doc#Radio) creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
 
@@ -975,15 +1116,19 @@ The following are available from `WebSharper.UI.Client`:
                 text " Select Blue"
             ]
         ]
-        
-    // Result:
-    // <div>
-    //   <label><input type="radio" /> Select Red</label>
-    //   <label><input type="radio" checked /> Select Green</label>
-    //   <label><input type="radio" /> Select Blue</label>
-    // </div>
-    // Plus varColor is bound to contain the selected color.
     ```
+        
+    Result:
+    
+    ```html
+    <div>
+      <label><input type="radio" /> Select Red</label>
+      <label><input type="radio" checked /> Select Green</label>
+      <label><input type="radio" /> Select Blue</label>
+    </div>
+    ```
+
+    Plus varColor is bound to contain the selected color.
 
 More variants are available in the [`Doc` module](/api/v4.1/WebSharper.UI.Client.Doc).
 
