@@ -173,6 +173,7 @@ concatenates the pre-compiled `.js` files of them. This results in faster compil
 
 Console argument: `--dce+`/`--dce-` (default is `--dce+`)
 
+<a name="downloadResources"></a>
 ## DownloadResources
 
 **Type**: bool (default is `false`)
@@ -180,7 +181,7 @@ Console argument: `--dce+`/`--dce-` (default is `--dce+`)
 Currently implemented for Sitelet projects. Set to `true` to have WebSharper download all 
 remote `js`/`css` resources defined in the current project and all references.
 
-You also need to add `<add key="UseDownloadedResources" value="True" />` to your `Web.config`'s `<appSettings>`
+You also need to set `UseDownloadedResources` to `true` in your [application configuration file](RuntimeConfiguration.md)
 so that WebSharper inserts a link to that downloaded file in your pages instead of a link to the online resource.
 
 **wsconfig.json file syntax**:
