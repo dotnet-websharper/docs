@@ -235,7 +235,7 @@ marked with `Instance` or `Static`) and reuse it by adding it to multiple type d
 ## Defining Members
 
 The primary use of type values is the definition of member signatures,
-methods, constructors, properties and fields, are defined.
+methods, constructors, properties and fields.
 
 ### Methods
 
@@ -410,7 +410,7 @@ The syntax for class inheritance is as follows:
 
 ### Interface Implementation
 
-The syntax for class inheritance is as follows:
+The syntax for interface implementation is as follows:
 
     Class "MyClass"
     |=> Implements [T<System.IComparable>]
@@ -440,9 +440,9 @@ For example:
         Interface "IDictionary"
         |+> [
             "Lookup"      => t1 ^-> t2
-            "ContainsKey" => t1 -> T<bool>
-            "Add"         => t1 * t2 -> T<unit>
-            "Remove"      => t1 -> T<unit>
+            "ContainsKey" => t1 ^-> T<bool>
+            "Add"         => t1 * t2 ^-> T<unit>
+            "Remove"      => t1 ^-> T<unit>
         ]
 
 This compiles to the following signature:
@@ -488,7 +488,7 @@ Documentation comments can be added using the `WithComment` function.
 
 By default, inline JavaScript definitions are inferred for all methods
 and properties from their names.  This is intuitive and convenient but
-not fully general.  Is is therefore possible to bypass the inferred
+not fully general. Therefore it is possible to bypass the inferred
 inlines and customize the generated bindings.
 
 ### Default Inline Generation
