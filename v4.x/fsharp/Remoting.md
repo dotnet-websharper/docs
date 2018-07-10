@@ -188,11 +188,12 @@ follows:
 Remote method arguments are serialized from/to JSON.
 All types occurring in method parameters and return must be one of the following:
 
-* System namespace numeric types, string, bool, `DateTime` and `TimeSpan`, all enums.
-* One-dimensional arrays, `Nullable<_>`, `System.Tuple<...>`. Also F# union and record types.
-* Collection types: `System.Array<_>`, `System.Collections.Generic.List<_>`, `System.Collections.Generic.Queue<_>`, `System.Collections.Generic.Stack<_>`. Other collection types have to be converted to a supported one.
-* Serializable classes with a default constructor for which the values of all fields are themselves serializable 
-or marked with the `System.NonSerialized` attribute.
+* `System` namespace numeric types, `string`, `bool`, `DateTime`, `TimeSpan`, `Guid`, `Nullable<_>`, `Tuple<...>`. Using `decimal` on the client side needs the `WebSharper.MathJS` package referenced.
+* F# union and record types (including built-in types like `option<_>`, `list<_>`, `Result<_>`), `Map<_>`, `Set<_>`.
+* Enums.
+* Collection types: `System.Array<_>` (one-dimensional arrays), `System.Collections.Generic` types `List<_>`, `Queue<_>`, `Stack<_>`, `LinkedList<_>`. Other collection types have to be converted to a supported one.
+* Classes with a default constructor for which the values of all fields are themselves serializable 
+or marked with the `System.NonSerialized` attribute. The `System.Serializable` attribute is not required and does not affect behavior.
 
 ### Security
 
