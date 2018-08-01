@@ -631,7 +631,7 @@ You can add holes to your template that will be filled by F# code. Each hole has
     * `<input type="number">`, for which it creates a hole that can be one of the following types: `Var<int>`, `Var<float>`, `Var<CheckedInput<int>>`, `Var<CheckedInput<float>>`.
     * `<input type="checkbox">`, for which it creates a `Var<bool>` hole.
 
-    The name of the hole is the value of the `ws-attr` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
+    The name of the hole is the value of the `ws-var` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
 
     my-template.html:
 
@@ -775,8 +775,8 @@ my-template.html:
     <Which>First</Which>
   </ws-field>
   <ws-Field Var="SecondVar">
-    <Id>second</Id>
-    <Which>Second</Which>
+    <Id>last</Id>
+    <Which>Last</Which>
   </ws-field>
 </div>
 <!-- Declare the template for input fields -->
@@ -794,7 +794,7 @@ let myForm =
     let lastName = Var.Create ""
     MyTemplate()
         .FirstVar(firstName)
-        .LastVar(lastName)
+        .SecondVar(lastName)
         .Doc()
 ```
 

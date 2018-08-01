@@ -7,7 +7,7 @@ WebSharper.UI is a library providing a novel, pragmatic and convenient approach 
 
 This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
 
-The the base library, and C#-oriented extension methods are in two separate packages, get them from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui) and [WebSharper.UI.CSharp](https://www.nuget.org/packages/websharper.ui.csharp).
+The base library, and C#-oriented extension methods are in two separate packages, get them from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui) and [WebSharper.UI.CSharp](https://www.nuget.org/packages/websharper.ui.csharp).
 
 
 ## Using HTML
@@ -69,7 +69,7 @@ var myDoc =
 // </div>
 ```
 
-Some HTML tags, such as `var`, collide with keyword names and are therefore only located in the `Tags` nested class. Some other tags, like `option` collide in F#, and they are too only inside `Tags` to have the organization consistent between the two languages.
+Some HTML tags, such as `var`, collide with keyword names and are therefore only located in the `Tags` nested class. Some other tags like `option` collide in F#, so they are only inside `Tags` too having the organization consistent between the two languages.
 
 ```csharp
 var myText =
@@ -331,7 +331,7 @@ public static Task<Content> MyPage(Context ctx) =>
     );
 ```
 
-To include client-side elements inside a page, use the `ClientSide` method of the Sitelets context.
+To include client-side elements inside a page, use the static `client` method of the class `WebSharper.UI.Html`.
 
 <a name="templating"></a>
 ## HTML Templates
@@ -521,7 +521,7 @@ You can add holes to your template that will be filled by C# code. Each hole has
     * `<input type="number">`, for which it creates a hole that can be one of the following types: `Var<int>`, `Var<float>`, `Var<CheckedInput<int>>`, `Var<CheckedInput<float>>`.
     * `<input type="checkbox">`, for which it creates a `Var<bool>` hole.
 
-    The name of the hole is the value of the `ws-attr` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
+    The name of the hole is the value of the `ws-var` attribute. Text `${Hole}`s with the same name can be used, and they will dynamically match the value of the Var.
 
     ```csharp
     // mytemplate.html:
@@ -647,8 +647,8 @@ The following example is equivalent to the example from [Inner Templates](#inner
 //     <Which>First</Which>
 //   </ws-field>
 //   <ws-Field Var="SecondVar">
-//     <Id>second</Id>
-//     <Which>Second</Which>
+//     <Id>last</Id>
+//     <Which>Last</Which>
 //   </ws-field>
 // </div>
 // <!-- Declare the template for input fields -->
@@ -662,7 +662,7 @@ var lastName = Var.Create("");
 var myForm =
     new Template.MyTemplate()
         .FirstVar(firstName)
-        .LastVar(lastName)
+        .SecondVar(lastName)
         .Doc();
 ```
 
