@@ -68,8 +68,6 @@ Result:
 </select>
 ```
 
-One thing to note is that the tag functions described above actually return a value of type [`Elt`](/api/v4.1/WebSharper.UI.Elt), which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as [`Dom`](/api/v4.1/WebSharper.UI.Elt#Dom) to get the underlying `Dom.Element`. This subtyping means that you will sometimes need to upcast the result of such a function with `:> Doc` to appease the compiler; you can see an example of this below in the example for `Doc.Empty`.
-
 Additional functions in the [`Doc`](/api/v4.1/WebSharper.UI.Doc) can create or combine Docs:
 
 * [`Doc.Empty`](/api/v4.1/WebSharper.UI.Doc#Empty) creates a Doc consisting of zero nodes. This can be useful for example when you may not need to insert an element depending on a condition.
@@ -78,7 +76,7 @@ Additional functions in the [`Doc`](/api/v4.1/WebSharper.UI.Doc) can create or c
     let myForm (withDropdown: bool) =
         form [] [
             input [ attr.name "name" ] []
-            (if withDropdown then myDropdown :> Doc else Doc.Empty)
+            (if withDropdown then myDropdown else Doc.Empty)
         ]
     ```
     
@@ -290,6 +288,7 @@ Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. T
     <div my-attr="my-value">...</div>
     ```
 
+<a name="event-handlers"></a>
 #### Event handlers
 
 A special kind of attribute is event handlers. They can be created using functions from the [`on`](/api/v4.1/WebSharper.UI.Html#on) submodule.
@@ -315,9 +314,13 @@ let myButton =
     ] [ text "Click me!" ]
 ```
 
+For many event types, this function is aware of the actual type of the triggered event. For example, for `on.click`, the handler function takes a `Dom.MouseEvent` rather than a simple `Dom.Event`, allowing you to access properties such as `ev.Button`.
+
 In addition to the standard HTML events, `on.afterRender` is a special handler that is called by WebSharper after inserting the element into the DOM.
 
 ### HTML on the client
+
+#### Rendering Docs
 
 To insert a Doc into the document on the client side, use the `Doc.Run*` family of functions from the module [`WebSharper.UI.Client`](/api/v4.1/WebSharper.UI.Client). Each of these functions has two variants: one directly taking a DOM [`Element`](/api/v4.1/WebSharper.JavaScript.Dom.Element) or [`Node`](/api/v4.1/WebSharper.JavaScript.Dom.Node), and the other suffixed with `ById` taking the id of an element as a string.
 
@@ -346,6 +349,71 @@ To insert a Doc into the document on the client side, use the `Doc.Run*` family 
 * [`Doc.RunBefore`](/api/v4.1/WebSharper.UI.Doc#RunBefore) and [`Doc.RunBeforeById`](/api/v4.1/WebSharper.UI.Doc#RunBeforeById) insert a given Doc as the previous sibling(s) of a given DOM node.
 
 * [`Doc.RunReplace`](/api/v4.1/WebSharper.UI.Doc#RunReplace) and [`Doc.RunReplaceById`](/api/v4.1/WebSharper.UI.Doc#RunReplaceById) insert a given Doc replacing a given DOM node.
+
+<a name="elt"></a>
+#### Manipulating the underlying DOM element
+
+Since the `Doc` type represents a sequence of elements, and not necessarily a single one, it doesn't have any direct API to access the underlying DOM element. However, you may sometimes need to do so; for example, a number of JavaScript libraries expect a DOM element as argument. For this, several options are available:
+
+* If you want to access the element once it's inserted in the DOM, you can use the [`on.afterRender`](#event-handlers) attribute. This will pass the `Dom.Element` to your handler function.
+
+    ```fsharp
+    let myDoc =
+        button [
+            on.afterRender (fun elt ->
+                // Directly use the DOM API on elt:
+                elt.TextContent <- "Clicked!"
+            )
+        ] [text "Click me!"]
+    ```
+
+* If you want to access the element regardless of whether it's been inserted in the DOM, you need to construct it slightly differently. The [`Elt`](/api/v4.1/WebSharper.UI.Html.Elt) submodule of `WebSharper.UI.Html` contains functions identical to those in `WebSharper.UI.Html`, except that they return values of type `Elt` rather than `Doc`.
+
+    `Elt` is a subtype of `Doc`, so you can use such a value everywhere you would use a `Doc`. However, you will sometimes need to upcast it:
+
+    ```fsharp
+    let myDoc =
+        if someCondition then
+            Doc.Empty
+        else
+            Elt.div [] [text "This is my div"] :> Doc // <- upcast needed here
+    ```
+
+    The point of `Elt` is that it has additional properties and methods to directly manipulate the underlying DOM element:
+    
+    * [`elt.Dom`](/api/v4.1/WebSharper.UI.Client.EltExtensions#Elt#get_Dom) gets the underlying `Dom.Element`.
+    * [`elt.Html`](/api/v4.1/WebSharper.UI.Client.EltExtensions#Elt#get_Html) gets the element's HTML as a string.
+    * [`elt.Id`](/api/v4.1/WebSharper.UI.Client.EltExtensions#Elt#get_Id) gets the element's id.
+    * [`elt.Value`](/api/v4.1/WebSharper.UI.Client.EltExtensions#Elt#get_Value) gets or sets the element's value (for elements such as `input`, `textarea`, etc).
+    * [`elt.Text`](/api/v4.1/WebSharper.UI.Client.EltExtensions#Elt#get_Text) gets or sets the element's text content.
+    * [`elt.On(string, Dom.Element -> Dom.Event -> unit)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#On) sets an event listener.
+    * [`elt.OnXyz(Dom.Element -> Dom.Event -> unit)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#OnAbort), where `Xyz` is an event name such as `Click`, `MouseMove`, etc, sets an event listener for this event.  
+        Just like its `on.xyz` attribute counterpart, this method is aware of many exact event types, so for example the handler for `elt.OnClick` takes a `Dom.MouseEvent` rather than a simple `Dom.Event`.
+    * [`elt.OnAfterRender(Dom.Element -> unit)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#OnAfterRender) sets an event listener equivalent to [`on.afterRender`](#event-handlers). Note that this will not have any effect if the element has already been inserted in the DOM.
+    * [`elt.AppendChild(Doc)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#AppendChild) adds the given doc as the last child of this element. This correctly handles any reactive content in the appended Doc, so it is preferable to use this method rather than `elt.Dom.AppendChild(otherElt.Dom)`.
+    * [`elt.PrependChild(Doc)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#PrependChild) adds the given doc as the first child of this element. This correctly handles any reactive content in the prepended Doc, so it is preferable to use this method rather than `elt.Dom.PrependChild(otherElt.Dom)`.
+    * [`elt.Clear()`](/api/v4.1/WebSharper.UI.Client.DocExtensions#Clear) removes all children from the element. This correctly handles any reactive content in the deleted children, so it is preferable to use this method rather than to loop on `elt.Dom.RemoveChild()`.
+    * [`elt.GetAttribute(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetAttribute) gets the value of the given DOM attribute.
+    * [`elt.SetAttribute(string, string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#SetAttribute) sets the value of the given DOM attribute.
+    * [`elt.HasAttribute(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#HasAttribute) checks whether the given DOM attribute is set.
+    * [`elt.RemoveAttribute(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#RemoveAttribute) removes the given DOM attribute.
+    * [`elt.GetProperty(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) gets the given property.
+    * [`elt.SetProperty(string, obj)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) sets the given property.
+    * [`elt.AddClass(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) adds the given class to the element.
+    * [`elt.RemoveClass(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) removes the given class from the element.
+    * [`elt.HasClass(string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) checks whether the element has the given class.
+    * [`elt.SetStyle(string, string)`](/api/v4.1/WebSharper.UI.Client.DocExtensions#GetProperty) sets the given CSS style on the element.
+    
+    Most of the above are extension methods or properties which are only available if you `open WebSharper.UI.Client`.
+
+> Note: Currently, the functions in the `Html` module return a value of type `Elt` that is upcast to `Doc`; however, we do not guarantee that this will always be the case in the future. So you should *not* downcast such a value to `Elt`; instead, always use the `Elt` module to create a value of type `Elt`.
+>
+> ```fsharp
+> // Do not do this:
+> let x = div [] [text "Hello, world!"] :?> Elt
+> // Instead, do this:
+> let x = Elt.div [] [text "Hello, world!"]
+> ```
 
 ### HTML on the server
 
@@ -454,7 +522,7 @@ let myPage =
 
 Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](#inner-templates).
 
-If the template comprises a single HTML element, then an additional method `.Elt()` is available. It is identical to `.Doc()`, except its return value has type `Elt` instead of `Doc`.
+If the template comprises a single HTML element, then an additional method `.Elt()` is available. It is identical to `.Doc()`, except its return value has type [`Elt`](#elt) instead of `Doc`.
 
 You can also declare a template from multiple files at once using a comma-separated list of file names. In this case, the template for each file is a nested class named after the file, truncated of its file extension.
 
@@ -1237,7 +1305,7 @@ Once you have created a View to represent your dynamic content, here are the var
         |> View.Map (fun s -> s.Split(' '))
         |> Doc.BindView (fun words ->
             words
-            |> Array.map (fun w -> li [] [text w] :> Doc)
+            |> Array.map (fun w -> li [] [text w])
             |> Doc.Concat
         )
     div [] [
@@ -1722,9 +1790,9 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
         |> Doc.BindView (fun people ->
             ul [] [
                 people
-                |> Seq.map (fun p -> li [] [ text p.Name ] :> Doc)
+                |> Seq.map (fun p -> li [] [ text p.Name ])
                 |> Doc.Concat
-            ] :> Doc
+            ]
         )
     ```
 
