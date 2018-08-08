@@ -69,11 +69,11 @@ var myDoc =
 // </div>
 ```
 
-Some HTML tags, such as `var`, collide with keyword names and are therefore only located in the `Tags` nested class. Some other tags like `option` collide in F#, so they are only inside `Tags` too having the organization consistent between the two languages.
+Some HTML tags, such as `var`, collide with keyword names and are therefore only located in the `Tags` nested class. Some other tags like `option` collide in F#, so they are only inside `Tags` too having the organization consistent between the two languages. Deprecated tags, such as `font`, are also located there.
 
 ```csharp
 var myText =
-    div("The value of ", Tags.var("x"), " is 2.")
+    div("The value of ", Tags.@var("x"), " is 2.")
 
 // <div>
 //   The value of <var>x</var> is 2.

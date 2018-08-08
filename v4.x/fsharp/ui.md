@@ -48,7 +48,7 @@ Result:
 </div>
 ```
 
-Some HTML tags, such as `option`, collide with standard library names and are therefore only located in the [`Tags`](/api/v4.1/WebSharper.UI.Html.Tags) submodule.
+Some HTML tags, such as `option`, collide with standard library names and are therefore only located in the [`Tags`](/api/v4.1/WebSharper.UI.Html.Tags) submodule. Deprecated tags, such as `font`, are also located there.
 
 ```fsharp
 let myDropdown =
