@@ -257,13 +257,20 @@ Provide a path to a file to make WebSharper write the `.js` output for the proje
   "jsOutput": "some/file.js"
 ```
 
-**.\*proj file syntax**: (none)
+**.\*proj file syntax**:
+
+```xml
+<WebSharperJsOutput>false</WebSharperJsOutput>
+```
+
+Console argument: `--jsoutput:some/file.js`
+
 
 ## MinJsOutput
 
 **Type**: string (relative or absolute file path)
 
-Provide a path to a file make WebSharper write the `.min.js` output for the project.
+Provide a path to a file to make WebSharper write the `.min.js` output for the project.
 
 **wsconfig.json file syntax**:
 
@@ -271,4 +278,10 @@ Provide a path to a file make WebSharper write the `.min.js` output for the proj
   "jsOutput": "some/file.min.js"
 ```
 
-**.\*proj file syntax**: (none)
+**.\*proj file syntax**:
+
+```xml
+<WebSharperMinJsOutput>false</WebSharperMinJsOutput>
+```
+
+Console argument: `--minjsoutput:some/file.min.js`
