@@ -4,6 +4,7 @@ WebSharper.UI is a library providing a novel, pragmatic and convenient approach 
 
 * An [HTML library](#html) usable both from the server side and from the client side, which you can use to build HTML pages either by calling C# functions to create elements, or by instantiating template HTML files.
 * A [reactive layer](#reactive) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP). This reactive system integrates with the HTML library to create reactive documents. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the reactive system, rather than a single state value associated with the component.
+* Client-side [routing](#routing) using the same endpoint type declaration as [WebSharper server-side routing](sitelets.md).
 
 This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
 
@@ -1328,6 +1329,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
 
 To show the contents of a ListModel in your document, you can of course use one of the above View methods and pass it to `Doc.BindView`.
 
+<a name="routing"></a>
 ## Routing
 
 If you have a `WebSharper.Sitelets.Router<T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
