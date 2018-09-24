@@ -94,6 +94,7 @@ public static async Task<bool> Login(string user, string password)
 }
 ```
 
+<a name="handler"></a>
 ### Server-side customization
 
 You can also use instance methods for client-server communication. 
@@ -101,7 +102,7 @@ The syntax for this is:
 
 ```csharp
 //using static WebSharper.JavaScript.Pervasives;
-Remote<MyType>.MyMethod(...)
+Remote<MyType>().MyMethod(...)
 ```
 
 The method invoked should be annotated with the `Remote` attribute and
@@ -121,9 +122,36 @@ In this case, you must provide a single instance of each type you use, preferabl
 WebSharper.Core.Remoting.AddHandler(typeof(MyType), new MyType());
 ```
 
+Note: on ASP.Net Core, instead of calling `WebSharper.Core.Remoting.AddHandler`, you can add the handler to the dependency injection graph using `services.AddWebSharperRemoting<MyType>()`. [See here for more details.](AspNetCore.md#remoting)
+
 Remote annotated methods can be abstract or virtual.
 The instance that you provide by `AddHandler` can be of a subclass of the type in the first argument.
 This way you can have parts of server-side RPC functionality undefined in a library, and have them implemented in your web project for better separation of concerns. 
+
+```csharp
+// Common server and client code:
+
+public abstract class MyType
+{
+    [Remote]
+    public abstract ... MyMethod(...);
+}
+
+// Client consumer:
+
+Remote<MyType>().MyMethod(...)
+
+// Server implementation:
+
+public class MyTypeImpl
+{
+    public ... MyMethod(...) { ... }
+}
+
+// App startup:
+
+WebSharper.Core.Remoting.AddHandler(typeof(MyType), new MyTypeImpl());
+```
 
 ### Client-side customization
 
