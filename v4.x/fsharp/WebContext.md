@@ -6,7 +6,7 @@ Both in Sitelets and Rpc functions, WebSharper provides a value of type `WebShar
 
 ### Sitelets
 
-In Sitelets, the context provided by [content-generating functions](Sitelets.md#content) such as `Content.Page` or `Content.Custom` implements `Web.Context`, so you can use it directly.
+In Sitelets, the context provided by [content-generating functions](sitelets.md#content) such as `Content.Page` or `Content.Custom` implements `Web.Context`, so you can use it directly.
 
 ### Rpc functions
 
