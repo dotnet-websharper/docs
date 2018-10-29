@@ -790,18 +790,18 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
 
 ### Managing User Sessions
 
-`Context<'T>` can be used to access the currently logged in user. The member `UserSession` has the following members:
+`Context<'T>` can be used to access the currently logged in user. The member `UserSession` has the following extension members, which require `using WebSharper.Web;`:
 
-* `Task LoginUser(string username, bool persistent = false)`  
-  `Task LoginUser(string username, System.TimeSpan duration)`
+* `Task LoginUserAsync(string username, bool persistent = false)`  
+  `Task LoginUserAsync(string username, System.TimeSpan duration)`
 
     Logs in the user with the given username. This sets a cookie that is uniquely associated with this username. The second parameter determines the expiration of the login:
 
-    * `LoginUser("username")` creates a cookie that expires with the user's browser session.
+    * `LoginUserAsync("username")` creates a cookie that expires with the user's browser session.
     
-    * `LoginUser("username", persistent: true)` creates a cookie that lasts indefinitely.
+    * `LoginUserAsync("username", persistent: true)` creates a cookie that lasts indefinitely.
     
-    * `LoginUser("username", duration: d)` creates a cookie that expires after the given duration.
+    * `LoginUserAsync("username", duration: d)` creates a cookie that expires after the given duration.
     
     Example:
     
@@ -810,7 +810,7 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     {
         // We're assuming here that the login is successful,
         // eg you have verified a password against a database.
-        await context.UserSession.LoginUser(username, 
+        await context.UserSession.LoginUserAsync(username, 
                 duration: TimeSpan.FromDays(30.));
         return Content.Page(
             Title: "Welcome!",
@@ -819,7 +819,7 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     } 
     ```
 
-* `Task<string> GetLoggedInUser()`
+* `Task<string> GetLoggedInUserAsync()`
 
     Retrieves the currently logged in user's username, or `null` if the user is not logged in.
     
@@ -828,7 +828,7 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     ```csharp
     public async Task<Content<EndPoint>> HomePage(Context<EndPoint> context) 
     {
-        var username = await context.UserSession.GetLoggedInUser();
+        var username = await context.UserSession.GetLoggedInUserAsync();
         return Content.Page(
             Title: "Welcome!",
             Body:
@@ -841,7 +841,7 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     }
     ```
 
-* `Task Logout()`
+* `Task LogoutAsync()`
 
     Logs the user out.
     
@@ -850,7 +850,7 @@ Note how `context.Link` is used in order to resolve the URL to the `Article` end
     ```csharp
     public async Content<EndPoint> Logout(Context<EndPoint> context)
     {
-        await context.UserSession.Logout();
+        await context.UserSession.LogoutAsync();
         return Content.RedirectTemporary(new Home());
     }
     ```
