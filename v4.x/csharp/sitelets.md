@@ -859,19 +859,7 @@ The implementation of these functions relies on cookies and thus requires that t
 
 ### Other Context members
 
-* `context.ApplicationPath` returns the web root of the application. Most of the time this will be `"/"`, unless you use a feature such as an ASP.NET virtual directory.
-
-* `context.Request` returns the `Http.Request` being responded to. This is useful to access elements such as HTTP headers, posted files or cookies.
-
-* `context.ResolveUrl` resolves links to static pages in your application. A leading `~/` character is translated to the `ApplicationPath` described above.
-
-* `context.RootFolder` returns the physical folder on the server machine from which the application is running.
-
-* `context.Environment` returns an `IDictionary<string, object>` which depends on the host on which WebSharper is running.
-
-    * When running on ASP.NET, `context.Environment["HttpContext"]` contains the `System.Web.HttpContextBase` for the current request.
-    
-    * When running on OWIN, `context.Environment` is the OWIN environment.
+`WebSharper.Sitelets.Context` inherits from `WebSharper.Web.Context`, and a number of properties and methods from it are useful. [See the documentation for `WebSharper.Web.Context`](WebContext.md).
 
 ### Routers
 

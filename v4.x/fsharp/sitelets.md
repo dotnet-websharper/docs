@@ -972,19 +972,7 @@ The implementation of these functions relies on cookies and thus requires that t
 
 ### Other Context members
 
-* [`context.ApplicationPath`](/api/v4.1/WebSharper.Web.Context#ApplicationPath) returns the web root of the application. Most of the time this will be `"/"`, unless you use a feature such as an ASP.NET virtual directory.
-
-* [`context.Request`](/api/v4.1/WebSharper.Web.Context#Request) returns the `Http.Request` being responded to. This is useful to access elements such as HTTP headers, posted files or cookies.
-
-* [`context.ResolveUrl`](/api/v4.1/WebSharper.Web.Context#ResolveUrl) resolves links to static pages in your application. A leading `~/` character is translated to the `ApplicationPath` described above.
-
-* [`context.RootFolder`](/api/v4.1/WebSharper.Web.Context#RootFolder) returns the physical folder on the server machine from which the application is running.
-
-* [`context.Environment`](/api/v4.1/WebSharper.Web.Context#Environment) returns an `IDictionary<string, obj>` which depends on the host on which WebSharper is running.
-
-    * When running on ASP.NET, `context.Environment.["HttpContext"]` contains the `System.Web.HttpContextBase` for the current request.
-    
-    * When running on OWIN, `context.Environment` is the OWIN environment.
+`WebSharper.Sitelets.Context<'T>` inherits from `WebSharper.Web.Context`, and a number of properties and methods from it are useful. [See the documentation for `WebSharper.Web.Context`](WebContext.md).
 
 <a name="advanced-sitelets"></a>
 ## Advanced Sitelets
