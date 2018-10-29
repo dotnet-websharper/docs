@@ -584,6 +584,7 @@ public class Article : Home {
 Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, Home p => p is Article ? (a as Article).Title : null)
 ```
 
+<a name="content"></a>
 ## Content
 
 Content describes the response to send back to the client: HTTP status, headers and body. Content is always worked with asynchronously: all the constructors and combinators described below take and return values of type `Task<Content>`.
