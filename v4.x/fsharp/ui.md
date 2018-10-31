@@ -684,6 +684,40 @@ You can add holes to your template that will be filled by F# code. Each hole has
             .Doc()
     ```
 
+### Filling holes
+
+There are two ways to fill the content for a given hole.
+
+* The recommended way is by using the method with the hole's name on the template instance, as used in the examples above.
+
+    ```fsharp
+    let myPage =
+        MyTemplate()
+            .Color("red")
+            .Name("my friend")
+            .Doc()
+    ```
+
+* If you need to decide which hole to fill at runtime, you can use the method `.With(holeName, content)`. It will throw a runtime error if the content's type doesn't match the hole's type.
+
+    ```fsharp
+    let myPage =
+        MyTemplate()
+            .With("Color", "red")
+            .With("Name", "my friend")
+            .Doc()
+    ```
+
+* You can of course mix and match both styles.
+
+    ```fsharp
+    let myPage =
+        MyTemplate()
+            .Color("red")
+            .With("Name", "my friend")
+            .Doc()
+    ```
+
 <a name="inner-templates"></a>
 ### Inner templates
 
