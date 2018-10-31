@@ -723,11 +723,6 @@ It is possible to include some client-side functionality when creating a templat
 
 * Event handlers (such as `ws-onclick="EventName"`) work fully if you pass a delegate: `.EventName(e => ...)`. The body of this function will be compiled to JavaScript. You can also pass a top-level function, in this case it must be declared with `[JavaScript]`.
 
-<a name="reactive"></a>
-## Reactive layer
-
-WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
-
 ### Special holes in server-side templates
 
 In a server-side template, you must specify the location of where WebSharper can include its generated content.
@@ -739,6 +734,29 @@ Three special placeholders are provided to include client-side content in the pa
 
 The `scripts` hole is necessary for correct working of the served page if it contains any client-side WebSharper functionality.
 The other two are optional: if neither `styles` nor `meta` is provided explicilty, then they are included automatically above the content for `scripts`.
+
+### Dynamic templates
+
+It is also possible to create a template without the compile-time safety of the code generator. This is done using the type `DynamicTemplate`.
+
+This type can be used similarly to a generated template, with the following limitations:
+
+* It is server-side only.
+* Its constructor must receive the HTML source as a string.
+* Holes are filled with `.With(holeName, content)`.
+* The final instantiation must be done with `.Doc()`.
+
+```fsharp
+var myPage = new DynamicTemplate("<div style=\"background-color: ${Color}\">Welcome, ${Name}!</div>")
+    .With("Color", "red")
+    .With("Name", "my friend")
+    .Doc();
+```
+
+<a name="reactive"></a>
+## Reactive layer
+
+WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
 
 ### Vars
 

@@ -1030,6 +1030,25 @@ Three special placeholders are provided to include client-side content in the pa
 The `scripts` hole is necessary for correct working of the served page if it contains any client-side WebSharper functionality.
 The other two are optional: if neither `styles` nor `meta` is provided explicilty, then they are included automatically above the content for `scripts`.
 
+### Dynamic templates
+
+It is also possible to create a template without the compile-time safety of the type provider. This is done using the type `DynamicTemplate`.
+
+This type can be used similarly to `Template<...>`, with the following limitations:
+
+* It is server-side only.
+* Its constructor must receive the HTML source as a string.
+* Holes can only be filled with `.With(holeName, content)`.
+* The final instantiation must be done with `.Doc()`.
+
+```fsharp
+let myPage =
+    DynamicTemplate("""<div style="background-color: ${Color}">Welcome, ${Name}!</div>""")
+        .With("Color", "red")
+        .With("Name", "my friend")
+        .Doc()
+```
+
 <a name="reactive"></a>
 ## Reactive layer
 
