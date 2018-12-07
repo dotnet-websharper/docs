@@ -486,7 +486,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
     // Parsed Endpoint:     Articles(123, ["fsharp"; "websharper"])
     // Returned Content:    (determined by Sitelet.Infer)
     //
-    // Accepted Request:    GET /Articles/123/fsharp/456/websharper
+    // Accepted Request:    GET /Articles2/123/fsharp/456/websharper
     // Parsed Endpoint:     Articles2 [(123, "fsharp"); (456, "websharper")]
     // Returned Content:    (determined by Sitelet.Infer)
     //
