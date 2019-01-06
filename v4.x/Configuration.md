@@ -30,7 +30,7 @@ The [Ionide](http://ionide.io/) extension for Visual Studio Code includes the sc
 ## Project Variables
 
 Most configuration options are also settable as properties in the `.csproj`/`.fsproj` files.
-For example the equivalent of `"souceMap": true` is `<WebSharperSourceMap>True</WebSharperSourceMap>`.
+For example the equivalent of `"sourceMap": true` is `<WebSharperSourceMap>True</WebSharperSourceMap>`.
 These must be set inside a `<PropertyGroup>` element.
 
 If a setting is provided both in the project file and in `wsconfig.json`, the value in `wsconfig.json` takes precedence.
@@ -272,3 +272,17 @@ Provide a path to a file make WebSharper write the `.min.js` output for the proj
 ```
 
 **.\*proj file syntax**: (none)
+
+## UseNetFxCompiler
+
+**Type**: boolean or empty (default is empty)
+
+By default, the WebSharper compiler runs on .NET Framework when compiling a .NET Framework assembly, and on .NET Core when compiling a .NET Core or .NET Standard assembly. This option overrides this and enforces which version of the compiler to run. `true` forces the .NET Framework compiler, and `false` forces the .NET Core compiler.
+
+**wsconfig.json file syntax**: (none). `wsconfig.json` is parsed by the compiler, so by this point it's too late to choose which compiler to run.
+
+**.\*proj file syntax**:
+
+```xml
+<WebSharperUseNetFxCompiler>true</WebSharperUseNetFxCompiler>
+```
