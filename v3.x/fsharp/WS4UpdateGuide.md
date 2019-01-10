@@ -1,4 +1,4 @@
-# WebSharper 3 to 4-beta update guide
+# WebSharper 3.6 to 4.x update guide
 
 ## Changes
 
@@ -41,6 +41,38 @@ JavaScript-compiled names of implementation and override methods are now resolve
 You can specify the JavaScript-compiled name at the interface or abstract method declaration.
 
 Module-bound `let` values are no more initialized on page load, but on the first access of any value in the same source file (as in .NET).
+
+### Instance-based remoting
+
+Interface types cannot be used any more for instance method remote calls.
+Abstract classes are the recommended way, because they allow the definition and implementation to be in different projects.
+Also `SetRpcHandlerFactory` has been replaced by an `AddRpcHandler` (alias for `WebSharper.Core.Remoting..AddHandler`) function,
+call this in your application initialization with a single type and instance (call multiple times for more)
+to assign an object instance to handle calls to methods of `Remote<T>` from the client.
+See example:
+
+```fsharp
+    open WebSharper
+
+    [<AbstractClass>]
+    type RemoteStringFunctions() =
+        [<Remote>]
+        abstract DoSomething: string -> Async<string> 
+
+    let createRemoteStringFunctions() =
+        // F# object expressions are just a shortcut to defining a subclass
+        { new RemoteStringFunctions() with
+            override this.DoSomething input =
+                async {
+                    return "Hello " + input
+                }
+        }
+
+    // call this in your app initialization, for example when creating the main Sitelet instance
+    AddRpcHandler typeof<RemoteStringFunctions> (createRemoteStringFunctions())
+    
+    // in client code, call like this: Remote<RemoteStringFunctions>.DoSomething "world"
+```
 
 ### Namespace changes
 
@@ -135,7 +167,7 @@ Instead of using the `CompiledName` attribute to specify JSON-serialized name of
 
 `Json.SerializeWith` and similar functions taking a custom serializer object have been removed.
 
-### UI.Next changes to UI
+### UI.Next changes to UI in WebSharper 4.1
 
 The package WebSharper.UI.Next has been renamed to WebSharper.UI. A legacy package named "WebSharper.UI.Next" still exists to help smoothen the transition, but it is recommended to switch to WebSharper.UI.
 
