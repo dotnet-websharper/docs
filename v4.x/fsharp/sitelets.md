@@ -690,7 +690,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
         ]
     ```
 
-* [`Sitelet.InferPartial`](/api/v4.1/WebSharper.Sitelets.Sitelet#InferPartial\`\`2) is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, it the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
+* [`Sitelet.InferPartial`](/api/v4.1/WebSharper.Sitelets.Sitelet#InferPartial\`\`2) is equivalent to combining `Sitelet.Infer` and `Sitelet.Embed`, except the context passed to the infer function is of the outer endpoint type instead of the inner. For example, in the example for `Sitelet.Embed` above, the function `articleContent` receives a `Context<string>` and can therefore only create links to articles. Whereas with `InferPartial`, it receives a full `Context<EndPoint>` and can create links to `Index`.
 
     ```fsharp
     type EndPoint =
@@ -987,7 +987,7 @@ The handler is responsible for handling endpoints, by returning content (a synch
 
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
-* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that it can be also be added a `[<JavaScript>]` attribute, so that the client can generate links from endpoint values too. `WebSharper.UI` also contains functionality for client-side routing, making it possible to handle all or a subset of internal links without browser navigation. So sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
+* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that you can add a `[<JavaScript>]` attribute on it, so that the client can generate links from endpoint values too. `WebSharper.UI` contains functionality for client-side routing too, making it possible to handle all or a subset of internal links without browser navigation. Sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
 * Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
 * Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
@@ -1010,9 +1010,9 @@ module WebSite =
         let link endPoint =
             match endPoint with
             | EndPoint.Page1 ->
-                Some <| System.Uri("/page2", System.UriKind.Relative)
-            | EndPoint.Page2 ->
                 Some <| System.Uri("/page1", System.UriKind.Relative)
+            | EndPoint.Page2 ->
+                Some <| System.Uri("/page2", System.UriKind.Relative)
         Router.New route link
 ```
 
