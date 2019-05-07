@@ -107,6 +107,20 @@ Content.Json (Map [(1, 12); (3, 34)])
 // Output: [[1, 12], [3, 34]]
 ```
 
+### Tuples
+
+Tuples (including struct tuples) are also represented as JSON arrays:
+
+```fsharp
+Content.Json ("a string", "another string")
+
+// Output: ["a string", "another string"]
+
+Content.Json (struct ("a string", "another string")
+
+// Output: ["another string", "a string"]
+```
+
 <a name="fs-records"></a>
 ### F# Records
 
@@ -132,7 +146,9 @@ Content.Json {name = {FirstName = "John"; LastName = "Doe"}; age = 42}
 
 ### F# Unions
 
-Union types intended for use in JSON serialization should bear the attribute `NamedUnionCases`. There are two ways to use it.
+Union types intended for use in JSON serialization should optimally bear the attribute `NamedUnionCases` for producing fully readable JSON format.
+There are two ways to use it, specifying a field name to hold the union case name or signaling that the case should be inferred from the field names.
+If no `NamedUnionCases` is present, a `"$"` field will be used for storing the case index.
 
 #### Explicit discriminator
 
@@ -163,6 +179,29 @@ Content.Json
 
 Unnamed fields receive the names `Item1`, `Item2`, etc.
 
+Missing the attribute, the case name would be not stored in a readable form:
+
+```fsharp
+type Contact =
+    | Address of street: string * zip: string * city: string
+    | Email of email: string
+
+Content.Json
+    [
+        Address("12 Random St.", "15243", "Unknownville")
+        Email "john.doe@example.com"
+    ]
+
+// Output: [
+//           {"$": 0,
+//            "street": "12 Random St.",
+//            "zip": "15243",
+//            "city": "Unknownville"},
+//           {"$": 1,
+//            "email": "john.doe@example.com"}
+//         ]
+```
+
 #### Implicit discriminator
 
 With an argumentless `[<NamedUnionCases>]`, no extra field is added to determine the union case; instead, it is inferred from the names of the fields present. This means that each case must have at least one mandatory field that no other case in the same type has, or a compile-time error will be thrown.
@@ -185,7 +224,7 @@ Content.Json
 //            "city": "Unknownville"},
 //           {"email": "john.doe@example.com"}
 //         ]
-```
+``` 
 
 #### Record inside union
 
