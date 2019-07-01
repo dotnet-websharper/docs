@@ -61,6 +61,94 @@ B is located before A in the `<head>`.
 
 ## Declaring Resources and Dependencies
 
+### In Client-side WebSharper code
+
+To declare a resource in a WebSharper library or application,
+you can declare a class inheriting from `BaseResource`.
+Use the constructor with a single argument for single paths,
+and multiple arguments for a base path and a set of subpaths.
+
+```fsharp
+module Resources =
+
+    open WebSharper.Core.Resources
+
+    type R1() =
+        inherit BaseResource("path.js")
+        
+    type R2() =
+        inherit BaseResource("//my.cdn.net",
+            "file1.js", "file2.js", "file3.css")
+```
+
+You can also implement more complex resources (for example,
+resources that require a bit of inline JavaScript) by directly
+implementing the `IResource` interface. You can emit arbitrary
+HTML in the `Render` method using the provided `HtmlTextWriter`.
+
+```fsharp
+type R3() =
+    interface R.IResource with
+        member this.Render ctx writer = ...
+```
+
+A resource dependency can be declared on a type, a member or an
+assembly by annotating it with the `Require` attribute. It is parameterized
+by the type of the resource to require:
+
+```fsharp
+[<Require(typeof<R1>)>]
+type MyWidget() = ...
+
+[<Require(typeof<R2>)>]
+let F x = ...
+
+[<assembly:Require(typeof<R3>)>]
+do()
+```
+
+You can also use the `Require` attribute on a resource class to define
+dependency relations between resources.
+The dependent resource link will be inserted first by WebSharper.
+
+A simplification: if you do not need dependencies between resources or
+custom `Render` and want to require a resource in a single code point,
+defining the subclass can be skipped by using `BaseResource` as the type
+and adding the path arguments on the `Require` attribute instead:
+
+```fsharp
+[<Require(typeof<BaseResource>, "path.js")>]
+type MyWidget() = ...
+
+[<Require(typeof<BaseResource>, "//my.cdn.net",
+            "file1.js", "file2.js", "file3.css")>]
+let F x = ...
+```
+
+In general, when adding extra arguments on the `Require` atttribute,
+WebSharper will use those to use the matching constructor on the given
+resource type with those arguments.
+
+### In Server-side WebSharper code
+
+Sometimes you might need to depend on a resource without having any client-side
+code; typically, a CSS file. In this case, you can add the web control
+`WebSharper.Web.Require` anywhere in your page. This control does not directly
+output any HTML at the location where you put it, but it incurs a dependency on
+the resource that you pass to it.
+
+Here is an example UI.Next page with a dependency on `R1` from above:
+
+```fsharp
+let MyPage() =
+    Content.Page(
+        div [
+            h1 [text "This page includes the script at `path.js`."]
+            Doc.WebControl(new Web.Require<R1>())
+        ]
+    )
+```
+
 ### In WebSharper Interface Generator
 
 To declare a resource in WIG, you can use one of the following
@@ -125,72 +213,6 @@ let C2 =
     Class "My.Library.C2"
     |+> (* members... *)
     |> RequiresExternal [typeof<Other.Library.Resources.R4>]
-```
-
-### In Client-side WebSharper code
-
-To declare a resource in a WebSharper library or application,
-you can simply declare a class inheriting from `BaseResource`.
-Use the constructor with a single argument for single paths,
-and multiple arguments for a base path and a set of subpaths.
-
-```fsharp
-module Resources =
-
-    open WebSharper.Core.Resources
-
-    type R1() =
-        inherit BaseResource("path.js")
-        
-    type R2() =
-        inherit BaseResource("//my.cdn.net",
-            "file1.js", "file2.js", "file3.css")
-```
-
-You can also implement more complex resources (for example,
-resources that require a bit of inline JavaScript) by directly
-implementing the `IResource` interface. You can emit arbitrary
-HTML in the `Render` method using the provided `HtmlTextWriter`.
-
-```fsharp
-type R3() =
-    interface R.IResource with
-        member this.Render ctx writer = ...
-```
-
-A resource dependency can be declared on a type, a member or an
-assembly by annotating it with `RequireAttribute`. It is parameterized
-by the type of the resource to require:
-
-```fsharp
-[<Require(typeof<R1>)>]
-type MyWidget() = ...
-
-[<Require(typeof<R2>)>]
-let F x = ...
-
-[<assembly:Require(typeof<R3>)>]
-do()
-```
-
-### In Server-side WebSharper code
-
-Sometimes you might need to depend on a resource without having any client-side
-code; typically, a CSS file. In this case, you can add the web control
-`WebSharper.Web.Require` anywhere in your page. This control does not directly
-output any HTML at the location where you put it, but it incurs a dependency on
-the resource that you pass to it.
-
-Here is an example UI.Next page with a dependency on `R1` from above:
-
-```fsharp
-let MyPage() =
-    Content.Page(
-        div [
-            h1 [text "This page includes the script at `path.js`."]
-            Doc.WebControl(new Web.Require<R1>())
-        ]
-    )
 ```
 
 ## Resource Implementation
