@@ -18,7 +18,7 @@ corresponds to the resource's path, and the following assembly-wide
 attribute is present:
 
     ```fsharp
-    [<assembly:System.Web.UI.WebResource("myfile.js", "mime/type")>]
+    [<assembly:WebSharper.WebResource("myfile.js", "mime/type")>]
     do ()
     ```
 
