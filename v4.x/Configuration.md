@@ -63,7 +63,7 @@ project type.
 **wsconfig.json file syntax**: 
 
 ```json
-  "project": "value"
+"project": "value"
 ```
 
 **.\*proj file syntax**:
@@ -88,7 +88,7 @@ Default folder is `./Content` for SPAs and `./bin/html` for HTML apps.
 **wsconfig.json file syntax**: 
 
 ```json
-  "outputDir": "some/folder"
+"outputDir": "some/folder"
 ```
 
 **.\*proj file syntax**:
@@ -118,7 +118,7 @@ about setting up Source Mapping in
 **wsconfig.json file syntax**:
 
 ```json
-  "sourceMap": false
+"sourceMap": false
 ```
 
 **.\*proj file syntax**:
@@ -138,7 +138,7 @@ If the value is `true`, WebSharper compiler errors will be treated as warnings.
 **wsconfig.json file syntax**:
 
 ```json
-  "warnOnly": false
+"warnOnly": false
 ```
 
 **.\*proj file syntax**:
@@ -162,7 +162,7 @@ concatenates the pre-compiled `.js` files of them. This results in faster compil
 **wsconfig.json file syntax**:
 
 ```json
-  "dce": false
+"dce": false
 ```
 
 **.\*proj file syntax**:
@@ -187,7 +187,7 @@ so that WebSharper inserts a link to that downloaded file in your pages instead 
 **wsconfig.json file syntax**:
 
 ```json
-  "downloadResources": false
+"downloadResources": false
 ```
 
 **.\*proj file syntax**:
@@ -215,7 +215,7 @@ This setting can enable warnings on these kinds of captures, helping to eliminat
 **wsconfig.json file syntax**:
 
 ```json
-  "analyzeClosures": false
+"analyzeClosures": false
 ```
 
 **.\*proj file syntax**:
@@ -240,7 +240,7 @@ This is marking the given files or types for JavaScript compilation.
 **wsconfig.json file syntax**:
 
 ```json
-  "javascript": false
+"javascript": false
 ```
 
 **.\*proj file syntax**: (none)
@@ -254,7 +254,7 @@ Provide a path to a file to make WebSharper write the `.js` output for the proje
 **wsconfig.json file syntax**:
 
 ```json
-  "jsOutput": "some/file.js"
+"jsOutput": "some/file.js"
 ```
 
 **.\*proj file syntax**: (none)
@@ -268,7 +268,7 @@ Provide a path to a file make WebSharper write the `.min.js` output for the proj
 **wsconfig.json file syntax**:
 
 ```json
-  "jsOutput": "some/file.min.js"
+"minJsOutput": "some/file.min.js"
 ```
 
 **.\*proj file syntax**: (none)
