@@ -1,0 +1,31 @@
+input: .
+output: .retype
+url: https://jooseppi12.github.io/retypedemo/
+branding:
+  title: WebSharper
+  label: 6.0
+  logo: /assets/ws-logo.png
+edit:
+  repo: "https://github.com/dotnet-websharper/docs/edit"
+  branch: main
+  label: "Edit this page in GitHub"
+
+links:
+- text: Home
+  link: https://websharper.com
+  icon: home
+  style: bold
+  target: blank
+- text: Try Online
+  link: https://try.websharper.com
+  target: blank
+- text: Forums
+  link: https://forums.websharper.com
+  icon: comment-discussion
+  target: blank
+
+footer:
+  copyright: "Copyright &copy; {{ year }} [IntelliFactory](https://intellifactory.com) and contributors."
+  links:
+    - text: Apache 2.0
+      link: license.md
