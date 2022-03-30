@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="turbo-cache-control" content="no-cache">
+
+    <!-- Primary Meta Tags -->
+    <title>Reactive views</title>
+    <meta name="title" content="Reactive views">
+    <meta name="description" content="The full power of WebSharper.UI's reactive layer comes from using View values. A View'T is a time-varying value computed from any number of Vars and..." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://docs.websharper.com/ui/views/">
+    <meta property="og:title" content="Reactive views">
+    <meta property="og:description" content="The full power of WebSharper.UI's reactive layer comes from using View values. A View'T is a time-varying value computed from any number of Vars and...">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://docs.websharper.com/ui/views/">
+    <meta property="twitter:title" content="Reactive views">
+    <meta property="twitter:description" content="The full power of WebSharper.UI's reactive layer comes from using View values. A View'T is a time-varying value computed from any number of Vars and...">
+    
+    <script>(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
+
+    <link href="/resources/css/retype.css?v=1.11.2.701974368196" rel="stylesheet" data-turbo-track="reload" />
+
+    <script type="text/javascript" src="/resources/js/config.js?v=1.11.2.701974368196" defer data-turbo-track="reload"></script>
+    <script type="text/javascript" src="/resources/js/retype.js?v=1.11.2" defer data-turbo-track="reload"></script>
+    <script id="lunr-js" type="text/javascript" src="/resources/js/lunr.js?v=1.11.2.701974368196" defer></script>
+    <script id="prism-js" type="text/javascript" src="/resources/js/prism.js?v=1.11.2.701974368196" defer></script>
+</head>
+    <body>
+        <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
+    <div class="absolute bottom-0 left-0 bg-gray-100 dark:bg-dark-800" style="top: 5rem; right: 50%"></div>
+
+    <header id="docs-site-header" class="sticky top-0 z-30 flex w-full h-16 bg-white border-b border-gray-200 md:h-20 dark:bg-dark-850 dark:border-dark-650">
+    <div class="container relative flex items-center justify-between flex-grow pr-6 md:justify-start">
+        <!-- Mobile menu button skeleton -->
+        <button v-cloak class="skeleton docs-mobile-menu-button flex items-center justify-center flex-shrink-0 overflow-hidden dark:text-white focus:outline-none rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+        <div v-cloak id="docs-sidebar-toggle"></div>
+
+        <!-- Logo -->
+        <div class="flex items-center justify-between h-full py-2 md:w-75">
+            <div class="flex items-center px-2 md:px-6">
+                <a id="docs-site-logo" href="/" class="flex items-center leading-snug text-2xl">
+                    <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">WebSharper</span>
+                </a><span class="hidden px-2 py-1 ml-4 text-sm font-semibold leading-none text-root-logo-label-text bg-root-logo-label-bg rounded-sm md:inline-block">6.0</span>
+            </div>
+
+            <span class="hidden h-8 border-r md:inline-block dark:border-dark-650"></span>
+        </div>
+
+        <div class="flex justify-between md:flex-grow">
+            <!-- Top Nav -->
+            <nav class="hidden md:flex">
+    <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+        <li class="md:mr-6">
+            <a class="inline-flex items-center py-2 md:mb-0 text-sm text-gray-400 whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://websharper.com" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                    <g fill="currentColor">
+                        <path fill-rule="evenodd" d="M11.03 2.59a1.5 1.5 0 011.94 0l7.5 6.363a1.5 1.5 0 01.53 1.144V19.5a1.5 1.5 0 01-1.5 1.5h-5.75a.75.75 0 01-.75-.75V14h-2v6.25a.75.75 0 01-.75.75H4.5A1.5 1.5 0 013 19.5v-9.403c0-.44.194-.859.53-1.144l7.5-6.363zM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v6.25h5v-9.403L12 3.734z"/>
+                    </g>
+                </svg>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="md:mr-6">
+            <a class="block py-2 text-sm text-gray-400 whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 md:mb-0" href="https://try.websharper.com" target="_blank">Try Online</a>
+        </li>
+        <li class="md:mr-6">
+            <a class="inline-flex items-center py-2 md:mb-0 text-sm text-gray-400 whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://forums.websharper.com" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                    <g fill="currentColor">
+                        <path fill-rule="evenodd" d="M1.75 1A1.75 1.75 0 000 2.75v9.5C0 13.216.784 14 1.75 14H3v1.543a1.457 1.457 0 002.487 1.03L8.061 14h6.189A1.75 1.75 0 0016 12.25v-9.5A1.75 1.75 0 0014.25 1H1.75zM1.5 2.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v9.5a.25.25 0 01-.25.25h-6.5a.75.75 0 00-.53.22L4.5 15.44v-2.19a.75.75 0 00-.75-.75h-2a.25.25 0 01-.25-.25v-9.5z"/><path d="M22.5 8.75a.25.25 0 00-.25-.25h-3.5a.75.75 0 010-1.5h3.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0122.25 20H21v1.543a1.457 1.457 0 01-2.487 1.03L15.939 20H10.75A1.75 1.75 0 019 18.25v-1.465a.75.75 0 011.5 0v1.465c0 .138.112.25.25.25h5.5a.75.75 0 01.53.22l2.72 2.72v-2.19a.75.75 0 01.75-.75h2a.25.25 0 00.25-.25v-9.5z"/>
+                    </g>
+                </svg>
+                <span>Forums</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+            <!-- Header Right Skeleton -->
+            <div v-cloak class="flex justify-end flex-grow skeleton">
+
+                <!-- Search input mock -->
+                <div class="relative hidden w-40 lg:block lg:max-w-sm lg:ml-auto">
+                    <div class="absolute flex items-center justify-center h-full pl-3 dark:text-dark-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-base" width="16" height="16" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 1px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                    </div>
+
+                    <input class="w-full h-10 transition-colors duration-200 ease-in bg-gray-200 border border-transparent rounded md:text-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-dark-600 dark:border-dark-600 placeholder-gray-400 dark:placeholder-dark-400"
+                    style="padding: 0.625rem 0.75rem 0.625rem 2rem" type="text" placeholder="Search" />
+                </div>
+
+                <!-- Mobile search button mock -->
+                <div class="flex items-center justify-center w-10 h-10 lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 icon-base" width="20" height="20" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 0px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                </div>
+
+                <!-- Dark mode switch placehokder -->
+                <div class="w-10 h-10 lg:ml-2"></div>
+
+                <!-- History button mock -->
+                <div class="flex items-center justify-center w-10 h-10" style="margin-right: -0.625rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 icon-base" width="22" height="22" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 0px;"><g fill="currentColor" ><g ><path d="M12.01 6.01c-.55 0-1 .45-1 1V12a1 1 0 00.4.8l3 2.22a.985.985 0 001.39-.2.996.996 0 00-.21-1.4l-2.6-1.92V7.01c.02-.55-.43-1-.98-1z"></path><path d="M12.01 1.91c-5.33 0-9.69 4.16-10.05 9.4l-.29-.26a.997.997 0 10-1.34 1.48l1.97 1.79c.19.17.43.26.67.26s.48-.09.67-.26l1.97-1.79a.997.997 0 10-1.34-1.48l-.31.28c.34-4.14 3.82-7.41 8.05-7.41 4.46 0 8.08 3.63 8.08 8.09s-3.63 8.08-8.08 8.08c-2.18 0-4.22-.85-5.75-2.4a.996.996 0 10-1.42 1.4 10.02 10.02 0 007.17 2.99c5.56 0 10.08-4.52 10.08-10.08.01-5.56-4.52-10.09-10.08-10.09z"></path></g></g></svg>
+                </div>
+            </div>
+
+            <div v-cloak class="flex items-center justify-end flex-grow">
+                <div id="docs-mobile-search-button"></div>
+                <doc-search-desktop></doc-search-desktop>
+
+                <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                <doc-history></doc-history>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container relative flex bg-white">
+        <!-- Sidebar Skeleton -->
+<div v-cloak class="fixed flex flex-col flex-shrink-0 duration-300 ease-in-out bg-gray-100 border-gray-200 sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton dark:bg-dark-800 dark:border-dark-650">
+
+    <!-- Render this div, if config.showSidebarFilter is `true` -->
+    <div class="flex items-center h-16 px-6">
+        <input class="w-full h-8 px-3 py-2 transition-colors duration-200 ease-linear bg-white border border-gray-200 rounded shadow-none text-sm focus:outline-none focus:border-gray-600 dark:bg-dark-600 dark:border-dark-600" type="text" placeholder="Filter" />
+    </div>
+
+    <div class="pl-6 mb-4 mt-1">
+        <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+        <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+        <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+        <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+        <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+        <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+    </div>
+
+
+    <div class="flex-shrink-0 mt-auto bg-transparent dark:border-dark-650">
+        <a
+    class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by"
+    target="_blank"
+    href="https://retype.com/"
+    rel="noopener"
+>
+    <span class="text-xs whitespace-nowrap">Powered by</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+</a>
+
+    </div>
+</div>
+
+<!-- Sidebar component -->
+<doc-sidebar v-cloak>
+    <template #sidebar-footer>
+        <div
+            class="flex-shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-dark-650"
+        >
+
+            <div class="py-3 px-6 md:hidden border-b dark:border-dark-650">
+                <nav>
+                    <ul class="flex flex-wrap justify-center items-center">
+                        <li class="mr-6">
+                            <a class="block py-1 text-sm whitespace-nowrap transition-colors duration-200 ease-linear text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://websharper.com">Home</a>
+                        </li>
+                        <li class="mr-6">
+                            <a class="block py-1 text-sm whitespace-nowrap transition-colors duration-200 ease-linear text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://try.websharper.com">Try Online</a>
+                        </li>
+                        <li class="mr-6">
+                            <a class="block py-1 text-sm whitespace-nowrap transition-colors duration-200 ease-linear text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://forums.websharper.com">Forums</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+
+            <a
+    class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by"
+    target="_blank"
+    href="https://retype.com/"
+    rel="noopener"
+>
+    <span class="text-xs whitespace-nowrap">Powered by</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+</a>
+
+        </div>
+    </template>
+</doc-sidebar>
+
+
+        <div class="flex-grow min-w-0 dark:bg-dark-850">
+            <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+            <div class="flex">
+    <div class="flex-grow min-w-0 px-6 md:px-16">
+        <main class="relative pt-6 pb-16">
+            <div class="docs-markdown" id="docs-content">
+                <!-- Rendered if sidebar right is enabled -->
+                <div id="docs-sidebar-right-toggle"></div>
+               
+                <!-- Page content  -->
+<doc-anchor-target id="reactive-views" class="break-words">
+    <h1>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#reactive-views">#</doc-anchor-trigger>
+        <span>Reactive views</span>
+    </h1>
+</doc-anchor-target>
+<p>The full power of WebSharper.UI&#x27;s reactive layer comes from using <code v-pre>View</code> values. A <code v-pre>View&lt;'T&gt;</code> is a time-varying value computed from any number of Vars and other Views, and its value automatically changes (if read programmatically or bound on the UI, see below) each time any of those dependencies change.</p>
+<div class="flex mb-6">
+    <div class="flex-shrink-0 w-1 rounded-tl rounded-bl bg-yellow-500"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-yellow-500" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3">
+            <h5>Important</h5>
+<p>One important property to remember is that the value of a View is not computed unless it is needed. For example, if you use <code v-pre>View.Map</code>, the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using <doc-anchor-trigger to="#inserting-views-in-docs">one of these methods</doc-anchor-trigger>. This means that you generally don&#x27;t have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in functions like <code v-pre>View.Map</code>.</p>
+        </div>
+    </div>
+</div>
+<p>Note that several of the functions below can be used more concisely using <doc-anchor-trigger to="#the-v-shorthand">the V shorthand</doc-anchor-trigger>.</p>
+<hr />
+<doc-anchor-target id="creating-and-combining-views">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#creating-and-combining-views">#</doc-anchor-trigger>
+        <span>Creating and combining Views</span>
+    </h2>
+</doc-anchor-target>
+<p>The first and main way to get a View is using the <a href="/api/v4.1/websharper.ui.var-1#View"><code v-pre>View</code></a> property of <code v-pre>Var&lt;'T&gt;</code>. This retrieves a View that tracks the current value of the Var.</p>
+<p>You can create Views using the following functions and combinators from the <code v-pre>View</code> module:</p>
+<hr />
+<doc-anchor-target id="viewconst">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewconst">#</doc-anchor-trigger>
+        <span>View.Const</span>
+    </h3>
+</doc-anchor-target>
+<p>Creates a View whose value is always the same.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let v = View.Const 42</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="viewconstanyc">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewconstanyc">#</doc-anchor-trigger>
+        <span>View.ConstAnyc</span>
+    </h3>
+</doc-anchor-target>
+<p>Similar to <code v-pre>View.Const</code>, but is initialized asynchronously. Until the async returns, the resulting View is uninitialized.</p>
+<hr />
+<doc-anchor-target id="viewmap">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmap">#</doc-anchor-trigger>
+        <span>View.Map</span>
+    </h3>
+</doc-anchor-target>
+<p>Takes an existing View and maps its value through a function.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let v1 : View&lt;string&gt; = // ...
+let v2 = View.Map (fun s -&gt; String.length s) v1</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="viewmap2">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmap2">#</doc-anchor-trigger>
+        <span>View.Map2</span>
+    </h3>
+</doc-anchor-target>
+<p>Takes two existing Views and map their value through a function.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let v1 : View&lt;int&gt; = // ...
+let v2 : View&lt;int&gt; = // ...
+let v3 = View.Map2 (fun x y -&gt; x + y) v1 v2</code></pre>
+</doc-codeblock></div>
+<p>Similarly, <code v-pre>View.Map3</code> takes three existing Views and map their value through a function.</p>
+<hr />
+<doc-anchor-target id="viewmapasync">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmapasync">#</doc-anchor-trigger>
+        <span>View.MapAsync</span>
+    </h3>
+</doc-anchor-target>
+<p>Similar to <code v-pre>View.Map</code>, but maps through an asynchronous function.</p>
+<div class="flex mb-6">
+    <div class="flex-shrink-0 w-1 rounded-tl rounded-bl bg-yellow-500"></div>
+    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-yellow-500" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3">
+            <h5>Important</h5>
+<p>An important property here is that this combinator saves work by abandoning requests. That is, if the input view changes faster than we can asynchronously convert it, the output view will not propagate change until it obtains a valid latest value. In such a system, intermediate results are thus discarded.</p>
+        </div>
+    </div>
+</div>
+<p>Similarly, <code v-pre>View.MapAsync2</code> maps two existing Views through an asynchronous function.</p>
+<hr />
+<doc-anchor-target id="viewapply">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewapply">#</doc-anchor-trigger>
+        <span>View.Apply</span>
+    </h3>
+</doc-anchor-target>
+<p>Takes a View of a function and a View of its argument type, and combines them to create a View of its return type.</p>
+<p>While Views of functions may seem like a rare occurrence, they are actually useful together with <code v-pre>View.Const</code> in a pattern that can lift a function of any number N of arguments into an equivalent of <code v-pre>View.Map</code>N.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">// This shorthand is defined in WebSharper.UI.Notation.
+let (&lt;*&gt;) vf vx = View.Apply vf vx
+
+// Inputs: a function of 4 arguments and 4 Views.
+let f a b c d = // ...
+let va = // ...
+let vb = // ...
+let vc = // ...
+let vd = // ...
+
+// Equivalent to a hypothetical `View.Map4 f va vb vc vd`.
+let combinedView =
+    View.Const f &lt;*&gt; va &lt;*&gt; vb &lt;*&gt; vc &lt;*&gt; vd</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="inserting-views-in-docs">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#inserting-views-in-docs">#</doc-anchor-trigger>
+        <span>Inserting Views in Docs</span>
+    </h2>
+</doc-anchor-target>
+<p>Once you have created a View to represent your dynamic content, here are the various ways to include it in a Doc:</p>
+<hr />
+<doc-anchor-target id="textview">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#textview">#</doc-anchor-trigger>
+        <span>textView</span>
+    </h3>
+</doc-anchor-target>
+<p>Is a reactive counterpart to <code v-pre>text</code>, which creates a text node from a <code v-pre>View&lt;string&gt;</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let varTxt = Var.Create &quot;&quot;
+let vLength =
+    varTxt.View
+    |&gt; View.Map String.length
+    |&gt; View.Map (fun l -&gt; sprintf &quot;You entered %i characters.&quot; l)
+div [] [
+    Doc.Input [] varName
+    textView vLength
+]</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="docbindview">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#docbindview">#</doc-anchor-trigger>
+        <span>Doc.BindView</span>
+    </h3>
+</doc-anchor-target>
+<p>Maps a View into a dynamic Doc.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let varTxt = Var.Create &quot;&quot;
+let vWords =
+    varTxt.View
+    |&gt; View.Map (fun s -&gt; s.Split(' '))
+    |&gt; Doc.BindView (fun words -&gt;
+        words
+        |&gt; Array.map (fun w -&gt; li [] [text w] :&gt; Doc)
+        |&gt; Doc.Concat
+    )
+div [] [
+    text &quot;You entered the following words:&quot;
+    ul [] [ vWords ]
+]</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="docembedview">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#docembedview">#</doc-anchor-trigger>
+        <span>Doc.EmbedView</span>
+    </h3>
+</doc-anchor-target>
+<p>Unwraps a <code v-pre>View&lt;Doc&gt;</code> into a Doc. It is equivalent to <code v-pre>Doc.BindView id</code>.</p>
+<hr />
+<doc-anchor-target id="attrdyn">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#attrdyn">#</doc-anchor-trigger>
+        <span>attr.*Dyn</span>
+    </h3>
+</doc-anchor-target>
+<p>The reactive equivalent to the corresponding <code v-pre>attr.*</code> functions, creating an attribute from a <code v-pre>View&lt;string&gt;</code>.</p>
+<p>For example, the following sets the background of the input element based on the user input value:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let varTxt = Var.Create &quot;&quot;
+let vStyle =
+    varTxt.View
+    |&gt; View.Map (fun s -&gt; &quot;background-color: &quot; + s)
+Doc.Input [attr.styleDyn vStyle] varTxt</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="attrdynpred">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#attrdynpred">#</doc-anchor-trigger>
+        <span>attr.*DynPred</span>
+    </h3>
+</doc-anchor-target>
+<p>Similar to the <code v-pre>attr.*Dyn</code> family of funtions, but takeing an extra <code v-pre>View&lt;bool&gt;</code>. When this View is true, the attribute is set (and dynamically updated as with <code v-pre>attr.*Dyn</code>), and when it is false, the attribute is removed.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let varTxt = Var.Create &quot;&quot;
+let varCheck = Var.Create true
+let vStyle =
+    varTxt.View
+    |&gt; View.Map (fun s -&gt; &quot;background-color: &quot; + s)
+div [] [
+    Doc.Input [attr.styleDynPred vStyle varCheck.View] varTxt
+    Doc.CheckBox [] varCheck
+]</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="mapping-views-on-sequences">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#mapping-views-on-sequences">#</doc-anchor-trigger>
+        <span>Mapping Views on sequences</span>
+    </h2>
+</doc-anchor-target>
+<p>Applications often deal with varying collections of data. This means using a View of a sequence: a value of type <code v-pre>View&lt;seq&lt;T&gt;&gt;</code>, <code v-pre>View&lt;list&lt;T&gt;&gt;</code> or <code v-pre>View&lt;T[]&gt;</code>. In this situation, it can be sub-optimal to use <code v-pre>Map</code> or <code v-pre>Doc</code> to render it: the whole sequence will be re-computed even when a single item has changed.</p>
+<p>The <code v-pre>SeqCached</code> family of functions fixes this issue. These functions map a View of a sequence to either a new <code v-pre>View&lt;seq&lt;U&gt;&gt;</code> (functions <code v-pre>View.MapSeqCached*</code> and method <code v-pre>.MapSeqCached()</code>) or to a <code v-pre>Doc</code> (functions <code v-pre>Doc.BindSeqCached</code> and method <code v-pre>.DocSeqCached()</code>) but avoid re-mapping items that haven&#x27;t changed.</p>
+<p>There are different versions of these functions, which differ in how they decide that an item &quot;hasn&#x27;t changed&quot;.</p>
+<hr />
+<doc-anchor-target id="viewmapseqcached">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmapseqcached">#</doc-anchor-trigger>
+        <span>View.MapSeqCached</span>
+    </h3>
+</doc-anchor-target>
+<p><code v-pre>View.MapSeqCached : ('T -&gt; 'V) -&gt; View&lt;seq&lt;'T&gt;&gt; -&gt; View&lt;seq&lt;'V&gt;&gt;</code> uses standard F# equality to check items.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let varNums = Var.Create [1; 2; 3]
+
+let vStrs = 
+    varNums.View
+    |&gt; View.MapSeqCached (fun i -&gt; 
+        Console.Log i
+        p [] [ text (string i) ]
+    )
+    |&gt; Doc.BindView Doc.Concat
+    |&gt; Doc.RunAppend JS.Document.Body
+// Prints 1, 2, 3
+// Displays 1, 2, 3
+
+varNums.Value &lt;- [1; 2; 3; 4]
+// Prints 4
+// Displays 1, 2, 3, 4
+// Note: the existing &lt;p&gt; tags remain, they aren't recreated.
+
+varNums.Value &lt;- [3; 2]
+// Prints nothing
+// Displays 3, 2</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="viewmapseqcachedby">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmapseqcachedby">#</doc-anchor-trigger>
+        <span>View.MapSeqCachedBy</span>
+    </h3>
+</doc-anchor-target>
+<p><code v-pre>View.MapSeqCachedBy : ('T -&gt; 'K) -&gt; ('T -&gt; 'V) -&gt; View&lt;seq&lt;'T&gt;&gt; -&gt; View&lt;seq&lt;'V&gt;&gt;</code> uses the given key function to check items. This means that if an item is added whose key is already present, the corresponding returned item is <em>not</em> changed. So you should only use this when items are intended to be added or removed, but not changed.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">type Person = { Id: int; Name: string: int }
+
+let ann =   { Id = 0; Name = &quot;Ann&quot; }
+let brian = { Id = 1; Name = &quot;Brian&quot; }
+let bobby = { Id = 1; Name = &quot;Bobby&quot; }
+let clara = { Id = 2; Name = &quot;Clara&quot; }
+let dave =  { Id = 3; Name = &quot;Dave&quot; }
+
+let varPeople = Var.Create [ann; brian; clara]
+
+varPeople.View
+|&gt; View.MapSeqCachedBy (fun p -&gt; p.Id) (fun p -&gt; 
+    Console.Log p.Id
+    p [] [text (string p.Name)]
+)
+|&gt; Doc.BindView Doc.Concat
+|&gt; Doc.RunAppend JS.Document.Body
+// Prints 1, 2, 3
+// Displays Ann, Brian, Clara
+
+varPeople.Value &lt;- [ann; brian; clara; dave]
+// Prints 4
+// Displays Ann, Brian, Clara, Dave
+// Note: the existing &lt;p&gt; tags remain, they aren't recreated.
+
+varPeople.Value &lt;- [ann; bobby; clara; dave]
+// Prints nothing
+// Displays Ann, Brian, Clara, Dave
+// The item with Id = 1 is already rendered as Brian,
+// so it is not re-rendered as Bobby.</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="viewmapseqcachedviewby">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#viewmapseqcachedviewby">#</doc-anchor-trigger>
+        <span>View.MapSeqCachedViewBy</span>
+    </h3>
+</doc-anchor-target>
+<p><code v-pre>View.MapSeqCachedViewBy : ('T -&gt; 'K) -&gt; ('K -&gt; View&lt;'T&gt; -&gt; 'V) -&gt; View&lt;seq&lt;'V&gt;&gt;</code> covers the situation where items are identified by a key function and can be updated. Instead of passing the item&#x27;s value to the mapping function, it passes a View of it, so you can react to the changes.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">varPeople.View
+|&gt; View.MapSeqCachedViewBy (fun p -&gt; p.Id) (fun pid vp -&gt; 
+    Console.Log pid
+    p [] [textView (vp |&gt; View.Map (fun p -&gt; string p.Name))]
+)
+|&gt; Doc.BindView Doc.Concat
+|&gt; Doc.RunAppend JS.Document.Body
+// Prints 1, 2, 3
+// Displays Ann, Brian, Clara
+
+varPeople.Value &lt;- [ann; brian; clara; dave]
+// Prints 4
+// Displays Ann, Brian, Clara, Dave
+// Note: the existing &lt;p&gt; tags remain, they aren't recreated.
+
+varPeople.Value &lt;- [ann; bobby; clara; dave]
+// Prints nothing
+// Displays Ann, Bobby, Clara, Dave
+// The item with Id = 1 is already rendered as Brian,
+// so its &lt;p&gt; tag remains but its text content changes.</code></pre>
+</doc-codeblock></div>
+<hr />
+<p>Each of these <code v-pre>View.MapSeqCached*</code> functions has a corresponding <code v-pre>Doc.BindSeqCached*</code>:</p>
+<ul>
+<li><code v-pre>Doc.BindSeqCached : ('T -&gt; #Doc) -&gt; View&lt;seq&lt;'T&gt;&gt; -&gt; Doc</code></li>
+<li><code v-pre>Doc.BindSeqCachedBy : ('T -&gt; 'K) -&gt; ('T -&gt; #Doc) -&gt; View&lt;seq&lt;'T&gt;&gt; -&gt; Doc</code></li>
+<li><code v-pre>Doc.BindSeqCachedViewBy : ('T -&gt; 'K) -&gt; ('K -&gt; View&lt;'T&gt; -&gt; #Doc) -&gt; View&lt;seq&lt;'T&gt;&gt; -&gt; Doc</code></li>
+</ul>
+<p>These functions map each item of the sequence to a Doc and then concatenate them. They are basically equivalent to passing the result of the corresponding <code v-pre>View.MapSeqCached*</code> to <code v-pre>Doc.BindView Doc.Concat</code>, the same way the examples above did.</p>
+<p>Finally, all of the above functions are also available as extension methods on the <code v-pre>View&lt;seq&lt;'T&gt;&gt;</code> type.</p>
+<ul>
+<li><code v-pre>.MapSeqCached()</code> overloads correspond to <code v-pre>View.MapSeqCached*</code> functions, and</li>
+<li><code v-pre>.DocSeqCached()</code> overloads correspond to <code v-pre>Doc.BindSeqCached*</code> functions.</li>
+</ul>
+
+
+
+
+                <!-- Required only on API pages -->
+                <doc-toolbar-member-filter-no-results />
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between mt-14">
+    <a class="my-2.5 inline-flex items-center text-sm whitespace-nowrap text-blue-500 dark:text-blue-400 hover:text-blue-700 hover:underline" href="https://github.com/dotnet-websharper/docs/edit/main/ui/views.md" target="_blank" rel="noopener">
+        <svg class="mr-1.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M20 12c-.55 0-1 .45-1 1v7c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h7c.55 0 1-.45 1-1s-.45-1-1-1H4C2.35 3 1 4.35 1 6v14c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-7c0-.55-.45-1-1-1z" /><path d="M22.21 1.79c-1.18-1.18-3.24-1.18-4.41 0l-9.5 9.5c-.13.13-.22.29-.26.46l-1 4c-.08.34.01.7.26.95.18.2.44.3.7.3.08 0 .16-.01.24-.03l4-1c.18-.04.34-.13.46-.26l9.5-9.5c1.22-1.22 1.22-3.2.01-4.42zm-1.42 3l-9.3 9.3-2.11.53.53-2.11 9.3-9.3c.42-.42 1.16-.42 1.59 0 .43.43.43 1.15-.01 1.58z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+        <span>Edit this page in GitHub</span>
+    </a>
+
+    <!--<p class="my-2.5 text-gray-500 dark:text-dark-350 text-sm">Last updated on <strong>2021-03-14</strong> by <strong>Geoffrey McGill</strong></p>-->
+</div>
+
+<nav class="flex mt-14">
+    <div class="w-1/2">
+        <a class="px-5 py-4 h-full flex items-center break-all md:break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="/ui/vars/">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+            <span>
+                <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
+                <span class="block mt-1">Vars</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="w-1/2">
+        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-all md:break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="/ui/lenses/">
+            <span>
+                <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
+                <span class="block mt-1">Lenses</span>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+        </a>
+    </div>
+</nav>
+
+
+        </main>
+
+        <div class="border-t dark:border-dark-650 pt-6 mb-8">
+            <footer class="flex flex-wrap items-center justify-between">
+    <div>
+        <ul class="flex flex-wrap items-center text-sm">
+    <li>
+        <a class="block mr-4 py-2 text-sm whitespace-nowrap transition-colors duration-200 ease-linear text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 md:mb-0" href="license.md">Apache 2.0</a>
+    </li>
+</ul>
+
+    </div>
+    <div class="docs-copyright py-2 text-gray-500 dark:text-dark-350 text-sm leading-relaxed"><p>Copyright © 2022 <a href="https://intellifactory.com">IntelliFactory</a> and contributors.</p>
+</div>
+</footer>
+
+        </div>
+    </div>
+    
+    <!-- Rendered if sidebar right is enabled -->
+    <!-- Sidebar right skeleton-->
+    <div v-cloak class="fixed top-0 bottom-0 right-0 transform translate-x-full bg-white border-gray-200 lg:sticky lg:border-l lg:flex-shrink-0 lg:pt-6 lg:transform-none lg:w-56 lg:z-0 md:w-72 sidebar-right skeleton dark:bg-dark-850 dark:border-dark-650">
+        <div class="pl-5">
+            <div class="w-32 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+            <div class="w-48 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+            <div class="w-40 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+        </div>
+    </div>
+    
+    <!-- User should be able to hide sidebar right -->
+    <doc-sidebar-right v-cloak></doc-sidebar-right>
+</div>
+
+        </div>
+    </div>
+
+    <doc-search-mobile></doc-search-mobile>
+    <doc-back-to-top></doc-back-to-top>
+</div>
+
+
+        <div id="docs-overlay-target"></div>
+
+        <script>window.__DOCS__ = { "title": "Views", icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    </body>
+</html>
