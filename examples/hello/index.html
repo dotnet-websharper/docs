@@ -9,24 +9,26 @@
     <meta name="generator" content="Retype 2.4.0">
 
     <!-- Primary Meta Tags -->
-    <title>Lenses</title>
-    <meta name="title" content="Lenses">
-    <meta name="description" content="The Var'T type is actually an abstract class, this makes it possible to create instances with an implementation different from" />
+    <title>Hello world!</title>
+    <meta name="title" content="Hello world!">
+    <meta name="description" content="Here is a simple sitelet that returns \"Hello world!\":" />
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://docs.websharper.com/ui/lenses/" />
+    <link rel="canonical" href="https://docs.websharper.com/examples/hello/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.websharper.com/ui/lenses/">
-    <meta property="og:title" content="Lenses">
-    <meta property="og:description" content="The Var'T type is actually an abstract class, this makes it possible to create instances with an implementation different from">
+    <meta property="og:url" content="https://docs.websharper.com/examples/hello/">
+    <meta property="og:title" content="Hello world!">
+    <meta property="og:description" content="Here is a simple sitelet that returns \"Hello world!\":">
+    <meta property="og:image" content="http://i.imgur.com/fZgqeKjm.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://docs.websharper.com/ui/lenses/">
-    <meta property="twitter:title" content="Lenses">
-    <meta property="twitter:description" content="The Var'T type is actually an abstract class, this makes it possible to create instances with an implementation different from">
+    <meta property="twitter:url" content="https://docs.websharper.com/examples/hello/">
+    <meta property="twitter:title" content="Hello world!">
+    <meta property="twitter:description" content="Here is a simple sitelet that returns \"Hello world!\":">
+    <meta property="twitter:image" content="http://i.imgur.com/fZgqeKjm.png">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
@@ -211,239 +213,106 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="lenses" class="break-words">
+<doc-anchor-target id="hello-world" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#lenses">#</doc-anchor-trigger>
-        <span>Lenses</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#hello-world">#</doc-anchor-trigger>
+        <span>Hello world!</span>
     </h1>
 </doc-anchor-target>
-<doc-anchor-target id="vars-and-lensing">
+<p>Here is a simple <a href="/sitelets/readme.md">sitelet</a> that returns &quot;Hello world!&quot;:</p>
+<doc-tabs>
+<doc-tab id="main-fs">
+<template #title>Main.fs</template>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">module Site
+
+open WebSharper
+open WebSharper.Sitelets
+
+[&lt;Website&gt;]
+let Main = Application.Text (fun ctx -&gt; &quot;Hello World!&quot;)</code></pre>
+</doc-codeblock></div>
+</doc-tab>
+</doc-tabs>
+<p><figure class="content-center">
+    <a href="http://i.imgur.com/fZgqeKjl.png">
+        <img src="http://i.imgur.com/fZgqeKjm.png" alt="Hello world!" />
+    </a>
+    <figcaption class="caption">Hello world!</figcaption>
+</figure>
+</p>
+<p>This sitelet has only one entry point: the root of the web application (at <code v-pre>/</code>, and the port is configurable). Requests to any other URL yield a 404 error. Given the root as a fixed, single endpoint and the textual response type, <code v-pre>Application.Text</code> is quick and easy way to create a simple, highly specialized sitelet when you need to respond with text.</p>
+<hr />
+<doc-anchor-target id="steps">
     <h2>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#vars-and-lensing">#</doc-anchor-trigger>
-        <span>Vars and lensing</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#steps">#</doc-anchor-trigger>
+        <span>Steps</span>
     </h2>
 </doc-anchor-target>
-<p>The <code v-pre>Var&lt;'T&gt;</code> type is actually an abstract class, this makes it possible to create instances with an implementation different from <code v-pre>Var.Create</code>. The main example of this are <strong>lenses</strong>.</p>
-<p>In WebSharper.UI, a lens is a <code v-pre>Var</code> without its own storage cell that &quot;focuses&quot; on a sub-part of an existing <code v-pre>Var</code>. For example, given the following:</p>
+<ol>
+<li><p>Install the <a href="/about/templates.md">WebSharper project templates</a> and create a new WebSharper minimal application:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type Person = { FirstName : string; LastName : string }
-let varPerson = Var.Create { FirstName = &quot;John&quot;; LastName = &quot;Doe&quot; }</code></pre>
+<pre class="language-none"><code v-pre class="language-none">dotnet new websharper-min -lang f# -n MyApp</code></pre>
 </doc-codeblock></div>
-<p>You might want to create a form that allows entering the first and last name separately. For this, you need two <code v-pre>Var&lt;string&gt;</code>s that directly observe and alter the <code v-pre>FirstName</code> and <code v-pre>LastName</code> fields of the value stored in <code v-pre>varPerson</code>. This is exactly what a lens does.</p>
-<p>To create a lens, you need to pass a getter and a setter function. The getter is called when the lens needs to know its current value, and extracts it from the parent <code v-pre>Var</code>&#x27;s current value. The setter is called when setting the value of the lens; it receives the current value of the parent <code v-pre>Var</code> and the new value of the lens, and returns the new value of the parent <code v-pre>Var</code>.</p>
+<p>OR</p>
+<p>Follow the steps in <a href="/about/from-scratch.md">Creating a new WebSharper project from scratch</a>. Subsequent examples will assume you have installed the WebSharper project templates, instead of going from an empty project.</p>
+</li>
+<li><p>Run it:</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let varFirstName =
-    varPerson.Lens (fun p -&gt; p.FirstName)
-                   (fun p n -&gt; { p with FirstName = n })
-let varLastName =
-    varPerson.Lens (fun p -&gt; p.LastName)
-                   (fun p n -&gt; { p with LastName = n })
-
-let myForm =
-    div [] [
-        Doc.Input [attr.placeholder &quot;First Name&quot;] varFirstName
-        Doc.Input [attr.placeholder &quot;Last Name&quot;] varLastName
-    ]</code></pre>
+<pre class="language-none"><code v-pre class="language-none">cd MyApp
+dotnet run</code></pre>
 </doc-codeblock></div>
+</li>
+</ol>
 <hr />
-<doc-anchor-target id="automatic-lenses">
-    <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#automatic-lenses">#</doc-anchor-trigger>
-        <span>Automatic lenses</span>
-    </h3>
-</doc-anchor-target>
-<p>In the specific case of records, you can use <code v-pre>LensAuto</code> to create lenses more concisely. This method only takes the getter, and is able to generate the corresponding setter during compilation.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let varFirstName = varPerson.LensAuto (fun p -&gt; p.FirstName)
-
-// The above is equivalent to:
-let varFirstName = varPerson.Lens (fun p -&gt; p.FirstName)
-                                  (fun p n -&gt; { p with FirstName = n })</code></pre>
-</doc-codeblock></div>
-<p>You can be even more concise when using the <code v-pre>Doc.Input</code> family of functions, thanks to the V shorthand.</p>
-<hr />
-<doc-anchor-target id="the-v-shorthand">
+<doc-anchor-target id="going-further">
     <h2>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#the-v-shorthand">#</doc-anchor-trigger>
-        <span>The V shorthand</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#going-further">#</doc-anchor-trigger>
+        <span>Going further</span>
     </h2>
 </doc-anchor-target>
-<p>Mapping reactive values from their model to a value that you want to display can be greatly simplified using the V shorthand. This shorthand revolves around passing calls to the property <code v-pre>view.V</code> to a number of supporting functions.</p>
 <hr />
-<doc-anchor-target id="views-and-v">
+<doc-anchor-target id="other-server-responses">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#views-and-v">#</doc-anchor-trigger>
-        <span>Views and V</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#other-server-responses">#</doc-anchor-trigger>
+        <span>Other server responses</span>
     </h3>
 </doc-anchor-target>
-<p>When an expression containing a call to <code v-pre>view.V</code> is passed as argument to one of the supporting functions, it is converted to a call to <code v-pre>View.Map</code> on this view, and the resulting expression is used in a way relevant to the supporting function.</p>
-<p>The simplest supporting function is called <code v-pre>V</code>, and it simply returns the view expression.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type Person = { FirstName: string; LastName: string }
-
-let vPerson : View&lt;Person&gt; = // ...
-
-let vFirstName = V(vPerson.V.FirstName)
-
-// The above is equivalent to:
-let vFirstName = vPerson |&gt; View.Map (fun p -&gt; p.FirstName)</code></pre>
-</doc-codeblock></div>
-<p>You can use arbitrarily complex expressions:</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let vFullName = V(vPerson.V.FirstName + &quot; &quot; + vPerson.V.LastName)
-
-// The above is equivalent to:
-let vFirstName = vPerson |&gt; View.Map (fun p -&gt; p.FirstName + &quot; &quot; + p.LastName)</code></pre>
-</doc-codeblock></div>
-<p>Other supporting functions use the resulting View in different ways:</p>
-<ul>
-<li><p><code v-pre>text</code> passes the resulting View to <code v-pre>textView</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let showName : Doc = text (vPerson.V.FirstName + &quot; &quot; + vPerson.V.LastName)
-
-// The above is equivalent to:
-let showName = 
-    textView (
-        vPerson
-        |&gt; View.Map (fun p -&gt; p.V.FirstName + &quot; &quot; + p.V.LastName)
-    )</code></pre>
-</doc-codeblock></div>
-</li>
-<li><p><code v-pre>attr.*</code> attribute creation functions pass the resulting View to the corresponding <code v-pre>attr.*Dyn</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type ImgData = { Src: string; Height: int }
-
-let myImgData = Var.Create { Src = &quot;/my-img.png&quot;; Height = 200 }
-
-let myImg =
-    img [
-        attr.src (myImgData.V.Src)
-        attr.height (string myImgData.V.Height)
-    ] []
-
-// The above is equivalent to:
-let myImg =
-    img [
-        attr.srcDyn (myImgData.View |&gt; View.Map (fun i -&gt; i.Src))
-        attr.heightDyn (myImgData.View |&gt; View.Map (fun i -&gt; string i.Height))
-    ] []</code></pre>
-</doc-codeblock></div>
-</li>
-<li><p><code v-pre>Attr.Style</code> passes the resulting View to <code v-pre>Attr.DynamicStyle</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type MyStyle = { BgColor: string; Width: int }
-
-let myStyle = Var.Create { BgColor = &quot;orangered&quot;; Width = 400 }
-
-let myElt =
-    div [
-        Attr.Style &quot;background-color&quot; myStyle.V.BgColor
-        Attr.Style &quot;width&quot; (sprintf &quot;%ipx&quot; myStyle.V.Width)
-    ] [ text &quot;This is my elt&quot; ]
-
-// The above is equivalent to:
-let myElt =
-    div [
-        Attr.DynamicStyle &quot;background-color&quot;
-            (myStyle |&gt; View.Map (fun s -&gt; s.BgColor))
-        Attr.DynamicStyle &quot;width&quot;
-            (myStyle |&gt; View.Map (fun s -&gt; sprintf &quot;%ipx&quot; s.Width))
-    ] [ text &quot;This is my elt&quot; ]</code></pre>
-</doc-codeblock></div>
-</li>
-</ul>
-<p>Calling <code v-pre>.V</code> outside of one of the above supporting functions is a compile error. There is one exception: if <code v-pre>view</code> is a <code v-pre>View&lt;Doc&gt;</code>, then <code v-pre>view.V</code> is equivalent to <code v-pre>Doc.EmbedView view</code>.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let varPerson = Var.Create (Some { FirstName = &quot;John&quot;; LastName = &quot;Doe&quot; })
-
-let vMyDoc = V(
-    match varPerson.V with
-    | None -&gt; Doc.Empty
-    | Some p -&gt; div [] [text varPerson.V.FirstName]
-)
-let myDoc = vMyDoc.V
-
-// The above is equivalent to:
-let vMyDoc =
-    varPerson.View |&gt; View.Map (fun p -&gt;
-        match p with
-        | None -&gt; Doc.Empty
-        | Some p -&gt; div [] [text p.FirstName]
-    )
-let myDoc = Doc.EmbedView vMyDoc</code></pre>
-</doc-codeblock></div>
+<p>You can also construct a multitude of server responses, such as HTML (with or without client-side functionality), JSON data, or serving files; see sitelet <a href="/sitelets/responses.md">responses</a> for more information.</p>
 <hr />
-<doc-anchor-target id="vars-and-v">
+<doc-anchor-target id="switching-to-larger-sitelets">
     <h3>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#vars-and-v">#</doc-anchor-trigger>
-        <span>Vars and V</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#switching-to-larger-sitelets">#</doc-anchor-trigger>
+        <span>Switching to larger sitelets</span>
     </h3>
 </doc-anchor-target>
-<p>Vars also have a <code v-pre>.V</code> property. When used with one of the above supporting functions, it is equivalent to <code v-pre>.View.V</code>.</p>
+<p>Unless you are planning on returning text only, <code v-pre>Application.Text</code> is of limited use. You will find <code v-pre>Application.SinglePage</code> (see the <a href="/quick/spa.md">Single-page application example</a>) and <code v-pre>Application.MultiPage</code> (an alias for <code v-pre>Sitelet.Infer</code>, see the <a href="/quick/fullstack.md">Full-stack application example</a>) more useful.</p>
+<doc-tabs>
+<doc-tab id="main-fs">
+<template #title>Main.fs</template>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">let varPerson = Var.Create { FirstName = &quot;John&quot;; LastName = &quot;Doe&quot; }
+<pre class="language-fsharp" data-line="6-8"><code v-pre class="language-fsharp">module Site
 
-let vFirstName = V(varPerson.V.FirstName)
+open WebSharper
+open WebSharper.Sitelets
 
-// The above is equivalent to:
-let vFirstName = V(varPerson.View.V.FirstName)
+type EndPoint =
+    | [&lt;EndPoint &quot;/&quot;&gt;] Home
+    | [&lt;EndPoint &quot;/about&quot;&gt;] About
 
-// Which is also equivalent to:
-let vFirstName = varPerson.View |&gt; View.Map (fun p -&gt; p.FirstName)</code></pre>
+[&lt;Website&gt;]
+let Main = Application.MultiPage (fun ctx -&gt; function
+    | Home -&gt;
+        Content.Page(
+            [
+                h1 [] [text &quot;Hello world!&quot;]
+            ]
+        )
+    | About -&gt; ...
+)</code></pre>
 </doc-codeblock></div>
-<p>Additionally, <code v-pre>var.V</code> can be used as a shorthand for <doc-anchor-trigger to="#lens">lenses</doc-anchor-trigger>. <code v-pre>.V</code> is a shorthand for <code v-pre>.LensAuto</code> when passed to the following supporting functions:</p>
-<ul>
-<li><p><code v-pre>Lens</code> simply creates a lensed Var.</p>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type Person = { FirstName : string; LastName : string }
-let varPerson = Var.Create { FirstName = &quot;John&quot;; LastName = &quot;Doe&quot; }
-
-let myForm =
-    div [] [
-        Doc.Input [attr.placeholder &quot;First Name&quot;] (Lens varPerson.V.FirstName)
-        Doc.Input [attr.placeholder &quot;Last Name&quot;] (Lens varPerson.V.LastName)
-    ]</code></pre>
-</doc-codeblock></div>
-</li>
-<li><p><code v-pre>Doc.InputV</code></p>
-</li>
-<li><p><code v-pre>Doc.InputAreaV</code></p>
-</li>
-<li><p><code v-pre>Doc.PasswordBoxV</code></p>
-</li>
-<li><p><code v-pre>Doc.IntInputV</code>, <code v-pre>Doc.IntInputUncheckedV</code></p>
-</li>
-<li><p><code v-pre>Doc.FloatInputV</code>, <code v-pre>Doc.FloatInputUncheckedV</code></p>
-</li>
-</ul>
-<div class="codeblock-wrapper"><doc-codeblock>
-<pre class="language-fsharp"><code v-pre class="language-fsharp">type Person = { FirstName : string; LastName : string }
-let varPerson = Var.Create { FirstName = &quot;John&quot;; LastName = &quot;Doe&quot; }
-
-let myForm =
-    div [] [
-        Doc.InputV [attr.placeholder &quot;First Name&quot;] varPerson.V.FirstName
-        Doc.InputV [attr.placeholder &quot;Last Name&quot;] varPerson.V.LastName
-    ]
-
-// The above is equivalent to:
-let myForm =
-    div [] [
-        Doc.Input [attr.placeholder &quot;First Name&quot;]
-            (varPerson.LensAuto (fun p -&gt; p.FirstName))
-        Doc.Input [attr.placeholder &quot;Last Name&quot;]
-            (varPerson.LensAuto (fun p -&gt; p.LastName))
-    ]
-
-// Which is equivalent to:
-let myForm =
-    div [] [
-        Doc.Input [attr.placeholder &quot;First Name&quot;] 
-            (varPerson.Lens (fun p -&gt; p.FirstName) (fun p n -&gt; { p with FirstName = n }))
-        Doc.Input [attr.placeholder &quot;Last Name&quot;]
-            (varPerson.Lens (fun p -&gt; p.LastName) (fun p n -&gt; { p with LastName = n }))
-    ]</code></pre>
-</doc-codeblock></div>
+</doc-tab>
+</doc-tabs>
 
                                 
                                 <!-- Required only on API pages -->
@@ -451,7 +320,7 @@ let myForm =
                             </div>
                             <footer class="clear-both">
                                 <div class="flex flex-wrap items-center justify-between mt-14">
-                                    <a class="my-2.5 inline-flex items-center text-sm whitespace-nowrap text-blue-500 dark:text-blue-400 hover:text-blue-700 hover:underline" href="https://github.com/dotnet-websharper/docs/edit/main/ui/lenses.md" target="_blank" rel="noopener">
+                                    <a class="my-2.5 inline-flex items-center text-sm whitespace-nowrap text-blue-500 dark:text-blue-400 hover:text-blue-700 hover:underline" href="https://github.com/dotnet-websharper/docs/edit/main/examples/hello.md" target="_blank" rel="noopener">
                                         <svg class="mr-1.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M20 12c-.55 0-1 .45-1 1v7c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h7c.55 0 1-.45 1-1s-.45-1-1-1H4C2.35 3 1 4.35 1 6v14c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-7c0-.55-.45-1-1-1z" /><path d="M22.21 1.79c-1.18-1.18-3.24-1.18-4.41 0l-9.5 9.5c-.13.13-.22.29-.26.46l-1 4c-.08.34.01.7.26.95.18.2.44.3.7.3.08 0 .16-.01.24-.03l4-1c.18-.04.34-.13.46-.26l9.5-9.5c1.22-1.22 1.22-3.2.01-4.42zm-1.42 3l-9.3 9.3-2.11.53.53-2.11 9.3-9.3c.42-.42 1.16-.42 1.59 0 .43.43.43 1.15-.01 1.58z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         <span>Edit this page in GitHub</span>
                                     </a>
@@ -459,20 +328,20 @@ let myForm =
                             
                                 <nav class="flex mt-14">
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../ui/views/">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../examples/">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                             <span>
                                                 <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
-                                                <span class="block mt-1">Views</span>
+                                                <span class="block mt-1">Examples</span>
                                             </span>
                                         </a>
                                     </div>
                             
                                     <div class="w-1/2">
-                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../ui/listmodels/">
+                                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../examples/spa/">
                                             <span>
                                                 <span class="block text-xs font-normal text-right text-gray-400 dark:text-dark-400">Next</span>
-                                                <span class="block mt-1">List​Models</span>
+                                                <span class="block mt-1">Single-​page applications</span>
                                             </span>
                                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                                         </a>
@@ -519,6 +388,6 @@ let myForm =
 
     <div id="docs-overlay-target"></div>
 
-    <script>window.__DOCS__ = { "title": "Lenses", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+    <script>window.__DOCS__ = { "title": "Hello world!", level: 2, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
 </body>
 </html>
