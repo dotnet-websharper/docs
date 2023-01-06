@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.726202287446">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.726279457358">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -11,7 +11,7 @@
     <!-- Primary Meta Tags -->
     <title>Source maps</title>
     <meta name="title" content="Source maps">
-    <meta name="description" content="This page is not yet written, please check back soon!" />
+    <meta name="description" content="Source maps are a way to map a combined/minified file back to the original source files. You can access the source, from within a browser, and set a..." />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://docs.websharper.com/basics/sourcemaps/" />
@@ -20,21 +20,23 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://docs.websharper.com/basics/sourcemaps/">
     <meta property="og:title" content="Source maps">
-    <meta property="og:description" content="This page is not yet written, please check back soon!">
+    <meta property="og:description" content="Source maps are a way to map a combined/minified file back to the original source files. You can access the source, from within a browser, and set a...">
+    <meta property="og:image" content="https://docs.websharper.com/assets/chrome-source-map.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://docs.websharper.com/basics/sourcemaps/">
     <meta property="twitter:title" content="Source maps">
-    <meta property="twitter:description" content="This page is not yet written, please check back soon!">
+    <meta property="twitter:description" content="Source maps are a way to map a combined/minified file back to the original source files. You can access the source, from within a browser, and set a...">
+    <meta property="twitter:image" content="https://docs.websharper.com/assets/chrome-source-map.png">
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.726202287446" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.726279457358" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.726202287446" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.726279457358" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.726202287446" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.726279457358" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -210,30 +212,113 @@
                                 <div id="docs-sidebar-right-toggle"></div>
                 
                                 <!-- Page content  -->
-<doc-anchor-target id="source-maps" class="break-words">
+<doc-anchor-target id="client-side-debugging-with-source-maps" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#source-maps">#</doc-anchor-trigger>
-        <span>Source maps</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#client-side-debugging-with-source-maps">#</doc-anchor-trigger>
+        <span>Client-side debugging with Source Maps</span>
     </h1>
 </doc-anchor-target>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1 rounded-tl rounded-bl bg-blue-500 dark:bg-blue-400"></div>
-    <div class="flex w-full py-4 border border-l-0 border-gray-300 rounded-tr rounded-br doc-alert bg-white dark:bg-dark-700 dark:border-dark-700" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-blue-500 dark:text-blue-400" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
-                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-            <h5>Sorry...</h5>
-<p>This page is not yet written, please check back soon!</p>
-        </div>
-    </div>
-</div>
+<doc-anchor-target id="sourcemap">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#sourcemap">#</doc-anchor-trigger>
+        <span>Sourcemap</span>
+    </h2>
+</doc-anchor-target>
+<p>Source maps are a way to map a combined/minified file back to the original source files.
+You can access the source, from within a browser, and set a breakpoint.</p>
+<doc-anchor-target id="embedding-source-maps-in-websharper-libraries">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#embedding-source-maps-in-websharper-libraries">#</doc-anchor-trigger>
+        <span>Embedding source maps in WebSharper libraries</span>
+    </h2>
+</doc-anchor-target>
+<p>For WebSharper 4.2+ projects, you can enable including source maps and the required source files in a WebSharper assembly, by adding <code v-pre>&quot;sourceMap&quot;: true</code> to wsconfig.json.</p>
+<p>Here is an example of wsconfig.json:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-none"><code v-pre class="language-none">{
+  &quot;project&quot;: &quot;site&quot;,
+  &quot;outputDir&quot;: &quot;wwwroot&quot;,
+  &quot;sourceMap&quot;: true,
+  &quot;downloadResources&quot;: true
+}</code></pre>
+</doc-codeblock></div>
+<p>For older versions, you can add the <code v-pre>WebSharperSourceMap</code> property to your project file.</p>
+<p>Here is a .csproj / .fsproj sample:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-none"><code v-pre class="language-none">&lt;PropertyGroup&gt;
+    &lt;WebSharperSourceMap&gt;True&lt;/WebSharperSourceMap&gt;
+&lt;/PropertyGroup&gt;</code></pre>
+</doc-codeblock></div>
+<p>WebSharper itself is built with source map embedding, so you can debug into
+WebSharper library code.</p>
+<p>Sitelets and single-page application projects are supported, offline sitelets
+(generating static Html+JS output) is currently not.</p>
+<doc-anchor-target id="usage">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#usage">#</doc-anchor-trigger>
+        <span>Usage</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="google-chrome--microsoft-edge-chromium">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#google-chrome--microsoft-edge-chromium">#</doc-anchor-trigger>
+        <span>Google Chrome &amp; Microsoft Edge Chromium</span>
+    </h3>
+</doc-anchor-target>
+<p>To enable source maps, press <code v-pre>crtl + shift + i</code> to open the developer tools,
+click the cog icon and check the &quot;Enable JavaScript source maps&quot;
+setting.</p>
+<p>In the Sources tab of Developer Tools, open the <code v-pre>Scripts/WebSharper</code>
+folder to load the source mappings.
+A folder named <code v-pre>Source</code> will appear with the original <code v-pre>.fs</code> files used
+for WebSharper translation.
+You can use this to set breakpoints in original code.</p>
+<p><figure class="content-center">
+    <img src="../../assets/chrome-source-map.png" alt="Chrome source mapping" />
+    <figcaption class="caption">Chrome source mapping</figcaption>
+</figure>
+</p>
+<doc-anchor-target id="mozilla-firefox">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#mozilla-firefox">#</doc-anchor-trigger>
+        <span>Mozilla Firefox</span>
+    </h3>
+</doc-anchor-target>
+<p>To enable source maps, press <code v-pre>crtl + shift + i</code> to open the Web Developer Tools, then press F1 for settings,
+check the &quot;Enable Source Maps&quot; item in the &quot;Advanced Settings&quot; section.</p>
+<p>In the Debugger tab of Web Developer Tools, open the <code v-pre>Scripts/WebSharper</code>
+folder to load the source mappings.
+A folder named <code v-pre>Source</code> will appear with the original <code v-pre>.fs</code> files used
+for WebSharper translation.</p>
+<p>You can access the list of original sources, however breakpoints
+don&#x27;t work correctly as of version 108.0.1.</p>
+<doc-anchor-target id="internet-explorer--microsoft-edge-legacy">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#internet-explorer--microsoft-edge-legacy">#</doc-anchor-trigger>
+        <span>Internet Explorer &amp; Microsoft Edge Legacy</span>
+    </h3>
+</doc-anchor-target>
+<p>You need to have Internet Explorer 11 on Windows 8.1 Update 1 or newer
+for source map support.
+Edge has inherited the debugging tool from IE11, works similarly.</p>
+<p>In the Debugger tab of F12 tools, the last icon in the toolbar says
+&quot;Load the sources mapped to this generated file&quot;.
+Use this to jump between generated and original source code.
+You can set breakpoints in the original code.</p>
+<p><figure class="content-center">
+    <img src="../../assets/explorer-source-map.png" alt="IE source mapping" />
+    <figcaption class="caption">IE source mapping</figcaption>
+</figure>
+</p>
+<doc-anchor-target id="outputting-source-maps-for-websharper-web-projects">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#outputting-source-maps-for-websharper-web-projects">#</doc-anchor-trigger>
+        <span>Outputting source maps for WebSharper web projects</span>
+    </h2>
+</doc-anchor-target>
+<p>If you have a separate web project hosting your WebSharper application,
+add the same <code v-pre>WebSharperSourceMap</code> property to the project file to unpack
+the source map files.</p>
 
                                 
                                 <!-- Required only on API pages -->
