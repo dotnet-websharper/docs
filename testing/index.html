@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.726287117289">
+
+    <!-- See retype.com -->
+    <meta name="generator" content="Retype 2.4.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Unit testing with WebSharper.Testing</title>
+    <meta name="title" content="Unit testing with WebSharper.Testing">
+    <meta name="description" content="NuGet package: WebSharper.Testing" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://docs.websharper.com/testing/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://docs.websharper.com/testing/">
+    <meta property="og:title" content="Unit testing with WebSharper.Testing">
+    <meta property="og:description" content="NuGet package: WebSharper.Testing">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://docs.websharper.com/testing/">
+    <meta property="twitter:title" content="Unit testing with WebSharper.Testing">
+    <meta property="twitter:description" content="NuGet package: WebSharper.Testing">
+
+    <script>(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
+
+    <link href="../resources/css/retype.css?v=2.4.0.726287117289" rel="stylesheet" />
+
+    <script type="text/javascript" src="../resources/js/config.js?v=2.4.0.726287117289" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../resources/js/lunr.js?v=2.4.0.726287117289" data-turbo-eval="false" defer></script>
+    <script id="prism-js" type="text/javascript" src="../resources/js/prism.js?v=2.4.0.726287117289" defer></script>
+</head>
+<body>
+    <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
+        <div class="absolute bottom-0 left-0 bg-gray-100 dark:bg-dark-800" style="top: 5rem; right: 50%"></div>
+    
+        <header id="docs-site-header" class="sticky top-0 z-30 flex w-full h-16 bg-white border-b border-gray-200 md:h-20 dark:bg-dark-850 dark:border-dark-650">
+            <div class="container relative flex items-center justify-between grow pr-6 md:justify-start">
+                <!-- Mobile menu button skeleton -->
+                <button v-cloak class="skeleton docs-mobile-menu-button flex items-center justify-center shrink-0 overflow-hidden dark:text-white focus:outline-none rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+                <div v-cloak id="docs-sidebar-toggle"></div>
+        
+                <!-- Logo -->
+                <div class="flex items-center justify-between h-full py-2 md:w-75">
+                    <div class="flex items-center px-2 md:px-6">
+                        <a id="docs-site-logo" href="../" class="flex items-center leading-snug text-2xl">
+                            <span class="w-10 mr-2 grow-0 shrink-0 overflow-hidden">
+                                <img class="max-h-10 dark:hidden md:inline-block" src="../assets/ws-logo.png">
+                                <img class="max-h-10 hidden dark:inline-block" src="../assets/ws-logo.png">
+                            </span>
+                            <span class="dark:text-white font-semibold line-clamp-1 md:line-clamp-2">WebSharper</span>
+                        </a><span class="hidden px-2 py-1 ml-4 text-sm font-semibold leading-none text-root-logo-label-text bg-root-logo-label-bg rounded-sm md:inline-block">6.0</span>
+                    </div>
+        
+                    <span class="hidden h-8 border-r md:inline-block dark:border-dark-650"></span>
+                </div>
+        
+                <div class="flex justify-between md:grow">
+                    <!-- Top Nav -->
+                    <nav class="hidden md:flex">
+                        <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+                            <li class="mr-6">
+                                <a class="py-2 md:mb-0 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://websharper.com" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                                        <g fill="currentColor">
+                                            <path fill-rule="evenodd" d="M11.03 2.59a1.5 1.5 0 011.94 0l7.5 6.363a1.5 1.5 0 01.53 1.144V19.5a1.5 1.5 0 01-1.5 1.5h-5.75a.75.75 0 01-.75-.75V14h-2v6.25a.75.75 0 01-.75.75H4.5A1.5 1.5 0 013 19.5v-9.403c0-.44.194-.859.53-1.144l7.5-6.363zM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v6.25h5v-9.403L12 3.734z"/>
+                                        </g>
+                                    </svg>
+                                    <span>Home</span>
+                                </a>
+                            </li>
+                            <li class="mr-6">
+                                <a class="py-2 md:mb-0 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://try.websharper.com" target="_blank">Try Online</a>
+                            </li>
+                            <li class="mr-6">
+                                <a class="py-2 md:mb-0 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://forums.websharper.com" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                                        <g fill="currentColor">
+                                            <path fill-rule="evenodd" d="M1.75 1A1.75 1.75 0 000 2.75v9.5C0 13.216.784 14 1.75 14H3v1.543a1.457 1.457 0 002.487 1.03L8.061 14h6.189A1.75 1.75 0 0016 12.25v-9.5A1.75 1.75 0 0014.25 1H1.75zM1.5 2.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v9.5a.25.25 0 01-.25.25h-6.5a.75.75 0 00-.53.22L4.5 15.44v-2.19a.75.75 0 00-.75-.75h-2a.25.25 0 01-.25-.25v-9.5z"/><path d="M22.5 8.75a.25.25 0 00-.25-.25h-3.5a.75.75 0 010-1.5h3.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0122.25 20H21v1.543a1.457 1.457 0 01-2.487 1.03L15.939 20H10.75A1.75 1.75 0 019 18.25v-1.465a.75.75 0 011.5 0v1.465c0 .138.112.25.25.25h5.5a.75.75 0 01.53.22l2.72 2.72v-2.19a.75.75 0 01.75-.75h2a.25.25 0 00.25-.25v-9.5z"/>
+                                        </g>
+                                    </svg>
+                                    <span>Forums</span>
+                                </a>
+                            </li>
+        
+                        </ul>
+                    </nav>
+        
+                    <!-- Header Right Skeleton -->
+                    <div v-cloak class="flex justify-end grow skeleton">
+        
+                        <!-- Search input mock -->
+                        <div class="relative hidden w-40 lg:block lg:max-w-sm lg:ml-auto">
+                            <div class="absolute flex items-center justify-center h-full pl-3 dark:text-dark-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-base" width="16" height="16" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 1px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                            </div>
+        
+                            <input class="w-full h-10 transition-colors duration-200 ease-in bg-gray-200 border border-transparent rounded md:text-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-dark-600 dark:border-dark-600 placeholder-gray-400 dark:placeholder-dark-400"
+                            style="padding: 0.625rem 0.75rem 0.625rem 2rem" type="text" placeholder="Search" />
+                        </div>
+        
+                        <!-- Mobile search button mock -->
+                        <div class="flex items-center justify-center w-10 h-10 lg:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="20" height="20" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 0px;"><g fill="currentColor" ><path d="M21.71 20.29l-3.68-3.68A8.963 8.963 0 0020 11c0-4.96-4.04-9-9-9s-9 4.04-9 9 4.04 9 9 9c2.12 0 4.07-.74 5.61-1.97l3.68 3.68c.2.19.45.29.71.29s.51-.1.71-.29c.39-.39.39-1.03 0-1.42zM4 11c0-3.86 3.14-7 7-7s7 3.14 7 7c0 1.92-.78 3.66-2.04 4.93-.01.01-.02.01-.02.01-.01.01-.01.01-.01.02A6.98 6.98 0 0111 18c-3.86 0-7-3.14-7-7z" ></path></g></svg>
+                        </div>
+        
+                        <!-- Dark mode switch placehokder -->
+                        <div class="w-10 h-10 lg:ml-2"></div>
+        
+                        <!-- History button mock -->
+                        <div class="flex items-center justify-center w-10 h-10" style="margin-right: -0.625rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 icon-base" width="22" height="22" viewBox="0 0 24 24" aria-labelledby="icon" role="presentation"  style="margin-bottom: 0px;"><g fill="currentColor" ><g ><path d="M12.01 6.01c-.55 0-1 .45-1 1V12a1 1 0 00.4.8l3 2.22a.985.985 0 001.39-.2.996.996 0 00-.21-1.4l-2.6-1.92V7.01c.02-.55-.43-1-.98-1z"></path><path d="M12.01 1.91c-5.33 0-9.69 4.16-10.05 9.4l-.29-.26a.997.997 0 10-1.34 1.48l1.97 1.79c.19.17.43.26.67.26s.48-.09.67-.26l1.97-1.79a.997.997 0 10-1.34-1.48l-.31.28c.34-4.14 3.82-7.41 8.05-7.41 4.46 0 8.08 3.63 8.08 8.09s-3.63 8.08-8.08 8.08c-2.18 0-4.22-.85-5.75-2.4a.996.996 0 10-1.42 1.4 10.02 10.02 0 007.17 2.99c5.56 0 10.08-4.52 10.08-10.08.01-5.56-4.52-10.09-10.08-10.09z"></path></g></g></svg>
+                        </div>
+                    </div>
+        
+                    <div v-cloak class="flex justify-end grow">
+                        <div id="docs-mobile-search-button"></div>
+                        <doc-search-desktop></doc-search-desktop>
+        
+                        <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                        <doc-history></doc-history>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="container relative flex bg-white">
+            <!-- Sidebar Skeleton -->
+            <div v-cloak class="fixed flex flex-col shrink-0 duration-300 ease-in-out bg-gray-100 border-gray-200 sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton dark:bg-dark-800 dark:border-dark-650">
+            
+                <!-- Render this div, if config.showSidebarFilter is `true` -->
+                <div class="flex items-center h-16 px-6">
+                    <input class="w-full h-8 px-3 py-2 transition-colors duration-200 ease-linear bg-white border border-gray-200 rounded shadow-none text-sm focus:outline-none focus:border-gray-600 dark:bg-dark-600 dark:border-dark-600" type="text" placeholder="Filter" />
+                </div>
+            
+                <div class="pl-6 mb-4 mt-1">
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-32 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-48 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                    <div class="w-40 h-3 mb-4 bg-gray-200 rounded-full loading dark:bg-dark-600"></div>
+                </div>
+            
+                <div class="shrink-0 mt-auto bg-transparent dark:border-dark-650">
+                    <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                        <span class="text-xs whitespace-nowrap">Powered by</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Sidebar component -->
+            <doc-sidebar v-cloak>
+                <template #sidebar-footer>
+                    <div class="shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-dark-650">
+            
+                        <div class="py-3 px-6 md:hidden border-b dark:border-dark-650">
+                            <nav>
+                                <ul class="flex flex-wrap justify-center items-center">
+                                    <li class="mr-6">
+                                        <a class="block py-1 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://websharper.com" target="_blank">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                                                <g fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M11.03 2.59a1.5 1.5 0 011.94 0l7.5 6.363a1.5 1.5 0 01.53 1.144V19.5a1.5 1.5 0 01-1.5 1.5h-5.75a.75.75 0 01-.75-.75V14h-2v6.25a.75.75 0 01-.75.75H4.5A1.5 1.5 0 013 19.5v-9.403c0-.44.194-.859.53-1.144l7.5-6.363zM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v6.25h5v-9.403L12 3.734z"/>
+                                                </g>
+                                            </svg>
+                                            <span>Home</span>
+                                        </a>
+                                    </li>
+                                    <li class="mr-6">
+                                        <a class="block py-1 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://try.websharper.com" target="_blank">Try Online</a>
+                                    </li>
+                                    <li class="mr-6">
+                                        <a class="block py-1 inline-flex items-center text-sm whitespace-nowrap transition-colors duration-200 ease-linear md:text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200" href="https://forums.websharper.com" target="_blank">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px mr-1" width="18" height="18" viewBox="0 0 24 24" role="presentation">
+                                                <g fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M1.75 1A1.75 1.75 0 000 2.75v9.5C0 13.216.784 14 1.75 14H3v1.543a1.457 1.457 0 002.487 1.03L8.061 14h6.189A1.75 1.75 0 0016 12.25v-9.5A1.75 1.75 0 0014.25 1H1.75zM1.5 2.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v9.5a.25.25 0 01-.25.25h-6.5a.75.75 0 00-.53.22L4.5 15.44v-2.19a.75.75 0 00-.75-.75h-2a.25.25 0 01-.25-.25v-9.5z"/><path d="M22.5 8.75a.25.25 0 00-.25-.25h-3.5a.75.75 0 010-1.5h3.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0122.25 20H21v1.543a1.457 1.457 0 01-2.487 1.03L15.939 20H10.75A1.75 1.75 0 019 18.25v-1.465a.75.75 0 011.5 0v1.465c0 .138.112.25.25.25h5.5a.75.75 0 01.53.22l2.72 2.72v-2.19a.75.75 0 01.75-.75h2a.25.25 0 00.25-.25v-9.5z"/>
+                                                </g>
+                                            </svg>
+                                            <span>Forums</span>
+                                        </a>
+                                    </li>
+            
+                                </ul>
+                            </nav>
+                        </div>
+            
+                        <a class="flex items-center justify-center flex-nowrap h-16 text-gray-400 dark:text-dark-400 hover:text-gray-700 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                            <span class="text-xs whitespace-nowrap">Powered by</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                        </a>
+                    </div>
+                </template>
+            </doc-sidebar>
+    
+            <div class="grow min-w-0 dark:bg-dark-850">
+                <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+                <div class="flex">
+                    <div class="grow min-w-0 px-6 md:px-16">
+                        <main class="relative pt-6 pb-16">
+                            <div class="docs-markdown" id="docs-content">
+                                <!-- Rendered if sidebar right is enabled -->
+                                <div id="docs-sidebar-right-toggle"></div>
+                
+                                <!-- Page content  -->
+<doc-anchor-target id="unit-testing-with-websharpertesting" class="break-words">
+    <h1>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#unit-testing-with-websharpertesting">#</doc-anchor-trigger>
+        <span>Unit testing with WebSharper.Testing</span>
+    </h1>
+</doc-anchor-target>
+<doc-panel id="where-is-it" collapsed>
+    <template #title>Where is it?</template>
+<ul>
+<li>NuGet package: <a href="https://www.nuget.org/packages/websharper.testing"><code v-pre>WebSharper.Testing</code></a></li>
+<li>DLL: <code v-pre>WebSharper.Testing.dll</code></li>
+<li>Namespace: <code v-pre>WebSharper.Testing</code></li>
+</ul>
+</doc-panel>
+<p><code v-pre>WebSharper.Testing</code> provides an easy-to-use, concise syntax for writing unit tests for libraries, services and web applications. It&#x27;s a wrapper around <a href="https://qunitjs.com/">QUnit</a>, which handles synchronous and asynchronous expressions and generates random data for property testing. The main tests page is meant to be run in a browser, but server-sides can also be tested by making remote calls from the tests.</p>
+<p>The code samples below assume that the module or assembly containing them is annotated with <code v-pre>[&lt;JavaScript&gt;]</code>, except when they refer to server-side code.</p>
+<hr />
+<doc-anchor-target id="test-categories-and-tests">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#test-categories-and-tests">#</doc-anchor-trigger>
+        <span>Test categories and tests</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="testcategory">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#testcategory">#</doc-anchor-trigger>
+        <span>TestCategory</span>
+    </h3>
+</doc-anchor-target>
+<p>Creates a definition for a single named test category. You can think of it as similar to F#&#x27;s <code v-pre>lazy</code> keyword: the code inside is not executed immediately, but only when it is passed to <code v-pre>Runner.RunTests</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let MyTests =
+    TestCategory &quot;MyTests&quot; {
+        Test &quot;Equality&quot; {
+            equal 1 1
+        }
+    }</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="test">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#test">#</doc-anchor-trigger>
+        <span>Test</span>
+    </h3>
+</doc-anchor-target>
+<p>Creates a definition for a single named test. Similarly to <code v-pre>TestCategory</code>, it delays the execution of its content and registers it in <code v-pre>QUnit</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let EqualityTests() =
+    Test &quot;Equality&quot; {
+        equal 1 1
+        notEqual 1 2
+    }</code></pre>
+</doc-codeblock></div>
+<p><code v-pre>Test &quot;name&quot;</code> is a computation expression (CE) builder that defines various custom operations (such as <code v-pre>equal</code>, <code v-pre>notEqual</code>, etc.) to use for individual assertions.</p>
+<hr />
+<doc-anchor-target id="runnerruntests">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#runnerruntests">#</doc-anchor-trigger>
+        <span>Runner.RunTests</span>
+    </h3>
+</doc-anchor-target>
+<p>Takes an array of <code v-pre>TestCategory</code> values, and returns an <code v-pre>IControlBody</code>, which can be used inside the <code v-pre>client &lt;@ ... @&gt;</code> helper to serve a page that runs the given tests. You can also call its <code v-pre>ReplaceInDom</code> method directly on the client, to replace a placeholder DOM element with the content generated by <code v-pre>QUnit</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let RunAllTests() =
+    Runner.RunTests [|
+        MyTests
+    |]</code></pre>
+</doc-codeblock></div>
+<p>Later, in your server-side code, you can serve this on a <a href="/sitelets/">sitelet</a> endpoint:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Content.Page(
+    Title = &quot;Unit tests&quot;,
+    Body = client &lt;@ RunAllTests() @&gt;
+)</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="expect">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#expect">#</doc-anchor-trigger>
+        <span>Expect</span>
+    </h3>
+</doc-anchor-target>
+<p>Tells the testing framework how many test cases are expected to be registered for a given category. If a category registers no tests, <code v-pre>QUnit</code> reports it as a failure, unless you add <code v-pre>expect 0</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let MyTests =
+    TestCategory &quot;MyTests&quot; {
+        Test &quot;Equality&quot; {
+            expect 2
+            equal 1 1
+            notEqual 1 2
+        }
+        Test &quot;Not failing&quot; {
+            expect 0
+            // A call to some outside function:
+            doNotFail() 
+            // If this throws an error, that still fails the test case, otherwise OK.
+        }
+    }</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="assertions">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#assertions">#</doc-anchor-trigger>
+        <span>Assertions</span>
+    </h2>
+</doc-anchor-target>
+<p>Most assertions have three additional variants:</p>
+<ul>
+<li><code v-pre>xxxMsg</code> - takes an additional name argument for its assertion,</li>
+<li><code v-pre>xxxAsync</code> - takes a value of type <code v-pre>Async&lt;'T&gt;</code> instead of the actual value <code v-pre>'T</code>. Expected value is still provided as a value of <code v-pre>'T</code>.</li>
+<li><code v-pre>xxxMsgAsync</code> - the combination of the above.</li>
+</ul>
+<hr />
+<doc-anchor-target id="istrue">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#istrue">#</doc-anchor-trigger>
+        <span>isTrue</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if a single argument expression evaluates to <code v-pre>true</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality&quot; {
+    isTrue (1 = 1)
+    isTrueMsg (1 = 1) &quot;One equals one&quot;
+    isTrueAsync (async { return 1 = 1 }) 
+    isTrueMsgAsync (async { return 1 = 1 }) &quot;One equals one, async version&quot;
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="isfalse">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#isfalse">#</doc-anchor-trigger>
+        <span>isFalse</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>isTrue</code>: the test passes if the expression evaluates to <code v-pre>false</code>.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality&quot; {
+    isFalse (1 = 2)
+    isFalseMsg (1 = 2) &quot;One equals two is false&quot;
+    isFalseAsync (async { return 1 = 2 }) 
+    isFalseMsgAsync (async { return 1 = 2 }) &quot;One equals two is false, async version&quot;
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="equality-checks">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#equality-checks">#</doc-anchor-trigger>
+        <span>Equality checks</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="equal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#equal">#</doc-anchor-trigger>
+        <span>equal</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if two expressions evaluate to equal values when tested with WebSharper&#x27;s equality semantics. This is the same as using the <code v-pre>=</code> operator from F# code, unions and records have structural equality and overrides on the <code v-pre>Equals</code> method or implementing <code v-pre>IEquatable</code> are honored.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality&quot; {
+    equal (Some 1) (Some 1)
+    equalMsg (Some 1) (Some 1) &quot;Option equality&quot;
+    equalAsync (async { return Some 1 }) (Some 1)
+    equalMsgAsync (async { return Some 1 }) (Some 1) &quot;Option equality, async version&quot;
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="notequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notequal">#</doc-anchor-trigger>
+        <span>notEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>equal</code>: fails if two values are equal with respect to WebSharper&#x27;s equality.</p>
+<hr />
+<doc-anchor-target id="jsequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#jsequal">#</doc-anchor-trigger>
+        <span>jsEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if two expressions evaluate to equal values when tested with JavaScript&#x27;s <code v-pre>==</code> operator. This is the same as using the <code v-pre>==.</code> operator in F# code (available with <code v-pre>open WebSharper.JavaScript</code>).</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality&quot; {
+    jsEqual 1 1
+    jsEqualMsg 1 1 &quot;One equals one&quot;
+    jsEqualAsync (async { return 1 }) 1
+    jsEqualMsgAsync (async { return 1 }) 1 &quot;One equals one, async version&quot;
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="notjsequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notjsequal">#</doc-anchor-trigger>
+        <span>notJsEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>jsEqual</code>: fails if two values are equal with JavaScript&#x27;s <code v-pre>==</code> operator.</p>
+<hr />
+<doc-anchor-target id="strictequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#strictequal">#</doc-anchor-trigger>
+        <span>strictEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if two expressions evaluate to equal values when tested with JavaScript&#x27;s <code v-pre>===</code> operator. This is the same as using the <code v-pre>===.</code> operator in F# code (available with <code v-pre>open WebSharper.JavaScript</code>).</p>
+<hr />
+<doc-anchor-target id="notstrictequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notstrictequal">#</doc-anchor-trigger>
+        <span>notStrictEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>strictEqual</code>: fails if two values are equal with JavaScript&#x27;s <code v-pre>===</code> operator.</p>
+<hr />
+<doc-anchor-target id="deepequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#deepequal">#</doc-anchor-trigger>
+        <span>deepEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if two expressions evaluate to equal values when tested with <code v-pre>QUnit</code>&#x27;s <code v-pre>deepEqual</code> function. This uses a deep recursive comparison, working on primitive types, arrays, objects, regular expressions, dates and functions.</p>
+<hr />
+<doc-anchor-target id="notdeepequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notdeepequal">#</doc-anchor-trigger>
+        <span>notDeepEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>deepEqual</code>: fails if two values are equal using <code v-pre>QUnit</code>&#x27;s <code v-pre>notDeepEqual</code> function.</p>
+<hr />
+<doc-anchor-target id="propequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#propequal">#</doc-anchor-trigger>
+        <span>propEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks if two expressions evaluate to equal values when tested with <code v-pre>QUnit</code>&#x27;s <code v-pre>propEqual</code> function. This function compares only the direct properties on an object with strict equality (<code v-pre>===</code>).</p>
+<hr />
+<doc-anchor-target id="notpropequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notpropequal">#</doc-anchor-trigger>
+        <span>notPropEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>propEqual</code>: fails if two values are equal using <code v-pre>QUnit</code>&#x27;s <code v-pre>notPropEqual</code> function.</p>
+<hr />
+<doc-anchor-target id="approxequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#approxequal">#</doc-anchor-trigger>
+        <span>approxEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>Compares floating point numbers, where a difference/epsilon of <code v-pre>&lt; 0.0001</code> is accepted.</p>
+<hr />
+<doc-anchor-target id="notapproxequal">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#notapproxequal">#</doc-anchor-trigger>
+        <span>notApproxEqual</span>
+    </h3>
+</doc-anchor-target>
+<p>The negation of <code v-pre>approxEqual</code>: fails if the difference of two values is <code v-pre>&lt; 0.0001</code>.</p>
+<hr />
+<doc-anchor-target id="exception-testing">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#exception-testing">#</doc-anchor-trigger>
+        <span>Exception testing</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="raises">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#raises">#</doc-anchor-trigger>
+        <span>raises</span>
+    </h3>
+</doc-anchor-target>
+<p>Checks that an expression is raising any exceptions, and passes test if it does.
+Note that the arguments are always implicitly enclosed within a lambda function by the framework, making sure that they are only evaluated when the test is running.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Exceptions&quot; {
+    raises (failwith &quot;should fail&quot;)
+    raisesMsg (failwith &quot;should fail&quot;) &quot;Failure is expected&quot;
+    raisesAsync (async { failwith &quot;should fail&quot; })
+    raisesMsgAsync (async { failwith &quot;should fail&quot; }) &quot;Failure is expected from inside async&quot;
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="asynchronous-tests">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#asynchronous-tests">#</doc-anchor-trigger>
+        <span>Asynchronous tests</span>
+    </h2>
+</doc-anchor-target>
+<p><code v-pre>Test</code> computation expressions also allow binding an <code v-pre>async</code> workflow at any point. If this is not used, and all assertions are synchronous then the entire test case will run synchronously for optimal performance.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality&quot; {
+    equal 1 1 
+    let! one = async { return 1 }
+    equal one 1
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="property-testing">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#property-testing">#</doc-anchor-trigger>
+        <span>Property testing</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="do">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#do">#</doc-anchor-trigger>
+        <span>Do</span>
+    </h3>
+</doc-anchor-target>
+<p>Using <code v-pre>Do</code> is very similar to using <code v-pre>Test &quot;name&quot;</code>: it is a computation expression builder, enabling the same custom operations. The difference is that it is not named, and also by itself does not register tests, as its intended use is to create sub-tests that can be executed inside a named test when doing property testing.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">let SubTest x =
+    Do {
+        equal x x 
+    }</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="property">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#property">#</doc-anchor-trigger>
+        <span>property</span>
+    </h3>
+</doc-anchor-target>
+<p>Auto-generates 100 random values based on a type and runs a sub-test with all of them. Supported types are <code v-pre>int</code>, <code v-pre>float</code>, <code v-pre>bool</code>, <code v-pre>string</code>, <code v-pre>unit</code>, <code v-pre>obj</code>, and also tuples, lists, arrays, options, <code v-pre>seq</code>, and <code v-pre>ResizeArray</code> composed from these. Using the <code v-pre>obj</code> type results in values from a mix of various types. When using a non-supported type, it results in a compile-time error.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality on ints is reflexive&quot; {
+    property (fun (x: int) -&gt;
+        Do {
+            equal x x 
+        }
+    )
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="propertywith">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#propertywith">#</doc-anchor-trigger>
+        <span>propertyWith</span>
+    </h3>
+</doc-anchor-target>
+<p>Similar to <code v-pre>property</code>, but the generator logic is not inferred from a type, but instead is passed as an <code v-pre>RandomValues.Generator</code> argument, which is described later on this page.</p>
+<p>There are also constructors and combinators in the <code v-pre>Random</code> module to get <code v-pre>Generator</code> values, allowing easier composition of complex test data.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality on ints is reflexive&quot; {
+    propertyWith RandomValues.Int (fun (x: int) -&gt;
+        Do {
+            equal x x 
+        }
+    )
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="propertywithsample">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#propertywithsample">#</doc-anchor-trigger>
+        <span>propertyWithSample</span>
+    </h3>
+</doc-anchor-target>
+<p>Similar to <code v-pre>propertyWith</code>, but the argument is an exact sample on which the property is tested. See <code v-pre>RandomValues.Sample</code> below.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality on ints is reflexive&quot; {
+    propertyWithSample (RandomValues.Sample [| 1; 2; 3 |]) (fun (x: int) -&gt;
+        Do {
+            equal x x 
+        }
+    )
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="looping">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#looping">#</doc-anchor-trigger>
+        <span>Looping</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="foreach">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#foreach">#</doc-anchor-trigger>
+        <span>forEach</span>
+    </h3>
+</doc-anchor-target>
+<p>You cannot use a regular <code v-pre>for</code> loop inside a <code v-pre>Test</code> computation expression, but you can emulate it with the <code v-pre>forEach</code> operation. Its use is similar to property testing, and you can use <code v-pre>Do</code> to define the body of the loop.</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">Test &quot;Equality on ints is reflexive&quot; {
+    forEach { 1 .. 3 } (fun x -&gt; 
+        Do {
+            equal x x
+        }
+    )
+}</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="sample-generators">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#sample-generators">#</doc-anchor-trigger>
+        <span>Sample generators</span>
+    </h2>
+</doc-anchor-target>
+<doc-anchor-target id="randomvaluesgenerator">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#randomvaluesgenerator">#</doc-anchor-trigger>
+        <span>RandomValues.Generator</span>
+    </h3>
+</doc-anchor-target>
+<p>A generator is a record that can hold an array of static values to always test against, and a function that can return additional values to be tested dynamically. It is defined as follows:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">// module Random
+type Generator&lt;'T&gt; =
+    {
+        /// An array of values that must be tested.
+        Base: 'T []
+        /// A function generating a new random value.
+        Next: unit -&gt; 'T
+    }</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="randomvaluessample">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#randomvaluessample">#</doc-anchor-trigger>
+        <span>RandomValues.Sample</span>
+    </h3>
+</doc-anchor-target>
+<p>The <code v-pre>RandomValues.Sample</code> type is a thin wrapper around an array of values, exposing multiple constructors
+to create from a given array or explicit or inferred generators.</p>
+<p>Examples:</p>
+<div class="codeblock-wrapper"><doc-codeblock>
+<pre class="language-fsharp"><code v-pre class="language-fsharp">  let sampleFromArray = RandomValues.Sample([| 1; 2; 3 |]);
+  let sampleFromGenerator = RandomValues.Sample(RandomValues.Int); // creates 100 values
+  let sampleFromGenerator10 = RandomValues.Sample(RandomValues.Int, 10); // creates 10 values
+  let sampleInferred = RandomValues.Sample&lt;int&gt;();
+  let sampleInferred10 = RandomValues.Sample&lt;int&gt;(10); // creates 10 values</code></pre>
+</doc-codeblock></div>
+<hr />
+<doc-anchor-target id="random-generator-constructors">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#random-generator-constructors">#</doc-anchor-trigger>
+        <span>Random generator constructors</span>
+    </h3>
+</doc-anchor-target>
+<p>The following produce simple <code v-pre>RandomValues.Generator</code> values:</p>
+<ul>
+<li><code v-pre>RandomValues.StandardUniform</code>: Standard uniform distribution sampler.</li>
+<li><code v-pre>RandomValues.Exponential</code>: Exponential distribution sampler.</li>
+<li><code v-pre>RandomValues.Boolean</code>: Generates random booleans.</li>
+<li><code v-pre>RandomValues.Float</code>: Generates random doubles.</li>
+<li><code v-pre>RandomValues.FloatExhaustive</code>: Generates random doubles, including corner cases (NaN, Infinity).</li>
+<li><code v-pre>RandomValues.Int</code>: Generates random int values.</li>
+<li><code v-pre>RandomValues.Natural</code>: Generates random natural numbers (0, 1, ...).</li>
+<li><code v-pre>RandomValues.Within low hi</code>: Generates integers within a range.</li>
+<li><code v-pre>RandomValues.FloatWithin low hi</code>: Generates doubles within a range.</li>
+<li><code v-pre>RandomValues.String</code>: Generates random strings.</li>
+<li><code v-pre>RandomValues.ReadableString</code>: Generates random readable strings.</li>
+<li><code v-pre>RandomValues.StringExhaustive</code>: Generates random strings including nulls.</li>
+<li><code v-pre>RandomValues.Auto&lt;'T&gt;</code>: Auto-generate values based on type, same as what <code v-pre>property</code> uses internally.</li>
+<li><code v-pre>RandomValues.Anything</code>: Generates a mix of ints, floats, bools, strings and tuples, lists, arrays, options of these.</li>
+</ul>
+<hr />
+<doc-anchor-target id="random-generator-combinators">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#random-generator-combinators">#</doc-anchor-trigger>
+        <span>Random generator combinators</span>
+    </h3>
+</doc-anchor-target>
+<ul>
+<li><code v-pre>RandomValues.Map mapping gen</code>: Maps a function over a generator.</li>
+<li><code v-pre>RandomValues.SuchThat predicate gen</code>: Filters the values of a generator by a predicate.</li>
+<li><code v-pre>RandomValues.ArrayOf gen</code>: Generates arrays (up to lengh 100), getting the items from the given generator.</li>
+<li><code v-pre>RandomValues.ResizeArrayOf gen</code>: Generates <code v-pre>ResizeArray</code>s.</li>
+<li><code v-pre>RandomValues.ListOf gen</code>: Generates <code v-pre>List</code>s.</li>
+<li><code v-pre>RandomValues.Tuple2Of (a, b)</code>: Generates a 2-tuple, getting the items from the given generators.</li>
+<li><code v-pre>RandomValues.Tuple3Of (a, b, c)</code>: Same as above for 3-tuples.</li>
+<li><code v-pre>RandomValues.Tuple4Of (a, b, c, d)</code>: Same as above for 4-tuples.</li>
+<li><code v-pre>RandomValues.OneOf arr</code>: Generates values from a given array.</li>
+<li><code v-pre>RandomValues.Mix a b</code>: Mixes values coming from two generators, alternating between them.</li>
+<li><code v-pre>RandomValues.MixMany gens</code>: Mixes values coming from an array of generators.</li>
+<li><code v-pre>RandomValues.MixManyWithoutBases gens</code>: Same as above, but skips the constant base values.</li>
+<li><code v-pre>RandomValues.Const x</code>: Creates a generator that always returns the same value.</li>
+<li><code v-pre>RandomValues.OptionOf x</code>: Creates a generator has <code v-pre>None</code> as a base value, then maps items using <code v-pre>Some</code>.</li>
+</ul>
+
+                                
+                                <!-- Required only on API pages -->
+                                <doc-toolbar-member-filter-no-results />
+                            </div>
+                            <footer class="clear-both">
+                                <div class="flex flex-wrap items-center justify-between mt-14">
+                                    <a class="my-2.5 inline-flex items-center text-sm whitespace-nowrap text-blue-500 dark:text-blue-400 hover:text-blue-700 hover:underline" href="https://github.com/dotnet-websharper/docs/edit/main/testing.md" target="_blank" rel="noopener">
+                                        <svg class="mr-1.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M20 12c-.55 0-1 .45-1 1v7c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h7c.55 0 1-.45 1-1s-.45-1-1-1H4C2.35 3 1 4.35 1 6v14c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-7c0-.55-.45-1-1-1z" /><path d="M22.21 1.79c-1.18-1.18-3.24-1.18-4.41 0l-9.5 9.5c-.13.13-.22.29-.26.46l-1 4c-.08.34.01.7.26.95.18.2.44.3.7.3.08 0 .16-.01.24-.03l4-1c.18-.04.34-.13.46-.26l9.5-9.5c1.22-1.22 1.22-3.2.01-4.42zm-1.42 3l-9.3 9.3-2.11.53.53-2.11 9.3-9.3c.42-.42 1.16-.42 1.59 0 .43.43.43 1.15-.01 1.58z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                        <span>Edit this page in GitHub</span>
+                                    </a>
+                                </div>
+                            
+                                <nav class="flex mt-14">
+                                    <div class="w-1/2">
+                                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-blue-500 dark:text-blue-400 border border-gray-300 hover:border-gray-400 dark:border-dark-650 dark:hover:border-dark-450 rounded-r rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../ui/routing/">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                                            <span>
+                                                <span class="block text-xs font-normal text-gray-400 dark:text-dark-400">Previous</span>
+                                                <span class="block mt-1">Routing</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                            
+                                    <div class="w-1/2">
+                                    </div>
+                                </nav>
+                            </footer>
+                        </main>
+                
+                        <div class="border-t dark:border-dark-650 pt-6 mb-8">
+                            <footer class="flex flex-wrap items-center justify-between">
+                                <div>
+                                    <ul class="flex flex-wrap items-center text-sm">
+                                        <li>
+                                            <a class="block mr-4 py-2 text-sm whitespace-nowrap transition-colors duration-200 ease-linear text-blue-500 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 md:mb-0" href="license.md">Apache 2.0</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="docs-copyright py-2 text-gray-500 dark:text-dark-350 text-sm leading-relaxed"><p>Copyright © 2023 <a href="https://intellifactory.com">IntelliFactory</a> and contributors.</p></div>
+                            </footer>
+                        </div>
+                    </div>
+                
+                    <!-- Rendered if sidebar right is enabled -->
+                    <!-- Sidebar right skeleton-->
+                    <div v-cloak class="fixed top-0 bottom-0 right-0 translate-x-full bg-white border-gray-200 lg:sticky lg:border-l lg:shrink-0 lg:pt-6 lg:transform-none sm:w-1/2 lg:w-64 lg:z-0 md:w-104 sidebar-right skeleton dark:bg-dark-850 dark:border-dark-650">
+                        <div class="pl-5">
+                            <div class="w-32 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-48 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                            <div class="w-40 h-3 mb-4 bg-gray-200 dark:bg-dark-600 rounded-full loading"></div>
+                        </div>
+                    </div>
+                
+                    <!-- User should be able to hide sidebar right -->
+                    <doc-sidebar-right v-cloak></doc-sidebar-right>
+                </div>
+
+            </div>
+        </div>
+    
+        <doc-search-mobile></doc-search-mobile>
+        <doc-back-to-top></doc-back-to-top>
+    </div>
+
+
+    <div id="docs-overlay-target"></div>
+
+    <script>window.__DOCS__ = { "title": "WebSharper.Testing", level: 1, icon: "file", hasPrism: true, hasMermaid: false, hasMath: false }</script>
+</body>
+</html>
