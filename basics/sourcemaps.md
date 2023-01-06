@@ -54,7 +54,7 @@ A folder named `Source` will appear with the original `.fs` files used
 for WebSharper translation.
 You can use this to set breakpoints in original code.
 
-![Chrome source mapping](../images/chrome-source-map.png)
+![Chrome source mapping](../assets/chrome-source-map.png)
 
 ### Mozilla Firefox
 
@@ -80,7 +80,7 @@ In the Debugger tab of F12 tools, the last icon in the toolbar says
 Use this to jump between generated and original source code.
 You can set breakpoints in the original code.
 
-![IE source mapping](../images/explorer-source-map.png)
+![IE source mapping](../assets/explorer-source-map.png)
 
 ## Outputting source maps for WebSharper web projects
 
