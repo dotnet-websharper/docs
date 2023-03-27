@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.726290108739">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="2.4.0.733276156577">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 2.4.0">
@@ -30,11 +30,11 @@
 
     <script>(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=2.4.0.726290108739" rel="stylesheet" />
+    <link href="../../resources/css/retype.css?v=2.4.0.733276156577" rel="stylesheet" />
 
-    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.726290108739" data-turbo-eval="false" defer></script>
+    <script type="text/javascript" src="../../resources/js/config.js?v=2.4.0.733276156577" data-turbo-eval="false" defer></script>
     <script type="text/javascript" src="../../resources/js/retype.js?v=2.4.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.726290108739" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" type="text/javascript" src="../../resources/js/lunr.js?v=2.4.0.733276156577" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -273,13 +273,73 @@ WebSharper 6 Library                              websharper-lib           [F#],
 ...</code></pre>
 </doc-codeblock></div>
 <hr />
+<doc-anchor-target id="how-to-decide-what-template-to-use">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#how-to-decide-what-template-to-use">#</doc-anchor-trigger>
+        <span>How to decide what template to use?</span>
+    </h2>
+</doc-anchor-target>
+<p>Here are some guidelines on choosing the right project for your app:</p>
+<hr />
+<doc-anchor-target id="does-your-application-have-a-server-side">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#does-your-application-have-a-server-side">#</doc-anchor-trigger>
+        <span>Does your application have a server-side?</span>
+    </h3>
+</doc-anchor-target>
+<ol>
+<li><p>Yes -&gt; use the client-server application template (<code v-pre>websharper-web</code>) for microservices or full-stack apps. If you have a single page with possibly multiple sub-pages, use the single-page application template (<code v-pre>websharper-spa</code>).</p>
+</li>
+<li><p>No, I need to build a static web app and host it on GitHub Pages -&gt; use the HTML application (<code v-pre>websharper-html</code>), or the single-page application template (<code v-pre>websharper-spa</code>) without a server-side.</p>
+</li>
+</ol>
+<hr />
+<doc-anchor-target id="whats-the-difference-between-an-html-application-and-an-spa">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#whats-the-difference-between-an-html-application-and-an-spa">#</doc-anchor-trigger>
+        <span>What&#x27;s the difference between an HTML application and an SPA?</span>
+    </h3>
+</doc-anchor-target>
+<p>An HTML application can contain multiple pages and has no server-side (RPCs or websockets, but it can still make requests to external services). An SPA has a single containing page with possibly multiple sub-pages inside it, and it may have an optional server-side.</p>
+<hr />
+<doc-anchor-target id="can-i-have-multiple-containing-pages-in-an-spa">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#can-i-have-multiple-containing-pages-in-an-spa">#</doc-anchor-trigger>
+        <span>Can I have multiple containing pages in an SPA?</span>
+    </h3>
+</doc-anchor-target>
+<p>Yes, but each page needs to be a separate SPA project and you need to manually assemble them into a single app by copying all master pages and their generated JavaScript code and other artifacts.</p>
+<hr />
+<doc-anchor-target id="i-want-to-use-our-legacy-javascript-codebase-and-other-third-party-javascript-libraries-in-my-application">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#i-want-to-use-our-legacy-javascript-codebase-and-other-third-party-javascript-libraries-in-my-application">#</doc-anchor-trigger>
+        <span>I want to use our legacy JavaScript codebase and other, third-party JavaScript libraries in my application.</span>
+    </h3>
+</doc-anchor-target>
+<p>Create a bindings for them using the JavaScript binding template (<code v-pre>websharper-ext</code>). You may also want to look around on NuGet or GitHub to see if a binding already exists.</p>
+<hr />
+<doc-anchor-target id="i-have-net-code-that-fails-to-compile-with-websharper">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#i-have-net-code-that-fails-to-compile-with-websharper">#</doc-anchor-trigger>
+        <span>I have .NET code that fails to compile with WebSharper.</span>
+    </h3>
+</doc-anchor-target>
+<p>Create a .NET proxy project (<code v-pre>websharper-prx</code>) to describe how to map your .NET code to JavaScript.</p>
+<hr />
+<doc-anchor-target id="i-want-to-package-up-some-of-my-ui-andor-client-side-logic-to-be-shared-with-other-websharper-applications">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#i-want-to-package-up-some-of-my-ui-andor-client-side-logic-to-be-shared-with-other-websharper-applications">#</doc-anchor-trigger>
+        <span>I want to package up some of my UI and/or client-side logic to be shared with other WebSharper applications.</span>
+    </h3>
+</doc-anchor-target>
+<p>Create a WebSharper library (<code v-pre>websharper-lib</code>).</p>
+<hr />
 <doc-anchor-target id="quick-overview-of-the-available-templates">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#quick-overview-of-the-available-templates">#</doc-anchor-trigger>
         <span>Quick overview of the available templates</span>
     </h2>
 </doc-anchor-target>
-<hr />
 <doc-anchor-target id="minimal-application">
     <h3>
         <doc-anchor-trigger class="header-anchor-trigger" to="#minimal-application">#</doc-anchor-trigger>
