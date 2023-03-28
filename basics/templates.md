@@ -52,7 +52,7 @@ Here are some guidelines on choosing the right project for your app:
 
 1) Yes -> use the client-server application template (`websharper-web`) for microservices or full-stack apps. If you have a single page with possibly multiple sub-pages, use the single-page application template (`websharper-spa`).
 
-2) No, I need to build a static web app and host it on GitHub Pages -> use the HTML application (`websharper-html`), or the single-page application template (`websharper-spa`) without a server-side.
+2) No, I need to build a static web app and host it with my own web host (GitHub Pages, etc.) -> use the HTML application (`websharper-html`), or the single-page application template (`websharper-spa`) without a server-side.
 
 ---
 
