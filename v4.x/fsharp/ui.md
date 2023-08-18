@@ -1295,6 +1295,7 @@ Once you have created a View to represent your dynamic content, here are the var
             |> Doc.Concat
         )
     div [] [
+        Doc.Input [] varTxt
         text "You entered the following words:"
         ul [] [ vWords ]
     ]
