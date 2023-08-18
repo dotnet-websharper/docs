@@ -117,7 +117,7 @@ let vLength =
     |> View.Map String.length
     |> View.Map (fun l -> sprintf "You entered %i characters." l)
 div [] [
-    Doc.Input [] varName
+    Doc.Input [] varTxt
     textView vLength
 ]
 ```
