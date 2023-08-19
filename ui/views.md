@@ -117,7 +117,7 @@ let vLength =
     |> View.Map String.length
     |> View.Map (fun l -> sprintf "You entered %i characters." l)
 div [] [
-    Doc.Input [] varName
+    Doc.Input [] varTxt
     textView vLength
 ]
 ```
@@ -135,10 +135,11 @@ let vWords =
     |> View.Map (fun s -> s.Split(' '))
     |> Doc.BindView (fun words ->
         words
-        |> Array.map (fun w -> li [] [text w] :> Doc)
+        |> Array.map (fun w -> li [] [text w])
         |> Doc.Concat
     )
 div [] [
+    Doc.InputType.Text [] varTxt
     text "You entered the following words:"
     ul [] [ vWords ]
 ]
