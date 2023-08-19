@@ -1277,7 +1277,7 @@ Once you have created a View to represent your dynamic content, here are the var
         |> View.Map String.length
         |> View.Map (fun l -> sprintf "You entered %i characters." l)
     div [] [
-        Doc.Input [] varName
+        Doc.Input [] varTxt
         textView vLength
     ]
     ```
@@ -1295,6 +1295,7 @@ Once you have created a View to represent your dynamic content, here are the var
             |> Doc.Concat
         )
     div [] [
+        Doc.Input [] varTxt
         text "You entered the following words:"
         ul [] [ vWords ]
     ]
