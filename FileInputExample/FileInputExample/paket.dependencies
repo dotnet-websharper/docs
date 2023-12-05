@@ -1,0 +1,15 @@
+source https://api.nuget.org/v3/index.json
+
+framework: net6.0, netstandard2.0
+strategy: min
+storage: none
+
+nuget FSharp.Core
+nuget WebSharper prerelease
+nuget WebSharper.FSharp prerelease
+nuget WebSharper.MathJS prerelease
+nuget WebSharper.UI prerelease
+nuget WebSharper.AspNetCore prerelease
+nuget WebSharper.Forms prerelease
+group wsbuild
+    git https://github.com/dotnet-websharper/build-script dotnettool
