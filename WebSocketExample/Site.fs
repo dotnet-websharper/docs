@@ -62,6 +62,6 @@ module Site =
             match endpoint with
             | EndPoint.Home -> 
                 HomePage ctx wsEndpoint
-            | EndPoint.About -> AboutPage ctx wsEnd
+            | EndPoint.About -> AboutPage ctx wsEndpoint
         )
 

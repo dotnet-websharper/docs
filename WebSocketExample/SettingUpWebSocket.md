@@ -1,6 +1,6 @@
 ## How do I set up WebSocket in WebSharper?
 First, we'll have to install the `WebSharper.AspNetCore.WebSocket` nuget package, then in a Client-Server example:
-* Set up a shared "package", be it a shared project or just a `Shared.fs` file, such as:
+* Set up a shared model, be it a shared project or just a `Shared.fs` file, such as:
 ```fsharp
 open WebSharper
 
