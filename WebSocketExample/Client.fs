@@ -2,27 +2,26 @@
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.UI
-open WebSharper.UI.Templating
-open WebSharper.UI.Notation
 
 
 
 [<JavaScript>]
 module Templates =
+    open WebSharper.UI.Templating
 
-    type MainTemplate = Templating.Template<"Main.html", ClientLoad.FromDocument, ServerLoad.WhenChanged>
+    type MainTemplate = Template<"Main.html", ClientLoad.FromDocument, ServerLoad.WhenChanged>
 
 [<JavaScript>]
 module Client =
 
+    open WebSharper.UI
+    open WebSharper.UI.Notation
     open WebSharper.AspNetCore.WebSocket
     open WebSharper.AspNetCore.WebSocket.Client
 
-    let webSocketExample (endpoint: WebSocketEndpoint<Shared.ServerToClient, Shared.ClientToServer>) =
+    let getWebSocketInstance (endpoint: WebSocketEndpoint<Shared.ServerToClient, Shared.ClientToServer>) =
         async {
-            let! server = 
-                ConnectStateful endpoint <| fun server -> async {
+            return! ConnectStateful endpoint <| fun server -> async {
                     return 0, fun state msg -> async {
                         match msg with
                         | Message data ->
@@ -37,23 +36,25 @@ module Client =
                             Console.Log "Connection opened"
                             return state
                         | Error -> 
-                            Console.Error "Connection error"
+                            let errMsg = "Connection error"
+                            Console.Error errMsg
+                            failwith errMsg
                             return state
                     }
-                }
+            }
+        }
+    let tryWebSocketInstance endpoint =
+        async {
+            let! server = getWebSocketInstance endpoint
 
-            let arr = Array.init 10 id
-            let pairs = 
-                Array.allPairs arr arr
-                |> Array.map Shared.ExampleRequest
-            for pair in pairs do
-                do! Async.Sleep 1000
-                server.Post pair
-                
+            Shared.ExampleRequest(3,2)
+            |> server.Post // this should result in a Console.Log with a value of "5" 
         }
     let Main wsEndpoint =
-        webSocketExample(wsEndpoint)
-        |> Async.StartImmediate
+        tryWebSocketInstance wsEndpoint
+        |> Promise.OfAsync
+        |> ignore
+
         let rvReversed = Var.Create ""
         Templates.MainTemplate.MainForm()
             .OnSend(fun e ->

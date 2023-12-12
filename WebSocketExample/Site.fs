@@ -27,7 +27,7 @@ module Templating =
             "About" => EndPoint.About
         ]
 
-    let Main ctx action (title: string) (body: Doc list) =
+    let Main ctx action (title: string) wsEndpoint (body: Doc list) =
         Content.Page(
             Templates.MainTemplate()
                 .Title(title)
@@ -44,13 +44,13 @@ module Site =
 
     let HomePage ctx wsEndpoint =
         
-        Templating.Main ctx EndPoint.Home "Home" [
+        Templating.Main ctx EndPoint.Home "Home" wsEndpoint [
             h1 [] [text "Say Hi to the server!"]
             div [] [client (Client.Main wsEndpoint)]
         ]
 
-    let AboutPage ctx =
-        Templating.Main ctx EndPoint.About "About" [
+    let AboutPage ctx wsEndpoint =
+        Templating.Main ctx EndPoint.About "About" wsEndpoint [
             h1 [] [text "About"]
             p [] [text "This is a template WebSharper client-server application."]
         ]
@@ -58,10 +58,10 @@ module Site =
     [<Website>]
     let Main =
         Application.MultiPage (fun (ctx:Context<_>) endpoint ->
+            let wsEndpoint = WebSocketEndpoint.Create(ctx.Request.Uri.ToString(), "ws")
             match endpoint with
             | EndPoint.Home -> 
-                let wsEndpoint = WebSocketEndpoint.Create(ctx.Request.Uri.ToString(), "ws")
                 HomePage ctx wsEndpoint
-            | EndPoint.About -> AboutPage ctx
+            | EndPoint.About -> AboutPage ctx wsEnd
         )
 

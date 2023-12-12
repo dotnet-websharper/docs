@@ -82,4 +82,68 @@ let HomePage (ctx:Context<_>) =
     ]
 ```
 
-# WIP: bughunt
+### Client-side
+To instantiate your WebSocket connection, your code will be similar to the server-side `Start` method:
+```fsharp
+open Shared
+
+
+open WebSharper.AspNetCore.WebSocket
+open WebSharper.AspNetCore.WebSocket.Client
+
+let getWebSocketInstance (endpoint: WebSocketEndpoint<ServerToClient, ClientToServer>) =
+    async {
+        // here, the WebSocketServer has the same generic params as the WebSocketEndpoint
+        return! ConnectStateful endpoint <| fun (server:WebSocketServer<_,_>) -> async {
+            return 0, fun state msg -> async {
+                match msg with
+                | Message data ->
+                    match data with
+                    | ExampleResponse value -> 
+                        Console.Log value
+                    | ErrorResponse errStr -> 
+                        Console.Error errStr
+                    return state + 1
+                | Close -> 
+                    Console.Log "Connection closed"
+                    return state
+                | Open -> 
+                    Console.Log "Connection opened"
+                    return state
+                | Error -> 
+                    let errMsg = "Connection error"
+                    Console.Error errMsg
+                    failwith errMsg
+                    return state
+            }
+        }
+    }
+
+// a function to test it out
+let tryWebSocketInstance endpoint =
+    async {
+        let! server = getWebSocketInstance endpoint
+
+        ExampleRequest(3,2)
+        |> server.Post // this should result in a Console.Log with a value of "5" 
+    }
+```
+
+Now that we have our methods to work with a `WebSocket` connection, we'll just have to plug it into our `Client.Main` method (or wherever you'd use it):
+
+```fsharp
+open WebSharper.UI
+open  WebSharper.UI.Notation
+
+let Main wsEndpoint =
+    tryWebSocketInstance wsEndpoint
+    |> Promise.OfAsync
+    |> ignore
+    
+    // ...the rest of our function goes here
+
+    Templates.MainTemplate.MainForm() // example-only
+        // .HoleOne(holeContent)
+        .Doc()
+```
+# Needs: proofread/bughunt
