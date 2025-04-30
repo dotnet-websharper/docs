@@ -1,0 +1,6 @@
+{
+    "root": true,
+    "title": "WebSharper CLI",
+    "description": "The CLI tool for WebSharper",
+    "icon": "Terminal"
+}
