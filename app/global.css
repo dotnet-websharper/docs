@@ -1,3 +1,13 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+div#nd-page > article {
+    margin-inline: unset;
+}
+
+@media screen and (min-width: 2560) {
+    div#nd-page > article {
+        max-width: 1600px;
+    }
+}
