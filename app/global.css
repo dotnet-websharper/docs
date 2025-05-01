@@ -9,5 +9,6 @@ div#nd-page > article {
 @media screen and (min-width: 2560) {
     div#nd-page > article {
         max-width: 1600px;
+        margin-inline: auto;
     }
 }

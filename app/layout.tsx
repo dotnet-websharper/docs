@@ -3,7 +3,7 @@ import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-const searchPath = process.env.GHREPO !== undefined ? "/" + process.env.GHREPO + "/api/search" : "/api/search";
+const searchPath = "/api/search"; //process.env.GHREPO !== undefined ? "/" + process.env.GHREPO + "/api/search" : "/api/search";
 
 const inter = Inter({
   subsets: ['latin'],
