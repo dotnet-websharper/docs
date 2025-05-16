@@ -22,12 +22,5 @@ export const baseOptions: BaseLayoutProps = {
         My App
       </>
     ),
-  },
-  links: [
-    {
-      text: 'Documentation',
-      url: '/docs',
-      active: 'nested-url',
-    },
-  ],
+  }
 };
