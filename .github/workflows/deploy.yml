@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - fumadocs
+      - main
 
 jobs:
   build:
@@ -17,8 +17,19 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          GHREPO: ${{ github.event.repository.name }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build snippets
+        run: dotnet build snippets/forms_example_1
+
+      - name: Move snippet and it's artifacts to the out directory
+        run: |
+          mkdir out/snippets
+          mkdir out/snippets/forms_example_1
+          cp -r snippets/forms_example_1/wwwroot/* out/snippets/forms_example_1/
 
       - name: Upload static files as artifact
         id: deployment

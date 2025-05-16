@@ -2,13 +2,110 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-div#nd-page > article {
-    margin-inline: unset;
+code[class*="language-"] {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
 }
 
-@media screen and (min-width: 2560) {
-    div#nd-page > article {
-        max-width: 1600px;
-        margin-inline: auto;
+.shiki {
+    counter-reset: step;
+    counter-increment: step 0;
+    overflow-x: auto;
+    position: relative;
+    z-index: 1;
+    
+    code {
+      width: fit-content;
+      display: block;
+      min-width: 100%
     }
+
+    .line {
+      display: inline-block;
+
+      &.highlight {
+        width: calc(100%)
+      }
+
+      &::before {
+        counter-increment: step;
+        @apply mr-6 inline-block w-4 border-transparent text-right text-neutral-600 content-[counter(step)];
+      }
+
+      &::after {
+        content: '';
+        margin-right: calc(var(--spacing) * 6);
+      }
+    }
+  }
+
+.dark .line.highlight {
+    background-color: #393f45;
+}
+
+.light .line.highlight {
+    background-color: #d8d8d8;
+}
+
+pre:has(code) {
+  position: relative;
+}
+
+.copyBlockHolder {
+  position: relative;
+}
+
+.copy {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  height: 28px;
+  width: 28px;
+  padding: 0;
+  display: flex;
+  opacity: 0;
+  transition: opacity .2s .5s;
+  z-index: 9001;
+
+  @media (pointer: coarse) {
+    & {
+      opacity: 1;
+      transition: none
+    }
+  }
+  
+  @media (pointer: fine) {
+    .copyBlockHolder:hover & {
+      opacity: 1;
+      transition: opacity .2s 0s;
+    }
+  }
+
+  & span {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+
+  & .ready {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMGMwYzAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jb3B5LWljb24gbHVjaWRlLWNvcHkiPjxyZWN0IHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgeD0iOCIgeT0iOCIgcng9IjIiIHJ5PSIyIi8+PHBhdGggZD0iTTQgMTZjLTEuMSAwLTItLjktMi0yVjRjMC0xLjEuOS0yIDItMmgxMGMxLjEgMCAyIC45IDIgMiIvPjwvc3ZnPg==);
+
+  }
+
+  & .success {
+    display: none;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGZmNDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGVjay1pY29uIGx1Y2lkZS1jaGVjayI+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01Ii8+PC9zdmc+); 
+  }
+
+  &.copied {
+    & .success {
+      display: block;
+    }
+
+    & .ready {
+      display: none;
+    }
+  }
 }
