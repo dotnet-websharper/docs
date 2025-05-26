@@ -1,0 +1,10 @@
+{
+  "name": "Vectors",
+  "version": "1.0.0",
+  "devDependencies": {
+    "esbuild": "^0.19.9"
+  },
+  "dependencies": {
+    "mathjs": "^12.4.3"
+  }
+}
