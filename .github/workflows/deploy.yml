@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Install packages
         run: npm install
 
@@ -20,16 +20,25 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
-      - name: Build snippets
-        run: dotnet build snippets/forms_example_1
-
-      - name: Move snippet and it's artifacts to the out directory
+      - name: Build all snippet projects
         run: |
-          mkdir out/snippets
-          mkdir out/snippets/forms_example_1
-          cp -r snippets/forms_example_1/wwwroot/* out/snippets/forms_example_1/
+          for proj in snippets/*/*.fsproj; do
+            echo "Building $proj"
+            dotnet build "$proj"
+          done
+
+      - name: Copy all wwwroot folders to output
+        run: |
+          mkdir -p out/snippets
+          for dir in snippets/*; do
+            if [ -d "$dir/wwwroot" ]; then
+              name=$(basename "$dir")
+              mkdir -p "out/snippets/$name"
+              cp -r "$dir/wwwroot/"* "out/snippets/$name/"
+            fi
+          done
 
       - name: Upload static files as artifact
         id: deployment
@@ -39,7 +48,7 @@ jobs:
 
   deploy:
     needs: build
-    
+
     permissions:
       pages: write
       id-token: write

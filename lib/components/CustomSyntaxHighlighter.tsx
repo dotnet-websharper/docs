@@ -29,9 +29,9 @@ export function CustomSyntaxHighlighter({ code, language, highlightLines }: Prop
 export function CustomSyntaxHighlighterWithCopy(p: Props) : JSX.Element {
   const c = 
     <div className="copyBlockHolder" id={p.id}>
-      <button className="copy">
-        <span className="ready"></span>
-        <span className="success"></span>
+      <button className="copy cursor-pointer">
+        <span className="ready text-xs"></span>
+        <span className="success text-xs"></span>
       </button>
       <CustomSyntaxHighlighter id={p.id} code={p.code} language={p.language} highlightLines={p.highlightLines}></CustomSyntaxHighlighter>
       <CopyCodeComponent id={p.id}></CopyCodeComponent>

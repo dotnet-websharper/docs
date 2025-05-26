@@ -11,10 +11,14 @@ export function FSharpSnippetTabs({ snippet, liveSnippetHeight = "600", highligh
 
     return (
         <Tabs items={["F#", "index.html", "Result"]}>
-            <Tab value="F#" className="not-prose">
-                <CustomSyntaxHighlighterWithCopy id={`snippet_${snippet}_fs`} code={fsCode} language="fsharp" highlightLines={highlightLines}></CustomSyntaxHighlighterWithCopy>    
+            <Tab value="F#" className="not-prose text-sm">
+                <CustomSyntaxHighlighterWithCopy 
+                    id={`snippet_${snippet}_fs`} 
+                    code={fsCode} language="fsharp" 
+                    highlightLines={highlightLines}
+                /> 
             </Tab>
-            <Tab value="index.html" className="not-prose">
+            <Tab value="index.html" className="not-prose text-sm">
                 <CustomSyntaxHighlighterWithCopy id={`snippet_${snippet}_fs`} code={htmlCode} language="html" highlightLines=""></CustomSyntaxHighlighterWithCopy>
             </Tab>
             <Tab value="Result">
