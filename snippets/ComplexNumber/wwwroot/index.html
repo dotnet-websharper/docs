@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ComplexNumber</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/ComplexNumber.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+
+        .panel {
+            margin: 20px;
+            padding: 20px;
+            box-shadow: 2px 2px 5px 2px #eee;
+        }
+
+        .result {
+            width: auto;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/ComplexNumber.head.js"></script>
+</head>
+<body>
+    <div id="main" class="panel" ws-children-template="Main">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="input1" ws-var="Input1" value="1" />
+            <label class="mdl-textfield__label" for="input1">First number</label>
+        </div><br />
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="input2" ws-var="Input2" value="1" />
+            <label class="mdl-textfield__label" for="input2">Second number</label>
+        </div>
+        <table class="mdl-data-table mdl-table-js-data-table">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Operation</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Addition</td>
+                    <td><p ws-replace="ResultAdd"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Subtraction</td>
+                    <td><p ws-replace="ResultSubtract"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Multiplication</td>
+                    <td><p ws-replace="ResultMultiply"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Divison</td>
+                    <td><p ws-replace="ResultDivide"></p></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="module" src="Scripts/ComplexNumber.min.js"></script>
+</body>
+</html>
