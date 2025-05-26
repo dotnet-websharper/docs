@@ -14,7 +14,7 @@ export function FSharpSnippetTabs({ snippet, liveSnippetHeight = "600", highligh
             defIndex = 1;
             break;
         case "html":
-            defIndex = 1;
+            defIndex = 2;
             break;
         case "preview":
             defIndex = 3;
