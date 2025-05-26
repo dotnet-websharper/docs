@@ -26,8 +26,11 @@ module Client =
         let vector1 = [| 8.; 6.; 4.; 6. |]
         let vector2 = [| 6.; 14.; 8.; 2. |]
 
-        let prettyVector1 = "$" + ((Math.Parse("[" + string vector1 + "]") |> As<Node>).ToTex()) + "$"
-        let prettyVector2 = "$" + ((Math.Parse("[" + string vector2 + "]") |> As<Node>).ToTex()) + "$"
+        let toPrettyVector (vector: float array) = 
+            "$" + ((Math.Parse("[" + string vector + "]") |> As<Node>).ToTex()) + "$"
+
+        let prettyVector1 = toPrettyVector vector1
+        let prettyVector2 = toPrettyVector vector2
 
         let result op = "[" + string (op vector1 vector2) + "]"
 
@@ -35,9 +38,12 @@ module Client =
         let resultSubtract = result (fun l r -> Math.Subtract(MathNumber(l), MathNumber(r)))
         let resultMultiply = result (fun l r -> Math.Multiply(MathNumber(l), MathNumber(r)))
 
-        let prettyResultAdd = "$" + ((Math.Parse(string resultAdd) |> As<Node>).ToTex()) + "$"
-        let prettyResultSubtract = "$" + ((Math.Parse(string resultSubtract) |> As<Node>).ToTex()) + "$"
-        let prettyResultMultiply = "$" + ((Math.Parse(string resultMultiply) |> As<Node>).ToTex()) + "$"
+        let toPrettyResult (result: string) =
+            "$" + ((Math.Parse(string result) |> As<Node>).ToTex()) + "$"
+
+        let prettyResultAdd = toPrettyResult resultAdd
+        let prettyResultSubtract = toPrettyResult resultSubtract
+        let prettyResultMultiply = toPrettyResult resultMultiply
 
         IndexTemplate.Main()
             .Vector1(prettyVector1)

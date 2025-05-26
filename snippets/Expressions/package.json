@@ -1,0 +1,11 @@
+{
+  "name": "Expressions",
+  "version": "1.0.0",
+  "devDependencies": {
+    "esbuild": "^0.19.9"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "mathjs": "^12.4.3"
+  }
+}
