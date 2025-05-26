@@ -5,12 +5,23 @@ import { extractBetweenMarkers } from "./shared";
 
 const basePath = process.env.GHREPO !== undefined ? "/" + process.env.GHREPO : "";
 
-export function FSharpSnippetTabs({ snippet, liveSnippetHeight = "600", highlightLines = "" }: FSharpSnippetTabsProps) {
+export function FSharpSnippetTabs({ snippet, liveSnippetHeight = "600", highlightLines = "", defTab = "" }: FSharpSnippetTabsProps) {
     const fsCode = extractBetweenMarkers(fs.readFileSync(`snippets/${snippet}/Client.fs`, 'utf-8'));
     const htmlCode = extractBetweenMarkers(fs.readFileSync(`snippets/${snippet}/wwwroot/index.html`, 'utf-8'));
-
+    let defIndex = 1
+    switch (defTab) {
+        case "fsharp":
+            defIndex = 1;
+            break;
+        case "html":
+            defIndex = 1;
+            break;
+        case "preview":
+            defIndex = 3;
+            break;
+    }
     return (
-        <Tabs items={["F#", "index.html", "Result"]}>
+        <Tabs items={["F#", "index.html", "Result"]} defaultIndex={defIndex}>
             <Tab value="F#" className="not-prose text-sm">
                 <CustomSyntaxHighlighterWithCopy 
                     id={`snippet_${snippet}_fs`} 
@@ -60,4 +71,5 @@ interface FSharpSnippetTabsProps {
     snippet: string; // e.g. "forms_example_1"
     liveSnippetHeight?: string;
     highlightLines?: string;
+    defTab?: string;
 }
