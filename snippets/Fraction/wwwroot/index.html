@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fraction</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/Fraction.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+        .panel {
+            margin: 20px;
+            padding: 20px;
+            box-shadow: 2px 2px 5px 2px #eee;
+        }
+
+        .result {
+            width: auto;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/Fraction.head.js"></script>
+</head>
+<body>
+    <div id="main" class="panel" ws-children-template="Main">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="input1" ws-var="Input1" value="0.1" />
+            <label class="mdl-textfield__label" for="input1">First number</label>
+        </div><br />
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="input2" ws-var="Input2" value="0.2" />
+            <label class="mdl-textfield__label" for="input2">Second number</label>
+        </div>
+        <table class="mdl-data-table mdl-table-js-data-table">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Operation</th>
+                    <th>Float result</th>
+                    <th>Fraction result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Addition</td>
+                    <td><p ws-replace="ResultFloatAdd"></p></td>
+                    <td><p ws-replace="ResultFractionAdd"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Subtraction</td>
+                    <td><p ws-replace="ResultFloatSubtract"></p></td>
+                    <td><p ws-replace="ResultFractionSubtract"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Multiplication</td>
+                    <td><p ws-replace="ResultFloatMultiply"></p></td>
+                    <td><p ws-replace="ResultFractionMultiply"></p></td>
+                </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Divison</td>
+                    <td><p ws-replace="ResultFloatDivide"></p></td>
+                    <td><p ws-replace="ResultFractionDivide"></p></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="module" src="Scripts/Fraction.min.js"></script>
+</body>
+</html>
