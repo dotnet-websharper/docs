@@ -22,10 +22,14 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Build all snippet projects
+      - name: Install Femto
+        run: dotnet tool install -g femto
+
+      - name: Build and Resolve Femto for all snippet projects
         run: |
           for proj in snippets/*/*.fsproj; do
-            echo "Building $proj"
+            echo "Building and Resolving $proj"
+            femto --resolve "$proj"
             dotnet build "$proj"
           done
 
