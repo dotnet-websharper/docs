@@ -3,6 +3,8 @@ title: Working with math
 description: Math in WebSharper
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 Higher level math is supported in WebSharper via the [MathJS](http://mathjs.org/) and [MathJax](https://www.mathjax.org/) JavaScript libraries. The usage of these libraries are the same as in `JavaScript` with some small changes. `JavaScript` would let you use any type in any function, but in WebSharper to use more than one type in a function we have to use the `MathNumber` wrapper.
 
 A little example:
@@ -56,6 +58,12 @@ Operations with these numbers are possible with the .Net way:
 ```fsharp
 let addBignum = myBignum + myBignum //Math.Add(MathNumber(myBigint), MathNumber(myBigint))
 ```
+
+<FSharpSnippetTabs
+  snippet="Bignumbers"
+  liveSnippetHeight="300"
+  highlightLines="8,27"
+/>
 
 ---
 
