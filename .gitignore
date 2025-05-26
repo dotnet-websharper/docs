@@ -32,3 +32,4 @@ snippets/*/bin/*
 snippets/*/obj/*
 snippets/*/wwwroot/Content
 snippets/*/websharper.log
+.fake

@@ -8,16 +8,16 @@ const basePath = process.env.GHREPO !== undefined ? "/" + process.env.GHREPO : "
 export function FSharpSnippetTabs({ snippet, liveSnippetHeight = "600", highlightLines = "", defTab = "" }: FSharpSnippetTabsProps) {
     const fsCode = extractBetweenMarkers(fs.readFileSync(`snippets/${snippet}/Client.fs`, 'utf-8'));
     const htmlCode = extractBetweenMarkers(fs.readFileSync(`snippets/${snippet}/wwwroot/index.html`, 'utf-8'));
-    let defIndex = 1
+    let defIndex = 0
     switch (defTab) {
         case "fsharp":
-            defIndex = 1;
+            defIndex = 0;
             break;
         case "html":
-            defIndex = 2;
+            defIndex = 1;
             break;
         case "preview":
-            defIndex = 3;
+            defIndex = 2;
             break;
     }
     return (

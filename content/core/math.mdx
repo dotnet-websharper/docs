@@ -1,9 +1,11 @@
 ---
 title: Working with math
-description: Math in WebSharper
+description: Documentation for WebSharper Math
 ---
 
 import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
+## Math in WebSharper
 
 Higher level math is supported in WebSharper via the [MathJS](http://mathjs.org/) and [MathJax](https://www.mathjax.org/) JavaScript libraries. The usage of these libraries are the same as in `JavaScript` with some small changes. `JavaScript` would let you use any type in any function, but in WebSharper to use more than one type in a function we have to use the `MathNumber` wrapper.
 
@@ -36,7 +38,7 @@ Math.Add(Math.Unit("1 cm"), Math.Unit("2 cm"), Math.Unit("3 cm"))
 
 ---
 
-## Bignumbers
+### Bignumbers
 
 F# already supports `BigInteger` (`System.Numerics.BigInteger` or `bigint`), but `JavaScript` does not by default. With WebSharper the usage of these types and their operators are just as easy as working with integers.
 
@@ -63,11 +65,12 @@ let addBignum = myBignum + myBignum //Math.Add(MathNumber(myBigint), MathNumber(
   snippet="Bignumbers"
   liveSnippetHeight="500"
   highlightLines="8,27"
+  defTab="preview"
 />
 
 ---
 
-## Complex number
+### Complex number
 
 Just like `BigInteger`, `Complex` is a member of `System.Numerics` too, but `JavaScript` does not support them. To use the `Complex` type in our program we could construct it as we're used to it from .Net, but now we're able to do it with `Math.Complex()` too which is able to construct a `Complex` number by taking a string with the complex value.
 
@@ -92,11 +95,12 @@ let addComplex = myComplex + myComplex //Math.Add(MathNumber(myComplex), MathNum
   snippet="ComplexNumber"
   liveSnippetHeight="500"
   highlightLines="11,26"
+  defTab="preview"
 />
 
 ---
 
-## Fraction
+### Fraction
 
 The original `float` type in `JavaScript` has limitations with its precision, but it's solved with the `Math.Fraction` type which has a much higher precision with its operations. To use this new `Math.Fraction`, we have to call the `Math.Fraction()` constructor.
 
@@ -121,11 +125,12 @@ After
   snippet="Fraction"
   liveSnippetHeight="500"
   highlightLines="11,36..39"
+  defTab="preview"
 />
 
 ---
 
-## Vectors
+### Vectors
 
 For vector operations in WebSharper we have to use the `MathJS.Math` functions and in those functions we have to use the `MathNumber` wrapper for the vectors. There are few exceptions when we don't have to wrap these vectors. If the function only accepts vectors or matrices, then the wrapper isn't needed (but can be used). (Note that if you wrap these in `MathNumber`, you might get a `MathNumber` return value.)
 
@@ -141,11 +146,12 @@ let addVector = Math.Add(MathNumber(myVector), MathNumber(myVector))
   snippet="Vectors"
   liveSnippetHeight="500"
   highlightLines="11,12,18..24,29,30,38..40"
+  defTab="preview"
 />
 
 ---
 
-## Matrices
+### Matrices
 
 The same as for vectors, WebSharper grants a huge variety of Matrix operations and functions, but to use those, we need to wrap the matrices in MathNumber. As we have seen at the vectors, there are some functions where matrices can be used without the `MathNumber` wrapper. (Note that if you wrap these in `MathNumber`, you might get a `MathNumber` return value.)
 
@@ -161,11 +167,12 @@ let addMatrix = Math.Add(MathNumber(myMatrix), MathNumber(myMatrix))
   snippet="Matrices"
   liveSnippetHeight="500"
   highlightLines="11,12,18..24,29,30,42,43"
+  defTab="preview"
 />
 
 ---
 
-## Units
+### Units
 
 WebSharper allows you to calculate with units too. Most of the functions from Math accept `Math.Unit`s to work with. Units are a special kind of types. They have a value and a measurement. Values with different kind of measurements can be used in operations and it will calulate with the given measurements. Units can be freed from their measurements (for example) by dividing.
 
@@ -183,11 +190,12 @@ let myUnitFromString = Math.Unit("5 cm")
   snippet="Units"
   liveSnippetHeight="500"
   highlightLines="11,28,41"
+  defTab="preview"
 />
 
 ---
 
-## An example for expressions
+### An example for expressions
 
 There are many functions in `Math.` that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md) we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
@@ -197,6 +205,63 @@ Most of the functions don't result a `Node`, but they can be converted to `Node`
   snippet="Expressions"
   liveSnippetHeight="500"
   highlightLines="13,14,20..26,37,38,46,47"
+  defTab="preview"
 />
 
 ---
+
+## Rendering math with WebSharper
+
+Rendering math expressions in WebSharper works with the [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md).
+
+MathJax, so WebSharper too allows you to use a variety of common math formatting systems but not only that, it supports more than one output formatting systems.
+
+### Supported input formats
+
+| Format    | Extension            | Jax include         |
+| --------- | -------------------- | ------------------- |
+| TeX       | `"tex2jax.js"`       | `"input/TeX"`       |
+| MathML    | `"mml2jax.js"`       | `"input/MathML"`    |
+| AsciiMath | `"asciimath2jax.js"` | `"input/AsciiMath"` |
+
+### Supported output formats
+
+| Format      | Jax include            |
+| ----------- | ---------------------- |
+| CommonHtml  | `"output/CommonHTML"`  |
+| HTML-CSS    | `"output/HTML-CSS"`    |
+| NativeMML   | `"output/NativeMML"`   |
+| SVG         | `"output/SVG"`         |
+| PreviewHTML | `"output/PreviewHTML"` |
+| PlainSource | `"output/PlainSource"` |
+
+### Rendering expresions
+
+To render static expressions (it's part of the static html file or generated with WebSharper to the html file at the beginning) we don't have to do anything else but configuring MathJax ([see an example here](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md)).
+
+In these examples we render dynamicaly changing formulas. In order to do that we have to use and call the `MathJax.Hub.Queue` on every update.
+
+#### TeX
+
+To render TeX expressions we have to include `"input/TeX"` in the Jax config, and `"tex2jax.js"` in the extensions. ([TeX documentation](https://en.wikibooks.org/wiki/TeX/def))
+
+<FSharpSnippetTabs
+  snippet="TeX"
+  liveSnippetHeight="500"
+  highlightLines="13,19..25,34,35"
+  defTab="preview"
+/>
+
+#### MathML
+
+To render MathML expressions we have to include `"input/MathML"` in the Jax config, and `"mml2jax.js"` in the extensions. ([MathML documentation](https://www.w3.org/TR/MathML/))
+
+#### Ascii Math
+
+To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Jax config, and `"asciimath2jax.js"` in the extensions. ([AsciiMath documentation](http://asciimath.org/))
+
+### An example for expressions
+
+There are many functions in [MathJS](https://github.com/intellifactory/websharper.mathjs/blob/master/doc/doc.md) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md) we can render the result if the formula is in `TeX` format. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
+
+(Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](https://www.mathjax.org/)))

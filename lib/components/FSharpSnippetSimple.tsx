@@ -7,13 +7,13 @@ const basePath = process.env.GHREPO !== undefined ? "/" + process.env.GHREPO : "
 
 export function FSharpSnippetSimple({ snippet, liveSnippetHeight = "600", highlightLines = "", defTab = "" }: Props) {
   const fsCode = extractBetweenMarkers(fs.readFileSync(`snippets/${snippet}/Client.fs`, 'utf-8'));  
-  let defIndex = 1
+  let defIndex = 0
   switch (defTab) {
       case "fsharp":
-          defIndex = 1;
+          defIndex = 0;
           break;
       case "preview":
-          defIndex = 2;
+          defIndex = 1;
           break;
   }
   return (

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>TeX</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/TeX.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+        .panel {
+            margin: 20px;
+            padding: 20px;
+            box-shadow: 2px 2px 5px 2px #eee;
+        }
+
+        .result {
+            width: auto;
+        }
+
+        .mdl-textfield {
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/TeX.head.js"></script>
+</head>
+<body>
+    <div id="main" class="panel" ws-children-template="Main">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="expression" ws-var="Expression" value="\frac{2\cdot x\cdot\left({ x}^{9}+{ x}^{2}\right)-{ x}^{2}\cdot\left(9\cdot{ x}^{8}+2\cdot x\right)}{{\left({ x}^{9}+{ x}^{2}\right)}^{2}}+2\cdot{ x}^{3}" />
+            <label class="mdl-textfield__label" for="expression">TeX Expression</label>
+        </div>
+    </div>
+    <div id="tex" class="panel result"></div>
+    <script type="module" src="Scripts/TeX.min.js"></script>
+</body>
+</html>
