@@ -195,21 +195,6 @@ let myUnitFromString = Math.Unit("5 cm")
 
 ---
 
-### An example for expressions
-
-There are many functions in `Math.` that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md) we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
-
-Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](https://mathjax.org/))
-
-<FSharpSnippetTabs
-  snippet="Expressions"
-  liveSnippetHeight="500"
-  highlightLines="13,14,20..26,37,38,46,47"
-  defTab="preview"
-/>
-
----
-
 ## Rendering math with WebSharper
 
 Rendering math expressions in WebSharper works with the [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md).
@@ -267,8 +252,22 @@ To render MathML expressions we have to include `"input/MathML"` in the Jax conf
 
 To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Jax config, and `"asciimath2jax.js"` in the extensions. ([AsciiMath documentation](http://asciimath.org/))
 
+<FSharpSnippetTabs
+  snippet="AsciiMath"
+  liveSnippetHeight="500"
+  highlightLines="13,19..25,37,38"
+  defTab="preview"
+/>
+
 ### An example for expressions
 
 There are many functions in [MathJS](https://github.com/intellifactory/websharper.mathjs/blob/master/doc/doc.md) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md) we can render the result if the formula is in `TeX` format. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
 (Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](https://www.mathjax.org/)))
+
+<FSharpSnippetTabs
+  snippet="Expressions"
+  liveSnippetHeight="500"
+  highlightLines="13,14,20..26,37,38,46,47"
+  defTab="preview"
+/>
