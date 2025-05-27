@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MathML", "MathML.fsproj", "{19CAFE19-5762-400A-B6DD-4FB33DCA3634}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19CAFE19-5762-400A-B6DD-4FB33DCA3634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19CAFE19-5762-400A-B6DD-4FB33DCA3634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19CAFE19-5762-400A-B6DD-4FB33DCA3634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19CAFE19-5762-400A-B6DD-4FB33DCA3634}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FB73D89-49CA-4BB6-B981-7F7B05CFA8F9}
+	EndGlobalSection
+EndGlobal
