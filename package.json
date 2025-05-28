@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbo",
+    "prep": "npx esbuild source.config.ts --platform=node --outfile=.source/source.config.mjs --format=esm",
+    "dev": "npm run prep && dotnet build snippets/snippets.sln -c Release && node customServer.mjs",
     "start": "next start",
     "postinstall": "fumadocs-mdx"
   },
@@ -24,6 +25,7 @@
     "@types/react-dom": "^19.1.2",
     "eslint": "^8",
     "eslint-config-next": "15.3.1",
+    "mime": "^4.0.7",
     "postcss": "^8.5.3",
     "postcss-nesting": "^13.0.1",
     "tailwindcss": "^4.1.4",
