@@ -34,3 +34,4 @@ snippets/*/wwwroot/Content
 snippets/*/websharper.log
 snippets/*/build
 .fake
+/.vs
