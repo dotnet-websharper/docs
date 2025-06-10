@@ -61,7 +61,7 @@ public IActionResult Index()
 
 Remember to add required service with `builder.Services.AddWebSharperContent()`. Then, add a placeholder for WebSharper-generated startup script in your layout page:
 
-```cshtml
+```html
 @inject WebSharper.AspNetCore.IWebSharperContentService WebSharperContentService
 ...
 <head>
