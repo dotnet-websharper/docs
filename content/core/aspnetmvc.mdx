@@ -2,14 +2,14 @@
 title: Setting up WebSharper in ASP.NET Core
 ---
 
-To integrate WebSharper into your web application, use the `WebSharper.AspNetCore` nuget package.
+To integrate WebSharper into your web application, use the `WebSharper.AspNetCore` nuget package. This documentation is for WebSharper version 9.1.3 and above. 
 
 # Configuring startup
 
-First, we need to set up some services.
+Configuring the startup for an ASP.NET Core application has two distinct stages: first setting up services and then the application pipeline. WebSharper relies on some services to run.
 
-- Call `builder.Services.AddWebSharper()` to set up required services (or `services.AddWebSharper()` in the `ConfigureServices` method of your `Startup` class). Any of the following methods also calls this implicitly, so you can use them instead.
-- Call `builder.Services.AddSitelet(mySitelet)` to register a WebSharper sitelet.
+- Call `builder.Services.AddWebSharper()` to set up required singleton service (or `services.AddWebSharper()` in the `ConfigureServices` method of your `Startup` class). Any of the following methods also calls this implicitly, so you can use them instead if those are more specific to your needs.
+- Call `builder.Services.AddSitelet(mySitelet)` to register a WebSharper sitelet. This is now not the recommended method, set your sitelet in the pipeline configuration.
 - Call `builder.Services.AddWebSharperRemoting<THandler>()` to register a WebSharper remoting handler for instance-based remoting. This is a typed alternative to `WebSharper.Core.Remoting.AddHandler`. This method has 3 overloads, you can pass it a single type argument which will be instantiated, two type arguments where the first is the type of the handler and the second is the type of the implementation class, or one type argument and pass it an instance of that type.
 - Call `builder.Services.AddWebSharperContent()` to register a scoped service to allow embedding WebSharper content into Razor pages.
 
@@ -17,20 +17,20 @@ Next are the middleware to put in the application pipeline.
 
 WebSharper has two main middleware, one is for serving pages (sitelets), and the other for API endpoints generated for automatic remoting.
 
-- Add `app.UseWebSharper()` for a basic setup of both remoting, and sitelets if defined in services. It has a builder parameter that can be used for additional configuration:
-  - `Sitetet` passes a sitelet instance to server
-  - `DiscoverSitelet` looks for a class property with the `[Website]` attribute to obtain the sitelet instance
+- Add `app.UseWebSharper()` for a basic setup of both remoting, and sitelets if configured. It has a builder parameter that can be used for additional configuration:
+  - `Sitetet` passes a sitelet instance to server.
+  - `DiscoverSitelet` looks for a class property with the `[Website]` attribute to obtain the sitelet instance.
   - `UseSitelets(false)` turns off serving a sitelet entirely. `UseSitelets(true)` has no effect, it's the default.
-  - `UseRemoting(false)` turns off using remoting entirely. `UseRemoting(true, headers)` can also be used to define additional headers to return.
-  - `Use` registers an additional action to be executed after the `WebSharperOptions` object is constructed
+  - `UseRemoting(false)` turns off using remoting entirely. `UseRemoting(true, headers)` can be used to define additional headers to return.
+  - `Use` registers an additional action to be executed after the `WebSharperOptions` object is constructed.
   - `Logger` adds a logger for WebSharper startup, default to the discoverable `ILogger<IWebSharperService>` service. Alternatively you can also pass it an `ILoggerFactory`.
 - The following options are also available in the builder, but usually not necessary to override defaults:
-  - `SiteletAssembly` specifies which assembly contains the runtime metadata, defaults to the calling assembly having the startup code
-  - `Metadata` allows passing WebSharper metadata, defaults to the deserialized runtime metadata
-  - `Config` allows passing runtime configuration, defaults to the `"websharper"` section of `"appsettings.json"`
-  - `ContentRootPath` specifies the application root for the WebSharper context, defaults to `hostingEnvironment.ContentRootPath`
-  - `WebRootPath` specifies the web root for the WebSharper context, defaults to `hostingEnvironment.WebRootPath`
-  - `AuthenticationScheme` Defines the name of the authentication scheme to use `WebSharper.Web.Context.UserSession`, defaults to `"WebSharper"`
+  - `SiteletAssembly` specifies which assembly contains the runtime metadata, defaults to the calling assembly having the startup code.
+  - `Metadata` allows passing WebSharper metadata, defaults to the deserialized runtime metadata.
+  - `Config` allows passing runtime configuration, defaults to the `"websharper"` section of `"appsettings.json"`.
+  - `ContentRootPath` specifies the application root for the WebSharper context, defaults to `hostingEnvironment.ContentRootPath`.
+  - `WebRootPath` specifies the web root for the WebSharper context, defaults to `hostingEnvironment.WebRootPath`.
+  - `AuthenticationScheme` Defines the name of the authentication scheme to use `WebSharper.Web.Context.UserSession`, defaults to `"WebSharper"`.
 - Add `app.UseWebSharperRemoting` as a shortcut to use remoting only. It also allows to define additional headers to return as a shortcut to using the builder.
 - Add `app.UseWebSharperSitelets` as a shortcut to use sitelets only.
 - Add `app.UseWebSharperScriptRedirect` to set up script redirection to a localhost server. If the `startVite` parameter is set to `true`, it starts up `vite` in a separate console window for local debugging. The `redirectUrlRoot` argument defines the local url to use, defaults to the `websharper:DebugScriptRedirectUrl` setting from config.
@@ -78,9 +78,9 @@ Then in your Razor PageModel file (code backend), use the `IWebSharperContentSer
               WebSharper.Sitelets.Content.Bundle("index", new MyWebSharperControl()));
 ```
 
-Use this property within your page, like `@Model.MyWebSharperControl`. Do not create WebSharper.Web.Controls directly in your Razor expressions as the WebSharper compiler cannot discover them there for preprocessing.
+Use this property within your page, like `@Model.MyWebSharperControl`. Do not create `WebSharper.Web.Control`s directly in your Razor expressions as the WebSharper compiler cannot discover them there for preprocessing.
 
-For a small example, check out https://github.com/dotnet-websharper/aspnetmvc
+For a small working example, check out https://github.com/dotnet-websharper/aspnetmvc
 
 ## Middleware for Giraffe/Saturn
 
