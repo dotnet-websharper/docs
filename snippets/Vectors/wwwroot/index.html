@@ -13,6 +13,7 @@
         [ws-template], [ws-children-template] {
             display: none;
         }
+
         .panel {
             margin: 20px;
             padding: 20px;
@@ -31,40 +32,52 @@
             display: flex;
         }
     </style>
+    <script>
+        MathJax = {
+            loader: {
+                load: ['input/tex', 'output/chtml']
+            },
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
     <script type="text/javascript" src="Scripts/Vectors.head.js"></script>
 </head>
 <body>
     <div id="main" class="panel" ws-children-template="Main">
-        <div class="holder">
-            <div>
-                First vector: <p ws-replace="Vector1"></p>
+        <div ws-onafterrender="PageInit">
+            <div class="holder">
+                <div>
+                    First vector: <p ws-replace="Vector1"></p>
+                </div>
+                <div>
+                    Second vector: <p ws-replace="Vector2"></p>
+                </div>
             </div>
-            <div>
-                Second vector: <p ws-replace="Vector2"></p>
-            </div>
+            <table class="mdl-data-table mdl-table-js-data-table">
+                <thead>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Operation</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Addition</td>
+                        <td><p ws-replace="ResultAdd"></p></td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Subtraction</td>
+                        <td><p ws-replace="ResultSubtract"></p></td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Multiplication</td>
+                        <td><p ws-replace="ResultMultiply"></p></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <table class="mdl-data-table mdl-table-js-data-table">
-            <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Operation</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Addition</td>
-                    <td><p ws-replace="ResultAdd"></p></td>
-                </tr>
-                <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Subtraction</td>
-                    <td><p ws-replace="ResultSubtract"></p></td>
-                </tr>
-                <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Multiplication</td>
-                    <td><p ws-replace="ResultMultiply"></p></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <script type="module" src="Scripts/Vectors.min.js"></script>
 </body>

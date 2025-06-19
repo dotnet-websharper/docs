@@ -21,13 +21,14 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Units", "Units\Units.fsproj
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Vectors", "Vectors\Vectors.fsproj", "{2BB1A124-C4F8-4760-B918-C30E7801228F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AsciiMath", "AsciiMath\AsciiMath.fsproj", "{45312AB9-8602-1507-0905-A9025641B4F2}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MathML", "MathML\MathML.fsproj", "{F045FD34-C2C0-BD8E-008C-C95FA65FA421}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B6D98CD8-2475-49C8-A671-CF8FD3E0F898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -66,5 +67,16 @@ Global
 		{2BB1A124-C4F8-4760-B918-C30E7801228F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BB1A124-C4F8-4760-B918-C30E7801228F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BB1A124-C4F8-4760-B918-C30E7801228F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45312AB9-8602-1507-0905-A9025641B4F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45312AB9-8602-1507-0905-A9025641B4F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45312AB9-8602-1507-0905-A9025641B4F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45312AB9-8602-1507-0905-A9025641B4F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F045FD34-C2C0-BD8E-008C-C95FA65FA421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F045FD34-C2C0-BD8E-008C-C95FA65FA421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F045FD34-C2C0-BD8E-008C-C95FA65FA421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F045FD34-C2C0-BD8E-008C-C95FA65FA421}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,6 @@
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.JQuery
 open WebSharper.UI
 open WebSharper.UI.Html
 open WebSharper.UI.Client
@@ -16,16 +15,9 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        Hub.Config(
-            MathJax.Config(
-                Extensions = [| "mml2jax.js" |],
-                Jax = [| "input/MathML"; "output/HTML-CSS"; |],        
-                Mml2jax = Mml2jax(Preview = [| "mathml" |])
-            )
-        )
-
         let text = 
-            "\t" + @"<math>
+            @"
+            <math>
                 <mstyle>
                     <mi>f</mi>
                     <mrow>
@@ -38,8 +30,7 @@ module Client =
                       <mn>1</mn>
                       <mrow>
                         <mn>2</mn>
-                        <mi>π
-                        </mi>
+                        <mi>π</mi>
                         <mi>i</mi>
                       </mrow>
                     </mfrac>
@@ -64,24 +55,17 @@ module Client =
                     </mfrac>
                     <mi>d</mi>
                     <mi>z</mi>
-                  </mstyle>
-                </math>"
+                </mstyle>
+            </math>"
 
         let rvExpression = Var.Create text
 
-        let viewExpression = rvExpression.View
-
-        let tex = 
-            div [
-                on.viewUpdate viewExpression (fun e v -> 
-                    JQuery.Of("#tex div").Empty().Append(v).Ignore
-                    Hub.Queue([| "Typeset", MathJax.Hub :> obj, [| e :> obj |] |]) |> ignore
-                )
-            ] [
-                textView <| viewExpression
-            ]
-
-        Doc.RunById "tex" tex
+        rvExpression.View
+        |> View.Sink (fun newHtml ->
+            let el = JS.Document.GetElementById("tex")
+            el.InnerHTML <- newHtml
+            MathJax.Typeset()
+        )
 
         IndexTemplate.Main()
             .Expression(rvExpression)

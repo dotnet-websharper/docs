@@ -13,6 +13,7 @@
         [ws-template], [ws-children-template] {
             display: none;
         }
+
         .panel {
             margin: 20px;
             padding: 20px;
@@ -24,6 +25,16 @@
             width: auto;
         }
     </style>
+    <script>
+        MathJax = {
+            loader: {
+                load: ['input/tex', 'output/chtml']
+            },
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
     <script type="text/javascript" src="Scripts/Expressions.head.js"></script>
 </head>
 <body>

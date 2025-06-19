@@ -2,7 +2,6 @@ namespace Expressions
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.JQuery
 open WebSharper.UI
 open WebSharper.UI.Html
 open WebSharper.UI.Client
@@ -17,13 +16,6 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        Hub.Config(
-            MathJax.Config(
-                Extensions = [| "tex2jax.js" |],
-                Jax = [| "input/TeX"; "output/HTML-CSS"; |],
-                Tex2jax = Tex2jax(InlineMath = [| ("$", "$"); ("\\(", "\\)") |])
-            )
-        )
 
         let rvFormula = Var.Create "x^2/(x^9 + x^2) + x^4/2"
         let rvDerivateBy = Var.Create "x"
@@ -40,17 +32,12 @@ module Client =
                     "The\ formula\ isn\'t\ correct."
             ) viewFormula viewDerivateBy
 
-        let tex = 
-            div [
-                on.viewUpdate texFormula (fun e v -> 
-                    JQuery.Of("#tex div").Empty().Append("$$" + v + "$$").Ignore
-                    Hub.Queue([| "Typeset", MathJax.Hub :> obj, [| e :> obj |] |]) |> ignore
-                )
-            ] [
-                textView <| texFormula.Map (fun x -> "$$" + x + "$$")
-            ]
-
-        Doc.RunById "tex" tex
+        texFormula
+        |> View.Sink (fun tex -> 
+            let el = JS.Document.GetElementById("tex")
+            el.InnerHTML <- "$$" + tex + "$$"
+            MathJax.Typeset()
+        )
 
         IndexTemplate.Main()
             .Formula(rvFormula)

@@ -15,14 +15,6 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        Hub.Config(
-            MathJax.Config(
-                Extensions = [| "tex2jax.js" |],
-                Jax = [| "input/TeX"; "output/HTML-CSS"; |],
-                Tex2jax = Tex2jax(InlineMath = [| ("$", "$"); ("\\(", "\\)") |])
-            )
-        )
-
         let matrix1 = Math.Matrix([| [| 8.; 6. |]; [| 4.; 6. |] |])
         let matrix2 = Math.Matrix([| [| 6.; 14. |]; [| 8.; 2. |] |])
 
@@ -54,5 +46,8 @@ module Client =
             .ResultSubtract(prettyResultSubtract)
             .ResultMultiply(prettyResultMultiply)
             .ResultDivide(prettyResultDivide)
+            .PageInit(fun () -> 
+                MathJax.Typeset()
+            )
             .Doc()
         |> Doc.RunById "main"

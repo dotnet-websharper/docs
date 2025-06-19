@@ -15,14 +15,6 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        MathJax.Hub.Config(
-            MathJax.Config(
-                Extensions = [| "tex2jax.js" |],
-                Jax = [| "input/TeX"; "output/HTML-CSS"; |],
-                Tex2jax = MathJax.Tex2jax(InlineMath = [| ("$", "$"); ("\\(", "\\)") |])
-            )
-        )
-
         let vector1 = [| 8.; 6.; 4.; 6. |]
         let vector2 = [| 6.; 14.; 8.; 2. |]
 
@@ -43,7 +35,7 @@ module Client =
 
         let prettyResultAdd = toPrettyResult resultAdd
         let prettyResultSubtract = toPrettyResult resultSubtract
-        let prettyResultMultiply = toPrettyResult resultMultiply
+        let prettyResultMultiply = toPrettyResult resultMultiply        
 
         IndexTemplate.Main()
             .Vector1(prettyVector1)
@@ -51,5 +43,8 @@ module Client =
             .ResultAdd(prettyResultAdd)
             .ResultSubtract(prettyResultSubtract)
             .ResultMultiply(prettyResultMultiply)
+            .PageInit(fun () -> 
+                MathJax.Typeset()
+            )
             .Doc()
         |> Doc.RunById "main"

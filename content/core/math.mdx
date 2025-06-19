@@ -197,38 +197,35 @@ let myUnitFromString = Math.Unit("5 cm")
 
 ## Rendering math with WebSharper
 
-Rendering math expressions in WebSharper works with the [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md).
+Rendering math expressions in WebSharper works with the [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](https://github.com/dotnet-websharper/mathjax/blob/master/README.md).
 
 MathJax, so WebSharper too allows you to use a variety of common math formatting systems but not only that, it supports more than one output formatting systems.
 
 ### Supported input formats
 
-| Format    | Extension            | Jax include         |
-| --------- | -------------------- | ------------------- |
-| TeX       | `"tex2jax.js"`       | `"input/TeX"`       |
-| MathML    | `"mml2jax.js"`       | `"input/MathML"`    |
-| AsciiMath | `"asciimath2jax.js"` | `"input/AsciiMath"` |
+| Format    | Loader Module       |
+|-----------|---------------------|
+| TeX       | `"input/tex"`       |
+| MathML    | `"input/mml"`       |
+| AsciiMath | `"input/asciimath"` |
 
 ### Supported output formats
 
-| Format      | Jax include            |
-| ----------- | ---------------------- |
-| CommonHtml  | `"output/CommonHTML"`  |
-| HTML-CSS    | `"output/HTML-CSS"`    |
-| NativeMML   | `"output/NativeMML"`   |
-| SVG         | `"output/SVG"`         |
-| PreviewHTML | `"output/PreviewHTML"` |
-| PlainSource | `"output/PlainSource"` |
+| Format      | Output Module          |
+|-------------|------------------------| 
+| CHTML       | `"output/chtml"`       |
+| SVG         | `"output/svg"`         |
 
 ### Rendering expresions
 
-To render static expressions (it's part of the static html file or generated with WebSharper to the html file at the beginning) we don't have to do anything else but configuring MathJax ([see an example here](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md)).
+To render static expressions (it's part of the static html file or generated with WebSharper to the html file at the beginning), you only need to configure MathJax correctly. It will automatically typeset matching math content once the page loads ([see an example here](https://github.com/dotnet-websharper/mathjax/blob/master/README.md)).
 
-In these examples we render dynamicaly changing formulas. In order to do that we have to use and call the `MathJax.Hub.Queue` on every update.
+To render dynamically changing formulas, update the DOM with the new expression and call `MathJax.Typeset()` — this replaces the old `MathJax.Hub.Queue()` method used in version 2.
 
 #### TeX
 
-To render TeX expressions we have to include `"input/TeX"` in the Jax config, and `"tex2jax.js"` in the extensions. ([TeX documentation](https://en.wikibooks.org/wiki/TeX/def))
+To render TeX expressions, ensure the loader module `input/tex` is included in your MathJax configuration. This allows MathJax to correctly parse TeX input.
+([TeX documentation](https://en.wikibooks.org/wiki/TeX/def))
 
 <FSharpSnippetTabs
   snippet="TeX"
@@ -239,7 +236,8 @@ To render TeX expressions we have to include `"input/TeX"` in the Jax config, an
 
 #### MathML
 
-To render MathML expressions we have to include `"input/MathML"` in the Jax config, and `"mml2jax.js"` in the extensions. ([MathML documentation](https://www.w3.org/TR/MathML/))
+To render MathML expressions, include the loader module `input/mml` in your MathJax configuration. This tells MathJax to treat embedded MathML correctly.
+([MathML documentation](https://www.w3.org/TR/MathML/))
 
 <FSharpSnippetTabs
   snippet="MathML"
@@ -250,7 +248,8 @@ To render MathML expressions we have to include `"input/MathML"` in the Jax conf
 
 #### Ascii Math
 
-To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Jax config, and `"asciimath2jax.js"` in the extensions. ([AsciiMath documentation](http://asciimath.org/))
+To render AsciiMath expressions, include the loader module `input/asciimath` in your MathJax configuration. This ensures that MathJax correctly parses AsciiMath notation.
+([AsciiMath documentation](http://asciimath.org/))
 
 <FSharpSnippetTabs
   snippet="AsciiMath"
@@ -261,7 +260,7 @@ To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Ja
 
 ### An example for expressions
 
-There are many functions in [MathJS](https://github.com/intellifactory/websharper.mathjs/blob/master/doc/doc.md) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/intellifactory/websharper.mathjax/blob/master/doc/doc.md) we can render the result if the formula is in `TeX` format. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
+There are many functions in [MathJS](https://github.com/intellifactory/websharper.mathjs/blob/master/doc/doc.md) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](https://github.com/dotnet-websharper/mathjax/blob/master/README.md) we can render the result if the formula is in `TeX` format. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
 (Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](https://www.mathjax.org/)))
 
