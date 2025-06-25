@@ -34,7 +34,23 @@ WebSharper has two main middleware, one is for serving pages (sitelets), and the
 - Add `app.UseWebSharperRemoting` as a shortcut to use remoting only. It also allows to define additional headers to return as a shortcut to using the builder.
 - Add `app.UseWebSharperSitelets` as a shortcut to use sitelets only.
 - Add `app.UseWebSharperScriptRedirect` to set up script redirection to a localhost server. If the `startVite` parameter is set to `true`, it starts up `vite` in a separate console window for local debugging. The `redirectUrlRoot` argument defines the local url to use, defaults to the `websharper:DebugScriptRedirectUrl` setting from config.
-- WebSharper also relies on `app.UseStaticFiles()` for serving generated JavaScript.
+
+## Serving JavaScript files
+
+If you have any client-side code, then it will need access to compiled JavaScript files, which the WebSharper middleware does not provide. So you need to add the default static files provider `app.UseStaticFiles()`.
+
+Note that `UseStaticFiles` should be called _after_ `UseWebSharper`. This way, `WebSharper` sitelets and remoting have a chance to handle requests even if they also happen to match a static file.
+
+## Authentication
+
+To use WebSharper's user sessions, add this to your service configuration:
+
+```csharp
+builder.Services.AddAuthentication("WebSharper").AddCookie("WebSharper")
+```
+and also `app.UseAuthentication()` to your application pipeline.
+
+If you configured a different authentication scheme in `UseWebSharper`, then you need to use that same scheme name here instead of `"WebSharper"`.
 
 # Integrations
 
