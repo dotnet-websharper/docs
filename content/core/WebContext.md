@@ -1,16 +1,29 @@
-# Web Context
+---
+title: Web Context
+---
 
-Both in Sitelets and Rpc functions, WebSharper provides a value of type `WebSharper.Web.Context` that gives some contextual information about the current request.
+Both in Sitelets and remote functions, WebSharper provides a value of type `WebSharper.Web.Context` that gives some contextual information about the current request.
 
 ## Retrieving the context
 
 ### Sitelets
 
-In Sitelets, the context provided by [content-generating functions](sitelets.md#content) such as `Content.Page` or `Content.Custom` implements `Web.Context`, so you can use it directly.
+In Sitelets, the functions creating Sitelet instances like `Sitelet.New`, `Sitelet.Content`, or `Sitelet.Infer`
+all take a function argument of type `Web.Context<'T> -> 'T -> Async<Web.Content>` (`Sitelet.Content` is dropping the `'T` value as it's for a single known value). 
+This means that when you implement a Sitelet, you can retrieve the context by using the function argument directly. For example:
+
+```fsharp
+let Main =
+    Sitelet.Infer (fun ctx endpoint ->
+        match endpoint with
+        | EndPoint.Home -> HomePage ctx
+        | EndPoint.About -> AboutPage ctx
+    )
+```
 
 ### Remote functions
 
-In remote functions, the context can be retrieved using the function `WebSharper.Web.Remoting.GetContext()`. Be careful to only call it from the thread from which your function was called. A typical remote function has the following structure:
+In [remote functions](Remoting.md), the context can be retrieved using the function `WebSharper.Web.Remoting.GetContext()`. Be careful to only call it from the thread from which your function was called. A typical remote function has the following structure:
 
 ```fsharp
 open WebSharper
