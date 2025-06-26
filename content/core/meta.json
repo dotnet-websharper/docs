@@ -1,6 +1,18 @@
 {
-    "root": true,
-    "title": "WebSharper Core",
-    "description": "Documentation for WebSharper Core",
-    "icon": "Heart"
+  "root": true,
+  "title": "WebSharper Core",
+  "description": "Documentation for WebSharper Core",
+  "icon": "Heart",
+  "pages": [
+    "Overview",
+    "GettingStarted",
+    "WSConfig",
+    "JavaScript",
+    "Sitelets",
+    "Remoting",
+    "Json",
+    "ASPNetCore",
+    "WebContext",
+    "Math"
+  ]
 }

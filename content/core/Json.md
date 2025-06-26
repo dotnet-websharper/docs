@@ -6,10 +6,10 @@ WebSharper provides a convenient and readable JSON serialization format for F# t
 
 ## Using JSON on the server
 
-WebSharper Sitelets provide facilities to both parse JSON from HTTP requests and write it to HTTP responses.
+WebSharper sitelets provide facilities to both parse JSON from HTTP requests and write it to HTTP responses.
 
-* Parsing: [using the `[<Json>]` attribute](Sitelets.md#json-request).
-* Writing: [using Content.Json](Sitelets.md#json-response).
+* Parsing: [using the `[<Json>]` attribute](Sitelets#json-request).
+* Writing: [using Content.Json](Sitelets#json-response).
 
 The `WebSharper.Json` type provides the following static methods:
 * `Serialize : 'T -> string` serializes a value to string.
@@ -33,7 +33,7 @@ WebSharper automatically uses JSON de/serialization for the following cases:
 * Remote method calls
 * Creating a `Web.Control` (including using the `client` helper) and passing it server-side values
 * Sitelet endpoints with a field with `[<Json>]` attribute
-* Returning a `Content.Json` value from a Sitelet endpoint
+* Returning a `Content.Json` value from a sitelet endpoint
 
 ## Supported types
 

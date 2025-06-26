@@ -46,7 +46,7 @@ The remoting component also assumes that:
 * RPC-callable methods have a return type that is serializable to
   JSON, or are of type `Async<'T>` or `Task<'T>` where `'T` is such a type.
 
-See WebSharper [JSON serialization documentation](Json.md) for details on what types are supported.
+See WebSharper [JSON serialization documentation](Json) for details on what types are supported.
 
 ## The RPC protocol and customization
 
@@ -72,32 +72,10 @@ CORS and CSRF protection are supported by default.
 # Remote Call Types
 
 The remoting mechanism supports three different ways of doing a remote
-call: message-passing, synchronous and asynchronous.
-
-## Message-Passing Calls
-
-Message-passing calls do not lock the browser, returning immediately
-on the client. If an RPC function has the return type of `unit`, calls
-to this function are message-passing calls.
-
-```fsharp
-[<Remote>]
-let Log (msg: string) =
-    System.Diagnostics.Debug.Write("MSG: {0}", msg)
-```
-
-With these definitions, a call to `Log "foo"` proceeds as follows:
-
-* The client serializes `"foo"` to JSON.
-
-* The client sends a request to the server.
-
-* The client returns `unit` immediately.
-
-* The server parses the request.
-
-* The server binds to and calls the requested method with the
-  arguments deserialized from JSON.
+call: asynchronous, message-passing, and synchronous.
+Asynchronous calls are the most common, and the recommended way to do remote calls.
+Message-passing calls are a convenience feature, when the client does not care about the result of the call.
+Synchronous (blocking) calls are discouraged for production-ready code as they can create bad user experience on a possibly slow response.
 
 ## Asynchronous Calls
 
@@ -144,6 +122,31 @@ With these definitions, a call to `Foo f` proceeds as follows:
 The mechanics of individual calls are similar to the message-passing
 calls.
 
+## Message-Passing Calls
+
+Message-passing calls do not lock the browser, returning immediately
+on the client. If an RPC function has the return type of `unit`, calls
+to this function are message-passing calls.
+
+```fsharp
+[<Remote>]
+let Log (msg: string) =
+    System.Diagnostics.Debug.Write("MSG: {0}", msg)
+```
+
+With these definitions, a call to `Log "foo"` proceeds as follows:
+
+* The client serializes `"foo"` to JSON.
+
+* The client sends a request to the server.
+
+* The client returns `unit` immediately.
+
+* The server parses the request.
+
+* The server binds to and calls the requested method with the
+  arguments deserialized from JSON.
+
 ## Synchronous Calls
 
 Synchronous RPC calls block the browser until the server's reply is
@@ -185,7 +188,7 @@ follows:
 
 Remote methods are exposed as http endpoints, so any security measures have to be integrated into the method body itself.
 `WebSharper.Web.Remoting.GetContext().UserSession` exposes some utilities for tracking users.
-This uses `Microsoft.AspNetCore.Authentication` on the server and by default cookies in the browser. [See here](WebContext.md) for more information.
+This uses `Microsoft.AspNetCore.Authentication` on the server and by default cookies in the browser. [See here](WebContext) for more information.
 
 ```fsharp
 //open WebSharper.Web
@@ -247,7 +250,7 @@ To have a handler for this type, you need to register an instance of it on the s
 WebSharper.Core.Remoting.AddHandler typeof<MyType> (new MyType())
 ```
 
-Or, on configuring ASP.NET Core, instead of calling `AddHandler`, you can add the handler to the dependency injection graph using `builder.Services.AddWebSharperRemoting<THandler>()`. [See here for more details.](aspnetmvc.mdx)
+Or, on configuring ASP.NET Core, instead of calling `AddHandler`, you can add the handler to the dependency injection graph using `builder.Services.AddWebSharperRemoting<THandler>()`. [See here for more details.](aspnetmvc)
 
 Remote annotated methods can be abstract.
 The instance that you provide can be of a subclass of the type in the first argument.
