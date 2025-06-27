@@ -270,6 +270,19 @@ export function getIntfObj(){
 }
 ```
 
+You can use `[<Name("")>]` or `[<Stub>]` attribute on the interface type itself to translate all interface methods to their original names, without the long prefix.
+This is useful for optimization, or interop with JavaScript libraries that expect the original names.
+
+### WebSharper attributes
+
+## Inline and Verbatim helpers
+
+The `WebSharper.JavaScript` namespace contains a number of helpers to make writing JavaScript code easier. These are: 
+
+- `JS.Inline` allows you to write parsed and checked JavaScript code snippets. It is a shortcut for creating a separate function with the `Inline` attribute. It supports `$0`, `$1`, for inserting additional arguments. Example: `JS.Inline("Math.max($0, $1)", 1, 2)` will be translated to `Math.max(1, 2)`.
+- `JS.Verbatim` allows you to write unchecked JavaScript code snippets, which will be inserted as-is into the output. It supports F# string interpolation, for example `JS.Verbatim($"Math.max({x}, {y})")` will be translated to `Math.max(x, y)`. This is useful for writing code that cannot be currently parsed by WebSharper, like JavaScript template literals.
+- `JS.Html` (or aliases `JS.html`, `JS.Jsx`, `JS.jsx`) is like `JS.Verbatim`, but it is optimized for JSX syntax, like React. The difference is that it will leave in the braces around expression holes in the output code, for example `JS.Html($"<div>{x}</div>")` will be translated to `<div>{x}</div>`.
+
 ## WebSharper attributes
 
 The following is an overview of all attributes provided by WebSharper to guide translation.
@@ -295,6 +308,7 @@ The following is an overview of all attributes provided by WebSharper to guide t
 
 - `Require` - for non-module JavaScript and other code requirements.
 - `Import` - for adding module-based imports. 
+- `WebResource` - add to an assembly with a file name to include that file when unpacking the assembly. This is useful for including static files like images, CSS, or JavaScript files in a WebSharper project.
 
 ### Remoting-specific attributes
 

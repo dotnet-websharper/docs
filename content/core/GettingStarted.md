@@ -1,17 +1,17 @@
 ---
-title: Getting Started with WebSharper
+title: Getting started with WebSharper
 ---
 
 Install the WebSharper templates by running the following command in your terminal:
 
-```powershell
+```cmd
 dotnet new install WebSharper.Templates
 ```
 
 This will add the WebSharper templates to your .NET SDK, allowing you to create new WebSharper projects using the `dotnet new` command.
 Now you can create a new WebSharper project in Visual Studio or by running:
 
-```powershell
+```cmd
 dotnet new websharper-web -lang F# -n MyWebSharperApp
 ```
 

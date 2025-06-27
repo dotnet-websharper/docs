@@ -70,6 +70,12 @@ where any generic parameters are also JSON-serializable types:
 For records, unions, classes and structs to be JSON-serializable, all their
 fields must also be JSON-serializable.
 
+## Extensibility
+
+Adding custom support for other types is currently supported only on the client side.
+Add static methods to your type or proxy `EncodeJson: 'T -> obj` and `DecodeJson: obj -> 'T`.
+These should convert between a JSON-compatible plain JavaScript object and your type.
+
 ## Format
 
 ### Base types
