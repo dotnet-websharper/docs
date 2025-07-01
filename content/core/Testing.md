@@ -1,4 +1,6 @@
-# Unit testing
+---
+title: Unit testing
+---
 
 The `WebSharper.Testing` library (available on [NuGet](https://www.nuget.org/packages/websharper.testing)) exposes a clean F# syntax to write unit tests for libraries, services and websites.
 It is a wrapper around `QUnit` for presentation which provides transparent handling of synchronous and asynchronous expressions, and generating random data for property testing.
