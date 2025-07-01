@@ -1,5 +1,5 @@
 ---
-title: Communicating With the Server
+title: Communicating with the server
 ---
 
 WebSharper supports remote procedure calls from the client (JavaScript environment) to the server (ASP.NET Core or other hosting environment).

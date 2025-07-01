@@ -1,5 +1,5 @@
 ---
-title: Web Context
+title: Using WebContext
 ---
 
 Both in Sitelets and remote functions, WebSharper provides a value of type `WebSharper.Web.Context` that gives some contextual information about the current request.

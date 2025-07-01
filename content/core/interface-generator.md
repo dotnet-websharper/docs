@@ -80,92 +80,23 @@ Example for immutability of members:
 
 ### Operator Reference
 
-<table>
-    <thead>
-        <tr>
-            <td>Function</td>
-            <td>Operator</td>
-            <td>Description</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>Method</code></td>
-            <td><code>=></code></td>
-            <td>Defines a method from name and signature</td>
-        </tr>
-        <tr>
-            <td><code>Property</code></td>
-            <td><code>=&#64;</code></td>
-            <td>Defines a property with a getter and setter</td>
-        </tr>
-        <tr>
-            <td><code>Getter</code></td>
-            <td><code>=?</code></td>
-            <td>Defines a read-only property</td>
-        </tr>
-        <tr>
-            <td><code>Setter</code></td>
-            <td><code>=!</code></td>
-            <td>Defines a write-only property</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>?</code></td>
-            <td>Defines a named parameter</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>^-></code></td>
-            <td>Defines a function type</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>-*</code></td>
-            <td>Defines the type of the <code>this</code> parameter on a function</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>*+</code></td>
-            <td>Defines the <code>rest</code> parameter (ParamArray in .NET)</td>
-        </tr>
-        <tr>
-            <td><code>Type.ArrayOf</code></td>
-            <td><code>!|</code></td>
-            <td>Defines an array type from its element type</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>!+</code></td>
-            <td>Defines <code>arguments</code> parameter (single ParamArray in .NET)</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>!?</code></td>
-            <td>Defines an optional parameter, property or return type</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>*</code></td>
-            <td>Defines a tuple type or joins parameters</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>+</code></td>
-            <td>Defines an overloaded parameter or a <code>Choice</code> property or return type</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>|=></code></td>
-            <td>Copies type definition identifier or applies attributes</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><code>|+></code></td>
-            <td>Adds members to a type definition</td>
-        </tr>
-    </tbody>
-</table>
+| Function           | Operator | Description                                                           |
+|--------------------|----------|-----------------------------------------------------------------------|
+| `Method`           | `=>`     | Defines a method from name and signature                              |
+| `Property`         | `=@`     | Defines a property with a getter and setter                           |
+| `Getter`           | `=?`     | Defines a read-only property                                          |
+| `Setter`           | `=!`     | Defines a write-only property                                         |
+|                    | `?`      | Defines a named parameter                                             |
+|                    | `^->`    | Defines a function type                                               |
+|                    | `-*`     | Defines the type of the `this` parameter on a function                |
+|                    | `*+`     | Defines the `rest` parameter (ParamArray in .NET)                     |
+| `Type.ArrayOf`     | `!|`     | Defines an array type from its element type                           |
+|                    | `!+`     | Defines `arguments` parameter (single ParamArray in .NET)             |
+|                    | `!?`     | Defines an optional parameter, property or return type                |
+|                    | `*`      | Defines a tuple type or joins parameters                              |
+|                    | `+`      | Defines an overloaded parameter or a `Choice` property or return type |
+|                    | `|=>`    | Copies type definition identifier or applies attributes               |
+|                    | `|+>`    | Adds members to a type definition                                     |
 
 ### Side cases
 
@@ -510,6 +441,15 @@ JavaScript with a qualified name, for example:
 This generates a .NET class `Point` which binds all static members as
 `geometry.Point.foo()` in JavaScript.
 
+### Importing from a JS module
+
+Use the `Import` helper to mark a type or member as a named import from a module.
+You can use `$import` in inlines to refer to the imported value to further customize its use.
+
+The `ImportDefault` helper is an alias for `Import "default"`, and will use the default export of the module.
+
+The `ImportFile` helper marks a file as a sideeffecting import, for including resources like css.
+
 ### Inline Transformations
 
 #### Functions
@@ -614,6 +554,20 @@ in the case of an indexed property, and for setters transforming `"value"` or `"
 Use the `Obsolate` helper to mark a type or member definition with
 `System.ObsoleteAttribute`.
 `ObsolateWithMessage` also sets a custom warning message.
+
+#### WebSharper warnings
+
+Use the `WithWarning` helper to make the compiler emit a specific warning when the type or member is used.
+
+#### Pure functions
+
+Use the `Pure` helper to mark a member definition with `WebSharper.PureAttribute`,
+meaning the compiler can optimize the call away if the result is unused.
+
+#### TypeScript Type
+
+Use the `WithTSType` helper to set the TypeScript type of a type.
+This is by default the same as the JavaScript name (the constructor function name) of the type.
 
 ## Best Practices
 
