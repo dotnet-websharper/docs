@@ -12,7 +12,7 @@ While exporting is the process of creating an npm package from your WebSharper l
 ## Bundling in SPA projects
 
 First, for SPA projects, the WebSharper compiler will generate a single JavaScript file that contains all the client-side code necessary for your application.
-The location of this file is determined by the [outputDir](wsconfig#outputDir) setting in your `wsconfig.json` file.
+The location of this file is determined by the [outputDir](wsconfig#outputdir) setting in your `wsconfig.json` file.
 You should directly link this file in your `index.html` file for your application.
 This is set up by default in the SPA project template.
 
