@@ -97,7 +97,7 @@ This is when you can use the `Content.Bundle` and `Content.BundleScope` function
 <a name="npm"></a>
 ## npm package export
 
-To create a library that can be used as an npm package, set `"dce": true` on a libray project and specify an [outputDir](wsconfig#outputDir).
+To create a library that can be used as an npm package, set `"dce": true` on a libray project and specify an [outputDir](wsconfig#outputdir).
 You might also want to set `"javascriptExport": true` to make the whole current project exported into the final output, otherwise only classes and methods marked with the `JavascriptExport` attribute will be available.
 
 To package the output for npm set `"outputDir": "build"` and then you can add a section to your project file like this:

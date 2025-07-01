@@ -353,7 +353,7 @@ When using a non-supported type, it results in a compile-time error.
 ### propertyWith
 
 Similar to above, but the generator logic is not inferred from type, but passed to the operation.
-It takes as first argument a record value of type `RandomValues.Generator`, which is [described here](#randomgenerator).
+It takes as first argument a record value of type `RandomValues.Generator`, which is [described here](#randomvaluesgenerator).
 
 There are also constructor functions and combinators in the `Random` module to get `Generator` values, 
 allowing easier composition of complex testing values.
@@ -374,7 +374,7 @@ allowing easier composition of complex testing values.
 ### propertyWithSample
 
 Similar to above, but the argument is an exact sample on which the property is tested.
-See [RandomValues.Sample](#randomsample) below.
+See [RandomValues.Sample](#randomvaluessample) below.
 
 #### Example:
 

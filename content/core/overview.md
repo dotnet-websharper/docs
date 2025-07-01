@@ -32,7 +32,7 @@ attributes. With sitelets, you can:
 * Generate HTML content from template files or directly in C#/F# with a clean
   syntax.
 
-Learn more about sitelets [here](Sitelets).
+Learn more about sitelets [here](sitelets).
 
 ## JavaScript compiler and client-side abstractions
 
@@ -47,7 +47,7 @@ so safe and swift.
 
 * Use powerful F# language features like pattern matching and type providers on the client side.
 * Use a functional and reactive programming style with
-  [WebSharper.UI](ui.md) to let the data flow through your UI.
+  [WebSharper.UI](../ui) to let the data flow through your UI.
 * Write full web forms in a couple lines of code using
   [WebSharper.Forms](https://github.com/intellifactory/websharper.forms/blob/master/README.md). (Currently available for F# only)
 * Develop libraries with self-contained client and/or server functionality to reuse in multiple projects.

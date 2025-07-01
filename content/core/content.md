@@ -65,7 +65,7 @@ The startup script will be inserted where the template has `<script ws-replace="
 <a name="json-response"></a>
 ### Content.Json
 
-If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to `Content.Json`, and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](json.md)
+If you are creating a web API, then Sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to `Content.Json`, and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](json)
 
 ```fsharp
 type BlogArticleResponse =

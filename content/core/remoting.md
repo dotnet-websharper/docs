@@ -46,7 +46,7 @@ The remoting component also assumes that:
 * RPC-callable methods have a return type that is serializable to
   JSON, or are of type `Async<'T>` or `Task<'T>` where `'T` is such a type.
 
-See WebSharper [JSON serialization documentation](Json) for details on what types are supported.
+See WebSharper [JSON serialization documentation](json) for details on what types are supported.
 
 ## The RPC protocol and customization
 
@@ -250,7 +250,7 @@ To have a handler for this type, you need to register an instance of it on the s
 WebSharper.Core.Remoting.AddHandler typeof<MyType> (new MyType())
 ```
 
-Or, on configuring ASP.NET Core, instead of calling `AddHandler`, you can add the handler to the dependency injection graph using `builder.Services.AddWebSharperRemoting<THandler>()`. [See here for more details.](aspnetmvc)
+Or, on configuring ASP.NET Core, instead of calling `AddHandler`, you can add the handler to the dependency injection graph using `builder.Services.AddWebSharperRemoting<THandler>()`. [See here for more details.](aspnetcore)
 
 Remote annotated methods can be abstract.
 The instance that you provide can be of a subclass of the type in the first argument.

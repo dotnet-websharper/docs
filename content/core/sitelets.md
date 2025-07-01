@@ -357,7 +357,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
 
 * `[<Json "arg">]` on a union case indicates that the field with the given name must be parsed as JSON from the body of the request. If an endpoint type contains several `[<Json>]` fields, a runtime error is thrown.
 
-    [Learn more about JSON parsing.](Json)
+    [Learn more about JSON parsing.](json)
 
     ```fsharp
     type EndPoint =
@@ -638,7 +638,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
     val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
     ```
 
-    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](content#context)
+    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](content#using-the-context)
 
 * `Sitelet.Map` converts a Sitelet to a different endpoint type using mapping functions in both directions.
 

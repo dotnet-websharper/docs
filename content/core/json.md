@@ -8,8 +8,8 @@ WebSharper provides a convenient and readable JSON serialization format for F# t
 
 WebSharper sitelets provide facilities to both parse JSON from HTTP requests and write it to HTTP responses.
 
-* Parsing: [using the `[<Json>]` attribute](sitelets#json-request).
-* Writing: [using Content.Json](sitelets#json-response).
+* Parsing: [using the `[<Json>]` attribute](sitelets#customizing-sitelet-infer).
+* Writing: [using Content.Json](content#content-json).
 
 The `WebSharper.Json` type provides the following static methods:
 * `Serialize : 'T -> string` serializes a value to string.
@@ -373,7 +373,7 @@ Content.Json [Blue; Red; Green]
 
 In order to be serializable to/from JSON on the server-side, a class must be annotated with the `[<System.Serializable>]` attribute and must have a default constructor.
 On the client-side, these are not checked or required.
-Then, it is serialized based on its fields, similarly to F# records [as mentioned above](#fs-records).
+Then, it is serialized based on its fields, similarly to F# records [as mentioned above](#f-records).
 Here is an example in C#:
 
 ```csharp

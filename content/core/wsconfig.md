@@ -69,7 +69,7 @@ Allows overriding configuration values based on project configuration. For examp
 
 An `spa` or `bundleOnly` project uses dead code elimination to have a minimal size `.js` output. If you run into any errors with missing code, please [report as a bug](https://github.com/dotnet-websharper/core/issues). As a quick workaround you can set `"dce": false` to see if that resolves your problem.
 
-The other use case for dead code elimination is producing npm-facing library code. See the [Bundling and exporting](bundling#npm) docs.
+The other use case for dead code elimination is producing npm-facing library code. See the [Bundling and exporting](bundling#npm-package-export) docs.
 
 <a name="downloadResources"></a>
 ## "downloadResources"
@@ -135,7 +135,7 @@ Specifies the path of the compilation output directory relative to the project f
 **Type**: bool (default `false`)
 
 Only for `web` projects, turns on production-ready mode: for all pages of a multi-page application a JavaScript file is created. 
-See the [Bundling and exporting](bundling#sitelets) docs for more details.
+See the [Bundling and exporting](bundling#bundling-in-multi-page-sitelet-applications) docs for more details.
 
 <a name="project"></a>
 ## "project"
