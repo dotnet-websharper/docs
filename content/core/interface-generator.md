@@ -80,23 +80,23 @@ Example for immutability of members:
 
 ### Operator Reference
 
-| Function           | Operator | Description                                                           |
-|--------------------|----------|-----------------------------------------------------------------------|
-| `Method`           | `=>`     | Defines a method from name and signature                              |
-| `Property`         | `=@`     | Defines a property with a getter and setter                           |
-| `Getter`           | `=?`     | Defines a read-only property                                          |
-| `Setter`           | `=!`     | Defines a write-only property                                         |
-|                    | `?`      | Defines a named parameter                                             |
-|                    | `^->`    | Defines a function type                                               |
-|                    | `-*`     | Defines the type of the `this` parameter on a function                |
-|                    | `*+`     | Defines the `rest` parameter (ParamArray in .NET)                     |
-| `Type.ArrayOf`     | `!|`     | Defines an array type from its element type                           |
-|                    | `!+`     | Defines `arguments` parameter (single ParamArray in .NET)             |
-|                    | `!?`     | Defines an optional parameter, property or return type                |
-|                    | `*`      | Defines a tuple type or joins parameters                              |
-|                    | `+`      | Defines an overloaded parameter or a `Choice` property or return type |
-|                    | `|=>`    | Copies type definition identifier or applies attributes               |
-|                    | `|+>`    | Adds members to a type definition                                     |
+| Function           | Operator   | Description                                                           |
+|--------------------|------------|-----------------------------------------------------------------------|
+| `Method`           | `=>`       | Defines a method from name and signature                              |
+| `Property`         | `=@`       | Defines a property with a getter and setter                           |
+| `Getter`           | `=?`       | Defines a read-only property                                          |
+| `Setter`           | `=!`       | Defines a write-only property                                         |
+|                    | `?`        | Defines a named parameter                                             |
+|                    | `^->`      | Defines a function type                                               |
+|                    | `-*`       | Defines the type of the `this` parameter on a function                |
+|                    | `*+`       | Defines the `rest` parameter (ParamArray in .NET)                     |
+| `Type.ArrayOf`     | `!&#124;`  | Defines an array type from its element type                           |
+|                    | `!+`       | Defines `arguments` parameter (single ParamArray in .NET)             |
+|                    | `!?`       | Defines an optional parameter, property or return type                |
+|                    | `*`        | Defines a tuple type or joins parameters                              |
+|                    | `+`        | Defines an overloaded parameter or a `Choice` property or return type |
+|                    | `&#124;=>` | Copies type definition identifier or applies attributes               |
+|                    | `&#124;+>` | Adds members to a type definition                                     |
 
 ### Side cases
 
