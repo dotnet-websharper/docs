@@ -39,8 +39,8 @@ If you have an existing .NET project and want to add WebSharper support, you can
   "project": "library"
 }
 ```
-  See the [WebSharper Compiler Configuration](WSConfig) for more details on available settings.
+  See the [WebSharper Compiler Configuration](wsconfig) for more details on available settings.
 * If your project is a library, you can start annotating types and methods with the `[<JavaScript>]` attribute to indicate that they should be compiled to JavaScript.
   No JavaScript files will be written, but they will be included as resources in the compiled library for quick use by other projects for debug mode.
   To see the compiled JavaScript right away, you can add the `"jsOutput": "folderName"` setting to your `wsconfig.json`.
-* If your project is a web application, take a look at the [ASP.NET Core integration](ASPNetCore) to set up WebSharper in your application pipeline.
+* If your project is a web application, take a look at the [ASP.NET Core integration](aspnetcore) to set up WebSharper in your application pipeline.

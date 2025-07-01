@@ -8,8 +8,8 @@ WebSharper provides a convenient and readable JSON serialization format for F# t
 
 WebSharper sitelets provide facilities to both parse JSON from HTTP requests and write it to HTTP responses.
 
-* Parsing: [using the `[<Json>]` attribute](Sitelets#json-request).
-* Writing: [using Content.Json](Sitelets#json-response).
+* Parsing: [using the `[<Json>]` attribute](sitelets#json-request).
+* Writing: [using Content.Json](sitelets#json-response).
 
 The `WebSharper.Json` type provides the following static methods:
 * `Serialize : 'T -> string` serializes a value to string.

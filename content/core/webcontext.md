@@ -23,7 +23,7 @@ let Main =
 
 ### Remote functions
 
-In [remote functions](Remoting), the context can be retrieved using the function `WebSharper.Web.Remoting.GetContext()`. Be careful to only call it from the thread from which your function was called. A typical remote function has the following structure:
+In [remote functions](remoting), the context can be retrieved using the function `WebSharper.Web.Remoting.GetContext()`. Be careful to only call it from the thread from which your function was called. A typical remote function has the following structure:
 
 ```fsharp
 open WebSharper

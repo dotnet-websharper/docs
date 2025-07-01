@@ -58,7 +58,7 @@ Based on this, a Sitelet is a value that represents the following mappings:
 
 * Mapping from requests to endpoints. A Sitelet is able to parse a URL such as `/blog/1243/some-article-slug` into the endpoint value `BlogArticle (id = 1243, slug = "some-article-slug")`. More advanced definitions can even parse query parameters, JSON bodies or posted forms.
 
-* Mapping from endpoints to URLs. This allows you to have internal links that are verified by the type system, instead of writing URLs by hand and being at the mercy of a typo or a change in the URL scheme. You can read more on this [in the "Context" section](#context).
+* Mapping from endpoints to URLs. This allows you to have internal links that are verified by the type system, instead of writing URLs by hand and being at the mercy of a typo or a change in the URL scheme. You can read more on this [in the Content doc](content#context).
 
 * Mapping from endpoints to content. Once a request has been parsed, this determines what content (HTML or other) must be returned to the client.
 
@@ -638,7 +638,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
     val Protect : Filter<'EndPoint> -> Sitelet<'EndPoint> -> Sitelet<'EndPoint>
     ```
 
-    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](#context)
+    Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](content#context)
 
 * `Sitelet.Map` converts a Sitelet to a different endpoint type using mapping functions in both directions.
 

@@ -188,7 +188,7 @@ follows:
 
 Remote methods are exposed as http endpoints, so any security measures have to be integrated into the method body itself.
 `WebSharper.Web.Remoting.GetContext().UserSession` exposes some utilities for tracking users.
-This uses `Microsoft.AspNetCore.Authentication` on the server and by default cookies in the browser. [See here](WebContext) for more information.
+This uses `Microsoft.AspNetCore.Authentication` on the server and by default cookies in the browser. [See here](webcontext) for more information.
 
 ```fsharp
 //open WebSharper.Web

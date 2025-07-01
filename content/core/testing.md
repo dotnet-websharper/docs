@@ -111,7 +111,7 @@ let RunAllTests() =
     |]
 ```
 
-Later, in server-side code, serve this on a [Sitelet](sitelets.md) endpoint:
+Later, in server-side code, serve this on a [Sitelet](sitelets) endpoint:
 
 ```fsharp
     Content.Page(
