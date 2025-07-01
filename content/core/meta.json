@@ -13,6 +13,7 @@
     "content",
     "routing",
     "remoting",
+    "bundling",
     "json",
     "aspnetcore",
     "webcontext",
