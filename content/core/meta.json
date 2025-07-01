@@ -10,10 +10,14 @@
     "JavaScript",
     "Resources",
     "Sitelets",
+    "Content",
+    "Routing",
     "Remoting",
     "Json",
     "ASPNetCore",
     "WebContext",
+    "InterfaceGenerator",
+    "Testing",
     "Math"
   ]
 }
