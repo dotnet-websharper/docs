@@ -18,12 +18,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Install lychee
-        run: cargo install lychee
-        
-      - name: Check links in static output
-        run: lychee --verbose --no-progress './out/**/*.html'
-
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
@@ -80,4 +74,4 @@ jobs:
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
           url: https://docs.websharper.com/
-          cmd_params: "--buffer-size=8192 --max-connections=5 --color=always --timeout=20"
+          cmd_params: "--verbose --buffer-size=8192 --max-connections=5 --color=always --timeout=20"
