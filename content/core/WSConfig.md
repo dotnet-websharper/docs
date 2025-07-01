@@ -69,24 +69,7 @@ Allows overriding configuration values based on project configuration. For examp
 
 An `spa` or `bundleOnly` project uses dead code elimination to have a minimal size `.js` output. If you run into any errors with missing code, please [report as a bug](https://github.com/dotnet-websharper/core/issues). As a quick workaround you can set `"dce": false` to see if that resolves your problem.
 
-The other use case for dead code elimination is producing npm-facing library code. For this, set `"dce": true` on a libray project and specify an [outputDir](#outputDir). You might also want to set `"javascriptExport": true` to make the whole current project exported into the final output, otherwise only classes and methods marked with the `JavascriptExport` attribute will be available.
-
-To package the output for npm set `"outputDir": "build"` and then you can add a section to your project file like this:
-
-```xml
-  <Target Name="CleanBuildDir" BeforeTargets="CoreCompile">
-    <RemoveDir Directories="build" />
-  </Target>
-  
-  <Target Name="CopyPackageJsonAndPack" AfterTargets="WebSharperCompile">
-    <Copy SourceFiles="assets/package.json" DestinationFolder="build" />
-    <Exec Command="npm pack" WorkingDirectory="build" />
-  </Target>
-```
-
-This cleans the build folder before a new build. After a successful WebSharper build, it copies over a `package.json` file to serve as your package declaration to your WebSharper project's output folder.
-
-WebSharper will create an `index.js` to serve as the root of the npm package, so in your `assets/package.json` file, set `"main": "index.js"`. Also take note that all static methods on static classes will be exported as top level functions, make sure to give expressive names for your functions for npm library use that does not depend on F# module name for example to disambiguate them.
+The other use case for dead code elimination is producing npm-facing library code. See the [Bundling and exporting](bundling#npm) docs.
 
 <a name="downloadResources"></a>
 ## "downloadResources"
@@ -151,44 +134,8 @@ Specifies the path of the compilation output directory relative to the project f
 
 **Type**: bool (default `false`)
 
-Only for `web` projects, turns on production-ready mode: for all pages of a multi-page application a JavaScript file is created. This is readable format code, possibly importing npm packages, so it needs a proper JavaScript bundler before serving. It is recommended that this output goes to a `build` folder, and then bundling can be set up in project file like this: 
-
-```xml
-  <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile">
-    <Exec Command="npm install" />
-    <Exec Command="node ./esbuild.config.mjs" />
-  </Target>
-```
-
-where `esbuild.config.mjs` contains:
-
-```javascript
-import { existsSync, cpSync, readdirSync } from 'fs'
-import { build } from 'esbuild'
-
-if (existsSync('./build/Content/WebSharper/')) {
-  cpSync('./build/Content/WebSharper/', './wwwroot/Content/WebSharper/', { recursive: true });
-}
-
-const files = readdirSync('./build/Scripts/WebSharper/$YOURPROJECTNAME$/');
-
-files.forEach(file => {
-  if (file.endsWith('.js')) {
-    var options =
-    {
-      entryPoints: ['./build/Scripts/WebSharper/$YOURPROJECTNAME$/' + file],
-      bundle: true,
-      minify: true,
-      format: 'iife',
-      outfile: 'wwwroot/Scripts/WebSharper/' + file,
-      globalName: 'wsbundle'
-    };
-
-    console.log("Bundling:", file);
-    build(options);
-  }
-});
-```
+Only for `web` projects, turns on production-ready mode: for all pages of a multi-page application a JavaScript file is created. 
+See the [Bundling and exporting](bundling#sitelets) docs for more details.
 
 <a name="project"></a>
 ## "project"

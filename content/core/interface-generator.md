@@ -20,9 +20,9 @@ JavaScript code using the `Inline` custom attribute.
 
 WIG is included with the WebSharper installer.
 To create a new project select the "Extension" template from WebSharper templates.
-This project file contains the line required for the WIG build task to run.
+This project file contains the line required for the WIG build task to run in `wsconfig.json`.
 
-    <WebSharperProject>InterfaceGenerator</WebSharperProject>
+    "project": "binding"
 
 You get a small example in the `Main.fs` file, which ends in this:
 

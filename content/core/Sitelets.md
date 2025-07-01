@@ -1,5 +1,5 @@
 ---
-title: Routing requests and serving content with Sitelets
+title: Routing requests and serving content with sitelets
 ---
 
 Sitelets are WebSharper's primary way to create server-side content. They provide a composable abstraction to route requests and generate responses like HTML pages or JSON.
