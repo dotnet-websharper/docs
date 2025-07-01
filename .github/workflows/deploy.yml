@@ -18,6 +18,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Install lychee
+        run: cargo install lychee
+        
+      - name: Check links in static output
+        run: lychee --verbose --no-progress './out/**/*.html'
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
@@ -70,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check for broken links
+      - name: Check for broken links in deployment
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
           url: https://docs.websharper.com/
