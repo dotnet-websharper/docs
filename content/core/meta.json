@@ -17,6 +17,7 @@
     "json",
     "aspnetcore",
     "webcontext",
+    "webworkers",
     "interface-generator",
     "testing",
     "math"

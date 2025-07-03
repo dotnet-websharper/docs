@@ -2,9 +2,10 @@
 title: Bundling and exporting
 ---
 
-Bundling in WebSharper refers to two main use cases:
+Bundling in WebSharper refers to three main use cases:
 * SPA project types, where a single JavaScript file is generated to hold the client-side code.
 * Multi-page sitelet applications in production-ready mode, where possibly multiple JavaScript files are generated, but they are optimized for one or more pages.
+* Automatic web worker script generation. See [web workers](webworkers).
 
 While exporting is the process of creating an npm package from your WebSharper library code.
 
