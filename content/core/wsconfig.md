@@ -79,7 +79,7 @@ The other use case for dead code elimination is producing npm-facing library cod
 Set to `true` to have WebSharper download all 
 remote `js`/`css` resources defined in the current project and all references. This is possible only for direct script resources, all npm imports you have to manage with running an `npm install` command.
 
-When using this setting, you also add this to your `appsettings.json` so that WebSharper inserts a link to that downloaded file in your pages instead of a link to the online resource:
+When using this setting, you must also add this to your `appsettings.json` so that WebSharper runtime will insert the links to downloaded files in your pages instead of online resources:
 
 ```json
   "websharper": {

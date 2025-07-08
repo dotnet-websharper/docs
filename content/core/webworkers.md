@@ -128,8 +128,7 @@ workers.forEach(file => {
       bundle: true,
       minify: false,
       format: 'iife',
-      outfile: 'wwwroot/Scripts/WebSharper/workers/' + file,
-      globalName: 'wsbundle'
+      outfile: 'wwwroot/Scripts/WebSharper/workers/' + file
     };
 
     build(options);
