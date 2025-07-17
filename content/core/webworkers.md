@@ -183,7 +183,7 @@ That is actually a simplification. In practice, WebSharper needs to figure out t
 - In a single-page application (aka `bundle` or `bundleOnly` project), the default path is `wwwroot/Content/workers/<filename>`.
 - In a generated static HTML site (aka `html` project), the default path is `/Scripts/workers/<filename>`.
 
-These correspond to the location where the compiler extracts the files, so in a standard setup, everything just works and there is nothing to do. But if you need it, this is customizable using the `scriptBaseUrl` [configuration setting](project-variables#scriptBaseUrl). It changes the base URL for the script, ie. the paths mentioned aboved minus the `workers/<filename>` suffix. Note that this URL **must** end with a slash, and almost always needs to start with a slash too.
+These correspond to the location where the compiler extracts the files, so in a standard setup, everything just works and there is nothing to do. But if you need it, this is customizable using the `scriptBaseUrl` [configuration setting](wsconfig#scriptbaseurl). It changes the base URL for the script, ie. the paths mentioned aboved minus the `workers/<filename>` suffix. Note that this URL **must** end with a slash, and almost always needs to start with a slash too.
 
 Here is an example `wsconfig.json` that deviates from the standard: the output directory into which the files are extracted is customized using `outputDir`, so we need to customize `scriptBaseUrl` too.
 
