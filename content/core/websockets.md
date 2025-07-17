@@ -28,7 +28,7 @@ type ServerToClient =
 ```
 
 These types will be serialized and deserialized automatically by the WebSharper framework when sending and receiving messages.
-See the (json documentation)[json] for restrictions on the types that can be used.
+See the [json documentation](json) for restrictions on the types that can be used.
 
 ## Defining server agents
 
@@ -87,7 +87,7 @@ let statefulServerAgent() : Server.StatefulAgent<ServerToClient, ClientToServer,
                     do! Async.Sleep 1000 // Simulate some processing for websocket response
                     match msg with
                     | Server.Message (Request name) ->
-                        client.Post (Response $"Hello, {name}! You are visitor number {count}.")
+                        do! client.PostAsync (Response $"Hello, {name}! You are visitor number {count}.")
                         return count + 1
                     | Server.Message Pong ->
                         client.Post Ping
@@ -105,6 +105,8 @@ let statefulServerAgent() : Server.StatefulAgent<ServerToClient, ClientToServer,
 Here after initialization, a starting state of `0` is and the message processing function is returned.
 The message processing function takes the current state and returns a new state after processing the message, wrapped in an `Async` which allows the response computation to be awaited.
 In the background, stateful agent functions will be converted to an F# `MailboxProcessor`, ensuring that messages are processed in a single-threaded manner.
+
+Also note that the `PostAsync` method is used to send a response back to the client, which ensures the whole message is sent before moving on to processing next request.
 
 There is a third type of agent, `CustomAgent`, which provides an abstraction for the agent to reply to events happening on the server too.
 A third message type `'Custom` is needed, for example:
@@ -150,6 +152,19 @@ Note that this allows weaving in the handling of events that are prompted by the
 
 Some extra redirection is needed to use the `CustomAgent` type, as it uses a `CustomWebSocketAgent` type that has a `Client` property to access the client agent.
 Also the message cases to process are of type `Server.CustomMessage`.
+
+## The client object
+
+On the `WebSocketClient` type (used from server-side code), there are several methods and properties available:
+    
+* `Connection`: an `WebSocketConnection` instance that provides access to some of the functionality of the underlying `System.Net.WebSockets.WebSocket` instance, and also exposes events
+* `JsonProvider`: the caching JSON de/serializer instance used for messaging
+* `Context`: the WebSharper context that can be used to access the current request url, user session, etc.
+* `PostAsync`: post to client asynchronously
+* `Post`: post to client and do not await full sending of the message
+* `OnMessage`: an event that is triggered when a message is received from the client
+* `OnOpen`: an event that is triggered when the websocket connection is opened
+* `OnClose`: an event that is triggered when the websocket connection is closed
 
 ## Starting the server
 
@@ -247,6 +262,13 @@ let statefulClientAgent() =
     }
     |> Async.Start
 ```
+
+## The server object
+
+On the `WebSocketServer` type (used from client-side code), there only two members available:
+
+* `Connection`: the underlying JavaScript `Websocket` instance
+* `Post`: post a message to the server
 
 ## Setting up the client endpoint
 
