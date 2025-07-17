@@ -18,6 +18,7 @@
     "aspnetcore",
     "webcontext",
     "webworkers",
+    "websockets",
     "interface-generator",
     "testing",
     "math"
