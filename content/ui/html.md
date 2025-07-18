@@ -8,7 +8,7 @@ WebSharper.UI is a library providing a novel, pragmatic and convenient approach 
 * A [reactive layer](reactive) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP). This reactive system integrates with the HTML library to create reactive documents. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the reactive system, rather than a single state value associated with the component.
 * Client-side [routing](routing) using the same endpoint type declaration as [WebSharper server-side routing](../core/routing).
 
-This page is an overview of the capabilities of WebSharper.UI. You can also check [the full reference of all the API types and modules](http://developers.websharper.com/api/WebSharper.UI).
+This page is an overview of the capabilities of WebSharper.UI.
 
 Get the package from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui).
 
@@ -21,7 +21,7 @@ Additionally, client-side Docs can be reactive. A same Doc can consist of differ
 <a name="html"></a>
 ### Constructing HTML
 
-The main means of creating Docs is by using the functions in the [`WebSharper.UI.Html`](/api/v4.1/WebSharper.UI.Html) module. Every HTML element has a dedicated function, such as `div` or `p`, which takes a sequence of [attributes](#attrs) (of type `Attr`) and a sequence of child nodes (of type `Doc`). Additionally, the `text` function creates a text node.
+The main means of creating Docs is by using the functions in the `WebSharper.UI.Html` module. Every HTML element has a dedicated function, such as `div` or `p`, which takes a sequence of [attributes](#attrs) (of type `Attr`) and a sequence of child nodes (of type `Doc`). Additionally, the `text` function creates a text node.
 
 ```fsharp
 open WebSharper.UI.Html
