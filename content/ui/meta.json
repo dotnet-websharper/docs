@@ -1,6 +1,12 @@
 {
-    "root": true,
-    "title": "WebSharper UI",
-    "description": "Documentation for WebSharper.UI",
-    "icon": "Palette"
+  "root": false,
+  "title": "WebSharper UI",
+  "description": "Documentation for WebSharper.UI",
+  "icon": "Palette",
+  "pages": [
+    "html",
+    "templating",
+    "reactive",
+    "routing"
+  ]
 }
