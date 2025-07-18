@@ -12,7 +12,7 @@ export const baseOptions: BaseLayoutProps = {
     title: (
       <>
         <img src="/favicon.png" />
-        My App
+        WebSharper documentation
       </>
     ),
   }

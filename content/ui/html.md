@@ -156,7 +156,7 @@ For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make
     ```
 
 * `Doc.Verbatim` creates a Doc from plain HTML text.  
-    **Security warning:** this function does not perform any checks on the contents, and can be a code injection vulnerability if used improperly. We recommend avoiding it unless absolutely necessary, and properly sanitizing user inputs if you do use it. If you simply want to use HTML syntax instead of F# functions, take a look at [templating](#templating).
+    **Security warning:** this function does not perform any checks on the contents, and can be a code injection vulnerability if used improperly. We recommend avoiding it unless absolutely necessary, and properly sanitizing user inputs if you do use it. If you simply want to use HTML syntax instead of F# functions, take a look at [templating](templating).
 
     ```fsharp
     let plainDoc =
@@ -367,7 +367,7 @@ let MyPage (ctx: Context<EndPoint>) =
     )
 ```
 
-By opening `WebSharper.UI.Server`, you can also just pass a full page to `Content.Page`. This is particularly useful together with [templates](#templating).
+By opening `WebSharper.UI.Server`, you can also just pass a full page to `Content.Page`. This is particularly useful together with [templates](templating).
 
 ```fsharp
 let MyPage (ctx: Context<EndPoint>) =
