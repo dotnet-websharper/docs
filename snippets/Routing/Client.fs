@@ -21,9 +21,9 @@ module Client =
         // Navigation bar
         let navBar =
             div [attr.``class`` "navbar"] [
-                a [attr.href (router.LinkHash Home)] [text "Home"]
-                a [attr.href (router.LinkHash About)] [text "About"]
-                a [attr.href (router.LinkHash Contact)] [text "Contact"]
+                a [attr.href ("#" + router.Link Home)] [text "Home"]
+                a [attr.href ("#" + router.Link About)] [text "About"]
+                a [attr.href ("#" + router.Link Contact)] [text "Contact"]
             ]
 
         // Page content based on current route
@@ -65,7 +65,7 @@ module Client =
     let Main () =
         let router = Router.Infer<EndPoint>()
 
-        // Install the router
+        // Install the router, with a fallback if no route matches
         let currentRoute =
             router 
             |> Router.InstallHash NotFound
