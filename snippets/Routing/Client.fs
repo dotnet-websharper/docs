@@ -11,19 +11,19 @@ open WebSharper.Sitelets
 module Client =
     // Define the possible routes
     type EndPoint =
-        | [<EndPoint "/">] Home
-        | [<EndPoint "/about">] About
-        | [<EndPoint "/contact">] Contact
-        | [<EndPoint "/notfound">] NotFound
+        | [<EndPoint "">] Home
+        | [<EndPoint "about">] About
+        | [<EndPoint "contact">] Contact
+        | [<EndPoint "notfound">] NotFound
 
     // Main UI component
     let Render (router: Router<EndPoint>) (currentRoute: Var<EndPoint>) =
         // Navigation bar
         let navBar =
             div [attr.``class`` "navbar"] [
-                a [attr.href (router.Link Home)] [text "Home"]
-                a [attr.href (router.Link About)] [text "About"]
-                a [attr.href (router.Link Contact)] [text "Contact"]
+                a [attr.href (router.LinkHash Home)] [text "Home"]
+                a [attr.href (router.LinkHash About)] [text "About"]
+                a [attr.href (router.LinkHash Contact)] [text "Contact"]
             ]
 
         // Page content based on current route
@@ -68,7 +68,7 @@ module Client =
         // Install the router
         let currentRoute =
             router 
-            |> Router.Install NotFound
+            |> Router.InstallHash NotFound
 
         Render router currentRoute
         |> Doc.RunById "main"

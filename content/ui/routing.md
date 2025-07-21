@@ -26,7 +26,7 @@ First argument (`Home`) specifies which page value to fall back on if the URL pa
 
 Also, you need to make sure that your router value is `[<JavaScript>]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
 
-`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#/contact/Bob/32`.
+`Router.InstallHash` have the same signature as `Router.Install`, the only difference is that URLs would look like `yoursite.com/#/contact/Bob/32`. Make sure to use `router.LinkHash` instead of `router.Link` to generate links in this case.
 
 Example for `Router.Slice` and `Router.Install`:
 ```fsharp
