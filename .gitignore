@@ -31,7 +31,9 @@ debug.log
 snippets/*/bin/*
 snippets/*/obj/*
 snippets/*/wwwroot/Content
+snippets/*/wwwroot/Scripts
 snippets/*/websharper.log
 snippets/*/build
+snippets/*/node_modules
 .fake
 /.vs

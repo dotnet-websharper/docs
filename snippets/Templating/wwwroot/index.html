@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Templating</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/Templating.css" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] { display: none; }
+    </style>
+    <script type="text/javascript" src="Scripts/Templating.head.js"></script>
+</head>
+<body>
+    <!-- Main template container -->
+    <div ws-template="MainTemplate">
+        <h1>WebSharper UI Templating Demo</h1>
+
+        <!-- Input section with two-way binding -->
+        <div>
+            <label>Name: <input ws-var="Name" type="text" placeholder="Enter your name"></label>
+            <p>Current name: ${Name}</p>
+        </div>
+
+        <!-- Counter section with event handlers -->
+        <div>
+            <button ws-onclick="Increment">Increment</button>
+            <button ws-onclick="Decrement">Decrement</button>
+            <p>Count: ${Count}</p>
+        </div>
+
+        <!-- Greeting section with reactive content -->
+        <div>
+            <h3>Greeting</h3>
+            <p>${Greeting}</p>
+        </div>
+
+        <!-- Repeating template for a list -->
+        <div ws-template="ItemTemplate">
+            <div class="item">
+                <span>${ItemName}</span>
+                <button ws-onclick="RemoveItem">Remove</button>
+            </div>
+        </div>
+
+        <!-- List section with dynamic items -->
+        <div>
+            <h3>Dynamic List</h3>
+            <input type="text" ws-var="NewItem" placeholder="Add new item">
+            <button ws-onclick="AddItem">Add Item</button>
+            <div ws-replace="Items"></div>
+        </div>
+    </div>
+
+    <!-- Container for the WebSharper application -->
+    <div id="main"></div>
+    <script type="module" src="Scripts/Templating.min.js"></script>
+</body>
+</html>

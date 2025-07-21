@@ -10,16 +10,16 @@ Reactive values that are directly set by code or by user interaction are represe
 
 The following are available from `WebSharper.UI.Client`:
 
-* `Doc.Input` creates an `<input>` element with given attributes that is bound to a `Var<string>`.
+* `Doc.InputType.Text` creates an `<input>` element with given attributes that is bound to a `Var<string>`.
 
     ```fsharp
     let varText = Var.Create "initial value"
-    let myInput = Doc.Input [ attr.name "my-input" ] varText
+    let myInput = Doc.InputType.Text [ attr.name "my-input" ] varText
     ```
     
     With the above code, once `myInput` has been inserted in the document, getting `varText.Value` will at any point reflect what the user has entered, and setting it will edit the input.
 
-* `Doc.IntInput` and `Doc.FloatInput` create an `<input type="number">` bound to a `Var<CheckedInput<_>>` of the corresponding type (`int` or `float`). `CheckedInput` provides access to the validity and actual user input, it is defined as follows:
+* `Doc.InputType.Int` and `Doc.InputType.Float` create an `<input type="number">` bound to a `Var<CheckedInput<_>>` of the corresponding type (`int` or `float`). `CheckedInput` provides access to the validity and actual user input, it is defined as follows:
 
     ```fsharp
     type CheckedInput<'T> =
@@ -28,15 +28,15 @@ The following are available from `WebSharper.UI.Client`:
         | Blank of inputText: string
     ```
 
-* `Doc.IntInputUnchecked` and `Doc.FloatInputUnchecked` create an `<input type="number">` bound to a `Var<_>` of the corresponding type (`int` or `float`). They do not check for the validity of the user's input, which can cause wonky interactions. We recommend using `Doc.IntInput` or `Doc.FloatInput` instead.
+* `Doc.InputType.IntUnchecked` and `Doc.InputType.FloatUnchecked` create an `<input type="number">` bound to a `Var<_>` of the corresponding type (`int` or `float`). They do not check for the validity of the user's input, which can cause wonky interactions. We recommend using `Doc.InputType.Int` or `Doc.InputType.Float` instead.
 
-* `Doc.InputArea` creates a `<textarea>` element bound to a `Var<string>`.
+* `Doc.InputType.TextArea` creates a `<textarea>` element bound to a `Var<string>`.
 
-* `Doc.PasswordBox` creates an `<input type="password">` element bound to a `Var<string>`.
+* `Doc.InputType.Password` creates an `<input type="password">` element bound to a `Var<string>`.
 
-* `Doc.CheckBox` creates an `<input type="checkbox">` element bound to a `Var<bool>`.
+* `Doc.InputType.CheckBox` creates an `<input type="checkbox">` element bound to a `Var<bool>`.
 
-* `Doc.CheckBoxGroup` also creates an `<input type="checkbox">`, but instead of associating it with a simple `Var<bool>`, it associates it with a specific `'T` in a `Var<list<'T>>`. If the box is checked, then the element is added to the list, otherwise it is removed.
+* `Doc.InputType.CheckBoxGroup` also creates an `<input type="checkbox">`, but instead of associating it with a simple `Var<bool>`, it associates it with a specific `'T` in a `Var<list<'T>>`. If the box is checked, then the element is added to the list, otherwise it is removed.
 
     ```fsharp
     type Color = Red | Green | Blue
@@ -47,15 +47,15 @@ The following are available from `WebSharper.UI.Client`:
     let mySelector =
         div [] [
             label [] [
-                Doc.CheckBoxGroup [] Red varColor
+                Doc.InputType.CheckBoxGroup [] Red varColor
                 text " Select Red"
             ]
             label [] [
-                Doc.CheckBoxGroup [] Green varColor
+                Doc.InputType.CheckBoxGroup [] Green varColor
                 text " Select Green"
             ]
             label [] [
-                Doc.CheckBoxGroup [] Blue varColor
+                Doc.InputType.CheckBoxGroup [] Blue varColor
                 text " Select Blue"
             ]
         ]
@@ -73,7 +73,7 @@ The following are available from `WebSharper.UI.Client`:
 
     Plus varColor is bound to contain the list of ticked checkboxes.
 
-* `Doc.Select` creates a dropdown `<select>` given a list of values to select from. The label of every `<option>` is determined by the given print function for the associated value.
+* `Doc.InputType.Select` creates a dropdown `<select>` given a list of values to select from. The label of every `<option>` is determined by the given print function for the associated value.
 
     ```fsharp
     type Color = Red | Green | Blue
@@ -86,7 +86,7 @@ The following are available from `WebSharper.UI.Client`:
         sprintf "%A" c
 
     let mySelector =
-        Doc.Select [] showColor [ Red; Green; Blue ] varColor
+        Doc.InputType.Select [] showColor [ Red; Green; Blue ] varColor
     ```
         
     Result:
@@ -101,7 +101,13 @@ The following are available from `WebSharper.UI.Client`:
 
     Plus varColor is bound to contain the selected color.
 
-* `Doc.Radio` creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
+* `Doc.InputType.SelectDyn` is similar to `Doc.InputType.Select`, but it takes a `View<list<'T>>` instead of a static list of values. This means that the dropdown can change dynamically based on the contents of the View.
+
+* `Doc.InputType.SelectOptional` and `Doc.InputType.SelectDynOptional` allow for selecting no values.
+
+* `Doc.InputType.SelectMultiple` and `Doc.InputType.SelectMultipleDyn` allow for selecting multiple values.
+
+* `Doc.InputType.Radio` creates an `<input type="radio">` given a value, which sets the given `Var` to that value when it is selected.
 
     ```fsharp
     type Color = Red | Green | Blue
@@ -112,15 +118,15 @@ The following are available from `WebSharper.UI.Client`:
     let mySelector =
         div [] [
             label [] [
-                Doc.Radio [] Red varColor
+                Doc.InputType.Radio [] Red varColor
                 text " Select Red"
             ]
             label [] [
-                Doc.Radio [] Green varColor
+                Doc.InputType.Radio [] Green varColor
                 text " Select Green"
             ]
             label [] [
-                Doc.Radio [] Blue varColor
+                Doc.InputType.Radio [] Blue varColor
                 text " Select Blue"
             ]
         ]
@@ -138,7 +144,8 @@ The following are available from `WebSharper.UI.Client`:
 
     Plus varColor is bound to contain the selected color.
 
-More variants are available in the `Doc` module.
+More variants available in the `Doc.InputType` module are: `Color`, `Date`, `DateTimeLocal`, `Email`, `File`, `Month`, `Range`, `Search`, `Tel`, `Time`, `Url`, `Week`, .
+These all correspond to the HTML `<input>` element of the same type.
 
 ### Views
 
@@ -227,7 +234,7 @@ Once you have created a View to represent your dynamic content, here are the var
         |> View.Map String.length
         |> View.Map (fun l -> sprintf "You entered %i characters." l)
     div [] [
-        Doc.Input [] varTxt
+        Doc.InputType.Text [] varTxt
         textView vLength
     ]
     ```
@@ -245,7 +252,7 @@ Once you have created a View to represent your dynamic content, here are the var
             |> Doc.Concat
         )
     div [] [
-        Doc.Input [] varTxt
+        Doc.InputType.Text [] varTxt
         text "You entered the following words:"
         ul [] [ vWords ]
     ]
@@ -262,7 +269,7 @@ Once you have created a View to represent your dynamic content, here are the var
     let vStyle =
         varTxt.View
         |> View.Map (fun s -> "background-color: " + s)
-    Doc.Input [ attr.styleDyn vStyle ] varTxt
+    Doc.InputType.Text [ attr.styleDyn vStyle ] varTxt
     ```
 
 * `attr.*DynPred` is similar to `attr.*Dyn`, but it takes an extra `View<bool>`. When this View is true, the attribute is set (and dynamically updated as with `attr.*Dyn`), and when it is false, the attribute is removed.
@@ -274,7 +281,7 @@ Once you have created a View to represent your dynamic content, here are the var
         varTxt.View
         |> View.Map (fun s -> "background-color: " + s)
     div [] [
-        Doc.Input [ attr.styleDynPred vStyle varCheck.View ] varTxt
+        Doc.InputType.Text [ attr.styleDynPred vStyle varCheck.View ] varTxt
         Doc.CheckBox [] varCheck
     ]
     ```
@@ -408,8 +415,8 @@ let varLastName = varPerson.Lens (fun p -> p.LastName)
                                  (fun p n -> { p with LastName = n })
 let myForm =
     div [] [
-        Doc.Input [ attr.placeholder "First Name" ] varFirstName
-        Doc.Input [ attr.placeholder "Last Name" ] varLastName
+        Doc.InputType.Text [ attr.placeholder "First Name" ] varFirstName
+        Doc.InputType.Text [ attr.placeholder "Last Name" ] varLastName
     ]
 ```
 
@@ -425,7 +432,7 @@ let varFirstName = varPerson.Lens (fun p -> p.FirstName)
                                   (fun p n -> { p with FirstName = n })
 ```
 
-You can be even more concise when using `Doc.Input` and family thanks to [the V shorthand](#the-v-shorthand).
+You can be even more concise when using `Doc.InputType.Text` and family thanks to [the V shorthand](#the-v-shorthand).
 
 <a name="v"></a>
 ### The V Shorthand
@@ -565,14 +572,14 @@ Additionally, `var.V` can be used as a shorthand for [lenses](#vars-and-lensing)
 
     let myForm =
         div [] [
-            Doc.Input [ attr.placeholder "First Name" ] (Lens varPerson.V.FirstName)
-            Doc.Input [ attr.placeholder "Last Name" ] (Lens varPerson.V.LastName)
+            Doc.InputType.Text [ attr.placeholder "First Name" ] (Lens varPerson.V.FirstName)
+            Doc.InputType.Text [ attr.placeholder "Last Name" ] (Lens varPerson.V.LastName)
         ]
     ```
 
-* `Doc.InputV`, `Doc.InputAreaV`, `Doc.PasswordBoxV`
-* `Doc.IntInputV`, `Doc.IntInputUncheckedV`
-* `Doc.FloatInputV`, `Doc.FloatInputUncheckedV`
+* `Doc.InputType.TextV`, `Doc.InputType.TextAreaV`, `Doc.InputType.PasswordV`
+* `Doc.InputType.IntV`, `Doc.InputType.IntUncheckedV`
+* `Doc.InputType.FloatV`, `Doc.InputType.FloatUncheckedV`
 
 ```fsharp
 type Person = { FirstName : string; LastName : string }
@@ -580,25 +587,25 @@ let varPerson = Var.Create { FirstName = "John"; LastName = "Doe" }
 
 let myForm =
     div [] [
-        Doc.InputV [ attr.placeholder "First Name" ] varPerson.V.FirstName
-        Doc.InputV [ attr.placeholder "Last Name" ] varPerson.V.LastName
+        Doc.InputType.TextV [ attr.placeholder "First Name" ] varPerson.V.FirstName
+        Doc.InputType.TextV [ attr.placeholder "Last Name" ] varPerson.V.LastName
     ]
 
 // The above is equivalent to:
 let myForm =
     div [] [
-        Doc.Input [ attr.placeholder "First Name" ]
+        Doc.InputType.Text [ attr.placeholder "First Name" ]
             (varPerson.LensAuto (fun p -> p.FirstName))
-        Doc.Input [ attr.placeholder "Last Name" ]
+        Doc.InputType.Text [ attr.placeholder "Last Name" ]
             (varPerson.LensAuto (fun p -> p.LastName))
     ]
 
 // Which is equivalent to:
 let myForm =
     div [] [
-        Doc.Input [ attr.placeholder "First Name" ] 
+        Doc.InputType.Text [ attr.placeholder "First Name" ] 
             (varPerson.Lens (fun p -> p.FirstName) (fun p n -> { p with FirstName = n }))
-        Doc.Input [ attr.placeholder "Last Name" ]
+        Doc.InputType.Text [ attr.placeholder "Last Name" ]
             (varPerson.Lens (fun p -> p.LastName) (fun p n -> { p with LastName = n }))
     ]
 ```
@@ -712,7 +719,7 @@ Once you have a ListModel, you can modify its contents like so:
         myPeople.LensInto "johnny87" (fun p -> p.Name) (fun p n -> { p with Name = n })
 
     // The following input field edits John's name directly in the listModel.
-    let editJohnsName = Doc.Input [] varJohnsName
+    let editJohnsName = Doc.InputType.Text [] varJohnsName
     ```
 
 #### Reactively observing ListModels
