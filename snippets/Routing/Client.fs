@@ -21,9 +21,9 @@ module Client =
         // Navigation bar
         let navBar =
             div [attr.``class`` "navbar"] [
-                a [attr.href ("#" + router.Link Home)] [text "Home"]
-                a [attr.href ("#" + router.Link About)] [text "About"]
-                a [attr.href ("#" + router.Link Contact)] [text "Contact"]
+                a [attr.href (router.HashLink Home)] [text "Home"]
+                a [attr.href (router.HashLink About)] [text "About"]
+                a [attr.href (router.HashLink Contact)] [text "Contact"]
             ]
 
         // Page content based on current route
