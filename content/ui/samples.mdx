@@ -25,7 +25,7 @@ This sample demonstrates:
 
 ## Shorthand Views with `.V`
 
-The `.V` property is a shorthand for "value", but the real magic happens when you use it inside a function that supports it like `text` or the `V` helper function.
+The `.V` property is a short for "value", but the real magic happens when you use it inside a function that supports it like `text` or the `V` helper function.
 It allows you to create reactive expressions that automatically update when the underlying data changes.
 
 <FSharpSnippetTabs
@@ -37,6 +37,12 @@ It allows you to create reactive expressions that automatically update when the 
 
 This is equivalent to the `Var` sample but with a cleaner approach for combining and displaying values.
 
+This sample demonstrates:
+
+* Combining the application state into a single variable.
+* Automatic mapping and lensing of Vars.
+* Using `.Update` to ensure updates are applied correctly on increase/decrease.
+
 ## HTML templates
 
 WebSharper.UI templating allows separating UI structure (HTML) from logic (F#), using attributes like `ws-template`, `ws-var`, and `ws-onclick` (or other events) for bindings.
@@ -44,12 +50,18 @@ WebSharper.UI templating allows separating UI structure (HTML) from logic (F#), 
 <FSharpSnippetTabs
   snippet="Templating"
   liveSnippetHeight="500"
-  highlightLines="33-53"
+  highlightLines="32,46"
   defTab="preview"
 />
 
 Templates make UI declarative and easier to design.
 You get a clear separation of concerns and the correctness is still fully ensured by the type system.
+
+This sample demonstrates:
+
+* Using `ws-template` to define a reusable HTML structure.
+* Binding data to HTML inputs with `ws-var`, displaying text via the `${Hole}` syntax.
+* Handling events like clicks with `ws-onclick`.
 
 ## Client-side routing
 
@@ -63,3 +75,8 @@ Routing adds navigation to create a full SPA. WebSharper.UI's `Router` handles U
 />
 
 This example shows how to set up a simple router that handles navigation between different pages in your application.
+
+This sample demonstrates:
+* Defining a router with `Router.Infer` and an `EndPoint` type.
+* Using `Router.Install` to set up client-side routing.
+* Handling URL changes and rendering different content based on the current route.
