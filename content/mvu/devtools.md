@@ -7,7 +7,7 @@ This browser extension allows you to inspect the successive messages and states 
 
 ## Installation
 
-See the [Installation readme](https://github.com/reduxjs/redux-devtools/tree/main/extension#installation) for a link to the extension for your browser.
+See the [Installation readme](https://github.com/reduxjs/redux-devtools/blob/main/extension/README.md#installation) for a link to the extension for your browser.
 
 ## Code integration
 
@@ -59,9 +59,12 @@ let Main() =
 
 Not all features of Redux DevTools are supported. The following features are currently implemented:
 
+* Action history: you can see the history of actions sent to the update function, with their payloads and the resulting state.
+* Inspect: actions, model states, and state diffs can be inspected in detail.
 * Time travel: you can use the "Jump" button on actions to go back to a previous state.
 * Reset: you can reset the state to the initial model.
 * Revert: you can revert to the last committed state.
 * Commit: you can commit the current state to jump back to with revert and clean up the action history.
+* Dispatch: you can dispatch actions manually from the DevTools. Use the same JSON format as how the tooling sees actions, i.e., an object with a `"type"` field.
 
 Other features such as skipping and reordering actions are not yet implemented.
