@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Counter": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:3880;http://localhost:3881"
+    }
+  }
+}

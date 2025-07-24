@@ -70,14 +70,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check for broken links on front page
+      - name: Check for broken links
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
           url: https://docs.websharper.com/
           cmd_params: "--verbose --buffer-size=8192 --max-connections=5 --color=always --timeout=20"
 
-      - name: Check for broken links in core docs
-        uses: ruzickap/action-my-broken-link-checker@v2
-        with:
-          url: https://docs.websharper.com/core/overview
-          cmd_params: "--verbose --buffer-size=8192 --max-connections=5 --color=always --timeout=20 --exclude=\"https://docs.websharper.com/cdn-cgi\" "
+      # - name: Check for broken links in core docs
+      #   uses: ruzickap/action-my-broken-link-checker@v2
+      #   with:
+      #     url: https://docs.websharper.com/core/overview
+      #     cmd_params: "--verbose --buffer-size=8192 --max-connections=5 --color=always --timeout=20 --exclude=\"https://docs.websharper.com/cdn-cgi\" "

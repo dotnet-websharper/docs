@@ -1,0 +1,10 @@
+{
+  "root": false,
+  "title": "WebSharper MVU",
+  "description": "Documentation for WebSharper.MVU",
+  "icon": "Palette",
+  "pages": [
+    "mvu",
+    "devtools"
+  ]
+}

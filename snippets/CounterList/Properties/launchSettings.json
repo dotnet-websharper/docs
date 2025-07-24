@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CounterList": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:4526;http://localhost:4527"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Paging</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .ws-page-container {
+            position: absolute !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .home-page {
+            transition: opacity 0.2s;
+        }
+
+            .home-page[aria-hidden=true] {
+                opacity: 0;
+                transition: opacity 0.2s, left 0.2s step-end;
+            }
+
+        .entry-page {
+            transition: left 0.2s;
+            background: white;
+        }
+
+            .entry-page[aria-hidden=true] {
+                left: 100% !important;
+            }
+    </style>
+    <script type="text/javascript" src="Scripts/Paging.head.js"></script>
+</head>
+<body>
+    <div id="main">
+    </div>
+    <script type="module" src="Scripts/Paging.min.js"></script>
+</body>
+</html>

@@ -1,3 +1,9 @@
 {
-    "pages": ["core", "ui", "cli", "forms"]
+  "pages": [
+    "core",
+    "ui",
+    "mvu",
+    "cli",
+    "forms"
+  ]
 }

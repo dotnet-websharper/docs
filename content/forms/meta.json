@@ -1,5 +1,5 @@
 {
-    "root": true,
+    "root": false,
     "title": "WebSharper Forms",
     "description": "Documentation for WebSharper.Forms",
     "icon": "Palette"
