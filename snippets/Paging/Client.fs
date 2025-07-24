@@ -117,3 +117,4 @@ module Client =
         App.CreateSimplePaged InitModel Update Render
         |> App.WithLocalStorage "mvu-tests"
         |> App.Run
+        |> Doc.RunById "main"
