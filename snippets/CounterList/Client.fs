@@ -61,6 +61,7 @@ module CountersApp =
             )
         ]
 
+    [<SPAEntryPoint>]
     let Main =
         let initModel = { Counters = List.init 10 (fun i -> { Id = i+1; Counter = 0 }) }
         App.CreateSimple initModel Update Render

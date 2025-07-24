@@ -112,6 +112,7 @@ module Client =
             Input = ""
         }
 
+    [<SPAEntryPoint>]
     let Main =
         App.CreateSimplePaged InitModel Update Render
         |> App.WithLocalStorage "mvu-tests"

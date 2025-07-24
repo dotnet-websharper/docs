@@ -26,6 +26,7 @@ module Counter =
             button [on.click (fun _ _ -> dispatch Increment)] [text "+"]
         ]
 
+    [<SPAEntryPoint>]
     let Main =
         App.CreateSimple { Counter = 0 } Update Render
         |> App.Run
