@@ -1,6 +1,9 @@
 {
-    "root": false,
-    "title": "WebSharper Forms",
-    "description": "Documentation for WebSharper.Forms",
-    "icon": "Palette"
+  "root": false,
+  "title": "WebSharper Forms",
+  "description": "Documentation for WebSharper.Forms",
+  "icon": "Palette",
+  "pages": [
+    "index"
+  ]
 }

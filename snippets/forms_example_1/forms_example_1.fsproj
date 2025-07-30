@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebSharper" Version="9.0.1.549" />    
-    <PackageReference Include="WebSharper.FSharp" Version="9.0.1.549" />
-    <PackageReference Include="WebSharper.MathJS" Version="9.0.0.547" />
-    <PackageReference Include="WebSharper.UI" Version="9.0.0.547" />
-    <PackageReference Include="WebSharper.AspNetCore" Version="9.0.1.549" />
+    <PackageReference Include="WebSharper" Version="9.1.5.591" />
+    <PackageReference Include="WebSharper.Forms" Version="9.1.0.557" />    
+    <PackageReference Include="WebSharper.FSharp" Version="9.1.5.591" />
+    <PackageReference Include="WebSharper.UI" Version="9.1.5.591" />
+    <PackageReference Include="WebSharper.AspNetCore" Version="9.1.5.591" />
   </ItemGroup>
 
   <ItemGroup>
