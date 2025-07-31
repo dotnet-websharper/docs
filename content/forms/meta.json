@@ -4,6 +4,7 @@
   "description": "Documentation for WebSharper.Forms",
   "icon": "Palette",
   "pages": [
-    "index"
+    "index",
+    "api"
   ]
 }
