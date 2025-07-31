@@ -158,7 +158,7 @@ are listed below.
 
 The `library` project type is the default, it can be omitted. In this case the WebSharper compiler translates the found JavaScript scope, preparing the project to be used as a reference of other WebSharper projects.
 
-The `web`, `spa`, and `microservice` project types work as web projects. The WebSharper compiler creates pre-optimized runtime metadata for them for fast startup of WebSharper Sitelets and Remoting services. A `web` project supports full Sitelet functionality. An `spa` outputs a single `.js` file to be linked from a static `html` file. A `microservice` is geared towards using server-side functionality only.
+The `web`, `spa`, and `microservice` project types work as web projects. The WebSharper compiler creates pre-optimized runtime metadata for them for fast startup of WebSharper sitelets and remoting services. A `web` project supports full Sitelet functionality. An `spa` outputs a single `.js` file to be linked from a static `html` file. A `microservice` is geared towards using server-side functionality only.
 
 A `bundleOnly` project mimics `spa` for the `.js` output, but skips .NET compilation for F# and embedding resources for C# for faster turnaround of client-only use cases.
 

@@ -2,15 +2,15 @@
 title: Using WebContext
 ---
 
-Both in Sitelets and remote functions, WebSharper provides a value of type `WebSharper.Web.Context` that gives some contextual information about the current request.
+Both in sitelets and remote functions, WebSharper provides a value of type `WebSharper.Web.Context` that gives some contextual information about the current request.
 
 ## Retrieving the context
 
 ### Sitelets
 
-In Sitelets, the functions creating Sitelet instances like `Sitelet.New`, `Sitelet.Content`, or `Sitelet.Infer`
+In sitelets, the functions creating sitelet instances like `Sitelet.New`, `Sitelet.Content`, or `Sitelet.Infer`
 all take a function argument of type `Web.Context<'T> -> 'T -> Async<Web.Content>` (`Sitelet.Content` is dropping the `'T` value as it's for a single known value). 
-This means that when you implement a Sitelet, you can retrieve the context by using the function argument directly. For example:
+This means that when you implement a sitelet, you can retrieve the context by using the function argument directly. For example:
 
 ```fsharp
 let Main =
@@ -84,7 +84,7 @@ The implementation of these functions relies on cookies and thus requires that t
 
 ## Sitelet Context
 
-For Sitelets, the object is typed with the type of the endpoint, so you get an instance of `WebSharper.Web.Context<Endpoint>``. This provides a method for generating safe links.
+For sitelets, the object is typed with the type of the endpoint, so you get an instance of `WebSharper.Web.Context<Endpoint>``. This provides a method for generating safe links.
 
 * `Link : Endpoint -> string` generates a link to the given endpoint, ensuring that the link is safe and correctly formatted.
 

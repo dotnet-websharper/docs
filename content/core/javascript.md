@@ -38,7 +38,7 @@ This mode is intended for debugging, creating code for npm, or for bundling with
 For website projects without `"preBundle": true` (for example for Debug mode), a `root.js` file is created that re-exports all code entry points needed for the website. This can be passed to tools like vite.
 
 ### Bundled output
-For web (Sitelet) and SPA projects, WebSharper can use source code type information to create dead code eliminated bundles.
+For web (sitelet) and SPA projects, WebSharper can use source code type information to create dead code eliminated bundles.
 
 By default, a single bundle called `all.js` is created for a web application which contains all necessary code for all pages. If using `Content.Page` to create responses, use the `Bundle` argument to set a name for the bundle to be pre-created for the page. WebSharper creates these bundles by compile-time analysis of the client-side code required to render the page that is passed as the `Body` argument. If you want to send code to a certain bundle without wrapping it in a `Content` object yet, use the `Content.Bundle` helper, which uses the same compile-time analysis.
 
@@ -331,7 +331,7 @@ The following is an overview of all attributes provided by WebSharper to guide t
 
 ### Sitelets routing-specific attributes
 
-- `EndPoint` - specifies an URL or URL fragment for Sitelets routing.
+- `EndPoint` - specifies an URL or URL fragment for sitelets routing.
 - `Method` - specifies the HTTP method.
 - `Json` - marks a field to deserialize request body JSON data into.
 - `Query` - marks a field to fill in from query parameter.

@@ -1,38 +1,36 @@
 ---
-title: WebSharper.Forms
+title: Introduction
 ---
 
 import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
 
-# Introduction to Forms
-
-The WebSharper.Forms library provides a high-level abstraction for working with web forms and constructing interactive user interfaces.
+The WebSharper.Forms library, [available on NuGet](https://www.nuget.org/packages/websharper.forms), provides a high-level abstraction for working with web forms and constructing interactive user interfaces.
 It can declaratively describe user data input such as forms, including data validation and feedback.
 It allows for a separation of concerns between the data model and the rendering of the form, while the two are connected in a type-safe manner.
 
 Additional benefits are composability and reusability of form components, as well as the ability to create dynamic forms that adapt to user input,
 i.e. the type and appearance of input fields in part of the form dynamically depends on user input in previous fields.
 
-Using Forms is easy. Users might be frightened by their cryptic type signature so this guide intends to explain what is the meaning of all the elements that compose a Form.
-In addition, introductory examples will be presented to get the user acquainted with Forms.
+Using forms is easy. Users might be frightened by their cryptic type signature so this guide intends to explain what is the meaning of all the elements that compose a form.
+In addition, introductory examples will be presented to get the user acquainted with WebSharper.Forms.
 
-Forms is based on [WebSharper UI](../ui/reactive). Therefore familiarity with concepts such as `Var`, `View` and the `Doc` type for HTML is necessary to work with it.
+WebSharper.Forms is based on [WebSharper UI](../ui/reactive). Therefore familiarity with concepts such as `Var`, `View` and the `Doc` type for HTML is necessary to work with it.
 
 See the bottom of this page for a complete working example.
 
-## A simple Form
+## A simple form
 
 Programming with reactive forms has two distinct steps:
 
-- Defining your Form, i.e. defining the fields that compose the result, how they are composed, and what validation must be run on them.
+- Defining your form, i.e. defining the fields that compose the result, how they are composed, and what validation must be run on them.
 
-- Rendering your Form, i.e. creating the markup that will be used and connecting the input fields with the reactive values created in the first step.
+- Rendering your form, i.e. creating the markup that will be used and connecting the input fields with the reactive values created in the first step.
 
-### Defining a Form
+### Defining a form
 
 In this step we create a value of type `Form<'T, 'R>` where:
 
-- `'T` is the type returned by the Form.
+- `'T` is the type returned by the form.
 
 - `'R` is the type of the render builder. It will always have the following shape:
 
@@ -58,7 +56,7 @@ type Species =
 type Pet = { species : Species; name : string }
 ```
 
-Then, let's define the Form itself:
+Then, let's define the form itself:
 
 ```fsharp
 let PetForm (init: Pet) =
@@ -70,9 +68,9 @@ let PetForm (init: Pet) =
 
 Let's break this down:
 * `Form.Yield` creates a singular reactive value that we can later render, with an initial value.
-* The `<*>` operator (an alias for `Form.Apply`) is used to apply a function to the values of multiple Forms by chaining. In this case, it applies the function `fun s n -> { species = s; name = n }` to the values of the two Forms that follow it.
-* `Form.Return` creates a Form that returns a value of type `Pet` when the function is applied to the values of the two Forms.
-* Validation can be applied at any level (singular or composed values). Here, a built-in validator is applied to the name field, which checks that it is not empty. If it is empty, an error message will be shown. Validation checks are performed when the Form is evaluated (on every change or on submit, see later).
+* The `<*>` operator (an alias for `Form.Apply`) is used to apply a function to the values of multiple forms by chaining. In this case, it applies the function `fun s n -> { species = s; name = n }` to the values of the two forms that follow it.
+* `Form.Return` creates a form that returns a value of type `Pet` when the function is applied to the values of the two forms.
+* Validation can be applied at any level (singular or composed values). Here, a built-in validator is applied to the name field, which checks that it is not empty. If it is empty, an error message will be shown. Validation checks are performed when the form is evaluated (on every change or on submit, see later).
 
 So in total, the `PetForm` function describes a functionality of a form with two input fields and how they are initialized from and composed into a single `Pet` value. This functionality is reusable and can be rendered in different ways.
 
@@ -80,9 +78,9 @@ However, this function is still generic, which will allow the type system to plu
 
 We have now defined how a species and a name should be composed into a Pet, and how the name should be verified. Time to define how to render the corresponding reactive form.
 
-### Rendering a Form
+### Rendering a form
 
-The Form we defined has the following type:
+The form we defined has the following type:
 
 ```fsharp
 val PetForm : Pet ->
@@ -135,7 +133,7 @@ let PetFormUI =
     |> Form.Render RenderPet
 ```
 
-## More complex Forms
+## More complex forms
 
 ### Submit button
 
@@ -213,7 +211,7 @@ type Person =
     }
 ```
 
-Defining a Form for this type is relatively straightforward using a function from the `Form.Many*` family:
+Defining a form for this type is relatively straightforward using a function from the `Form.Many*` family:
 
 ```fsharp
 let PersonForm (init: Person) =
@@ -235,7 +233,7 @@ The function `Form.Many` takes three arguments:
 
 - A function taking an initial `Pet` value and returning the `Form<Pet, _>` that will be shown for each pet.
 
-It returns a Form whose value is a sequence of `Pet`s, and adds an argument to the render function of type `Form.Many.CollectionWithDefault<'T, 'V, 'W>`. The type `'T` is the type of items in the collection, and `'V -> 'W` is the type of the render builder for a single item. This is how you render such a stream:
+It returns a form whose value is a sequence of `Pet`s, and adds an argument to the render function of type `Form.Many.CollectionWithDefault<'T, 'V, 'W>`. The type `'T` is the type of items in the collection, and `'V -> 'W` is the type of the render builder for a single item. This is how you render such a stream:
 
 ```fsharp
 let RenderPerson (firstName: Var<string>)
@@ -261,7 +259,7 @@ The function passed to `pets.Render` is called once for every new item in the co
 
 - A value of type `Form.Many.ItemOperations`, named `ops` here. This value has members that allow to move the current item up or down in the collection, or to delete it.
 
-- The arguments of the render function for the item rendering Form, ie. the Form that was passed as the third argument to `Form.Many`.
+- The arguments of the render function for the item rendering form, ie. the form that was passed as the third argument to `Form.Many`.
 
 `CollectionWithDefault` also contains a callback called `Add` that adds a new pet at the end of the collection.
 

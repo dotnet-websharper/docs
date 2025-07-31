@@ -45,7 +45,7 @@ The `MySampleWebsite` value has type `Sitelet<EndPoint>`. It defines a complete 
 
 ## Routing
 
-WebSharper Sitelets abstract away URLs and request parsing by using an endpoint type that represents the different HTTP endpoints available in a website. For example, a site's URL scheme can be represented by the following endpoint type:
+WebSharper sitelets abstract away URLs and request parsing by using an endpoint type that represents the different HTTP endpoints available in a website. For example, a site's URL scheme can be represented by the following endpoint type:
 
 ```fsharp
 type EndPoint =
@@ -54,27 +54,27 @@ type EndPoint =
     | BlogArticle of id: int * slug: string
 ```
 
-Based on this, a Sitelet is a value that represents the following mappings:
+Based on this, a sitelet is a value that represents the following mappings:
 
-* Mapping from requests to endpoints. A Sitelet is able to parse a URL such as `/blog/1243/some-article-slug` into the endpoint value `BlogArticle (id = 1243, slug = "some-article-slug")`. More advanced definitions can even parse query parameters, JSON bodies or posted forms.
+* Mapping from requests to endpoints. A sitelet is able to parse a URL such as `/blog/1243/some-article-slug` into the endpoint value `BlogArticle (id = 1243, slug = "some-article-slug")`. More advanced definitions can even parse query parameters, JSON bodies or posted forms.
 
 * Mapping from endpoints to URLs. This allows you to have internal links that are verified by the type system, instead of writing URLs by hand and being at the mercy of a typo or a change in the URL scheme. You can read more on this [in the Content doc](content#using-the-context).
 
 * Mapping from endpoints to content. Once a request has been parsed, this determines what content (HTML or other) must be returned to the client.
 
-A number of primitives are available to create and compose Sitelets.
+A number of primitives are available to create and compose sitelets.
 
-### Trivial Sitelets
+### Trivial sitelets
 
-Two helpers exist for creating a Sitelet with a trivial router: only handling requests on the root.
+Two helpers exist for creating a sitelet with a trivial router: only handling requests on the root.
 
-* `Application.Text` takes just a `Context<_> -> string` function and creates a Sitelet that serves the result string as a text response.
-* `Application.SinglePage`takes a `Context<_> -> Async<Content<_>>` function and creates a Sitelet that serves the returned content.
+* `Application.Text` takes just a `Context<_> -> string` function and creates a sitelet that serves the result string as a text response.
+* `Application.SinglePage`takes a `Context<_> -> Async<Content<_>>` function and creates a sitelet that serves the returned content.
 
 <a name="sitelet-infer"></a>
 ### Sitelet.Infer
 
-The easiest way to create a more complex Sitelet is to automatically generate URLs from the shape of your endpoint type using `Sitelet.Infer`, also aliased as `Application.MultiPage`. This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
+The easiest way to create a more complex sitelet is to automatically generate URLs from the shape of your endpoint type using `Sitelet.Infer`, also aliased as `Application.MultiPage`. This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
 ```fsharp
 namespace SampleWebsite
@@ -554,7 +554,7 @@ module SampleSite =
 
 The following functions are available to build simple sitelets or compose more complex sitelets out of simple ones:
 
-* `Sitelet.Empty` creates a Sitelet which does not recognize any URLs.
+* `Sitelet.Empty` creates a sitelet which does not recognize any URLs.
 
 * `Sitelet.Content`, as shown in the first example, builds a sitelet that accepts a single URL and maps it to a given endpoint and content.
 
@@ -566,7 +566,7 @@ The following functions are available to build simple sitelets or compose more c
     // Returned Content:    (value of IndexContent : Content<EndPoint>)
     ```
 
-* `Sitelet.Sum` takes a sequence of Sitelets and tries them in order until one of them accepts the URL. It is generally used to combine a list of `Sitelet.Content`s.
+* `Sitelet.Sum` takes a sequence of sitelets and tries them in order until one of them accepts the URL. It is generally used to combine a list of `Sitelet.Content`s.
 
   The following sitelet accepts `/index` and `/about`:
 
@@ -585,7 +585,7 @@ The following functions are available to build simple sitelets or compose more c
     // Returned Content:    (value of AboutContent : Content<EndPoint>)
     ```
 
-* `+` takes two Sitelets and tries them in order. `s1 + s2` is equivalent to `Sitelet.Sum [s1; s2]`.
+* `+` takes two sitelets and tries them in order. `s1 + s2` is equivalent to `Sitelet.Sum [s1; s2]`.
 
     ```fsharp
     Sitelet.Content "/index" Index IndexContent
@@ -597,7 +597,7 @@ The following functions are available to build simple sitelets or compose more c
 
 For the mathematically enclined, the functions `Sitelet.Empty` and `+` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
 
-* `Sitelet.Shift` takes a Sitelet and shifts it by a path segment.
+* `Sitelet.Shift` takes a sitelet and shifts it by a path segment.
 
     ```fsharp
     Sitelet.Content "index" Index IndexContent
@@ -608,7 +608,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
     // Returned Content:    (value of IndexContent : Content<EndPoint>)
     ```
 
-* `Sitelet.Folder` takes a sequence of Sitelets and shifts them by a path segment. It is effectively a combination of `Sum` and `Shift`.
+* `Sitelet.Folder` takes a sequence of sitelets and shifts them by a path segment. It is effectively a combination of `Sum` and `Shift`.
 
     ```fsharp
     Sitelet.Folder "folder" [
@@ -640,7 +640,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
 
     Given a filter value and a sitelet, `Protect` returns a new sitelet that requires a logged in user that passes the `VerifyUser` predicate, specified by the filter.  If the user is not logged in, or the predicate returns false, the request is redirected to the endpoint specified by the `LoginRedirect` function specified by the filter. [See here how to log users in and out.](content#using-the-context)
 
-* `Sitelet.Map` converts a Sitelet to a different endpoint type using mapping functions in both directions.
+* `Sitelet.Map` converts a sitelet to a different endpoint type using mapping functions in both directions.
 
     ```fsharp
     type EndPoint = Article of string
@@ -650,7 +650,7 @@ For the mathematically enclined, the functions `Sitelet.Empty` and `+` make site
     let s2 : Sitelet<EndPoint> = Sitelet.Map Article (fun (Article a) -> a) s
     ```
 
-* `Sitelet.Embed` similarly converts a Sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
+* `Sitelet.Embed` similarly converts a sitelet to a different endpoint type, but with a partial mapping function: the input endpoint type represents only a subset of the result endpoint type.
 
     ```fsharp
     type EndPoint =

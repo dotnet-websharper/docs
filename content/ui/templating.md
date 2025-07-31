@@ -502,7 +502,7 @@ Result:
 </html>
 ```
 
-Note that for `Bind()` to work correctly, the holes need to be present in the document itself. This is not a problem if your project is an SPA. But you can also serve the page from a Sitelet, using the same template on the server side. You can fill some holes on the server side and leave some to be filled by the client side. However, by default, the server-side engine removes unfilled holes from the served document. This is correct behavior in most cases, but here, the client does need the unfilled hole markers like `ws-replace` or `${...}` to be present. So this behavior can be overridden by the optional boolean argument `keepUnfilled` of the `.Doc()` and `.Elt()` methods.
+Note that for `Bind()` to work correctly, the holes need to be present in the document itself. This is not a problem if your project is an SPA. But you can also serve the page from a sitelet, using the same template on the server side. You can fill some holes on the server side and leave some to be filled by the client side. However, by default, the server-side engine removes unfilled holes from the served document. This is correct behavior in most cases, but here, the client does need the unfilled hole markers like `ws-replace` or `${...}` to be present. So this behavior can be overridden by the optional boolean argument `keepUnfilled` of the `.Doc()` and `.Elt()` methods.
 
 index.html:
 

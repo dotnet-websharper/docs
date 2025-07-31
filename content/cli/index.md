@@ -1,5 +1,5 @@
 ---
-title: WebSharper CLI
+title: Using the console tooling
 ---
 
 `dotnet ws` is a .NET tool for WebSharper. You can install it with (remove the `-g` option to install locally):

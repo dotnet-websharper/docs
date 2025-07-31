@@ -133,7 +133,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
 * `Router.Option`: Creates an F# option parser/writer. Writes or reads `None` and `Some/x` segments.
 * `Router.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router. For 
-* `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [Sitelets documentation](sitelets).
+* `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [sitelets documentation](sitelets).
 * `Router.Table`: Creates a router mapping between a list of static endpoint values and paths.
 * `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
 * `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
@@ -150,7 +150,7 @@ A useful helper to have in the file defining your router is:
             a [ attr.href (Router.Link router page) ] [ text content ]
     ```
 This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
-* `Sitelet.New` creates a Sitelet from a router and handler. Example:
+* `Sitelet.New` creates a sitelet from a router and handler. Example:
 ```fsharp
     [<Website>]
     let Main =
