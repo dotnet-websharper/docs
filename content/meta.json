@@ -3,6 +3,7 @@
     "core",
     "ui",
     "mvu",
-    "forms"
+    "forms",
+    "cli"
   ]
 }

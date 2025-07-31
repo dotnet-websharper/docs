@@ -4,7 +4,7 @@
   "description": "Documentation for WebSharper.MVU",
   "icon": "Palette",
   "pages": [
-    "mvu",
+    "index",
     "devtools"
   ]
 }
