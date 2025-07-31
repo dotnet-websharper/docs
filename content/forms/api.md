@@ -1,4 +1,6 @@
-# Full forms API
+---
+title: Full forms API
+---
 
 Everything in the library is inside the namespace `WebSharper.Forms`.
 
