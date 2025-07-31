@@ -6,7 +6,7 @@ Everything in the library is inside the namespace `WebSharper.Forms`.
 
 ## Types for form definitions
 
-### `Result<'T>` type
+### Result type
 The library defines its own result type for validation results. `Success` holds the valid value, while `Failure` holds a list of error messages.
 
 ```fsharp
@@ -15,16 +15,16 @@ type Result<'T> =
   | Failure of list<ErrorMessage>
 ```
 
-### `ErrorMessage` type
+### ErrorMessage type
 A type containing an error message associated with a specific form element identified by `Id` containing message `Text`.
 
 It is automatically created by validation failures, see below. The `Id` property also do not need to be checked manually, 
 instead, the `.Through` extension method can be used on a `View<Result<...>>` to filter for error messages arising from a given `Var` or `Form`.
 
-### `Form<'T, 'R>` type
-The central type for defining forms. `'T` is the type of the value produced by the form, and `'R` is a signature that encodes how the form is structured to provide type-safety between the form definition and its rendering.
+### Form type
+The central type for defining forms is `Form<'T, 'R>`. `'T` is the type of the value produced by the form, and `'R` is a signature that encodes how the form is structured to provide type-safety between the form definition and its rendering.
 
-### `Result` module
+### Result module
 This module provides utility functions for working with the `Result<'T>` type, enabling pattern matching, mapping, and binding operations typical for error-handling monads.
 
 * `Result.IsSuccess: Result<'T> -> bool`: Check whether a result is successful.
@@ -34,7 +34,7 @@ This module provides utility functions for working with the `Result<'T>` type, e
 * `Result.Bind: ('T -> Result<'U>) -> Result<'T> -> Result<'U>`: Pass a result through a function if it is successful, also able to introduce new failure points.
 * `Result.FailWith: string * ?string -> Result<'T>`: Create a failing result with a single error message, with an optional `Id` included, tying it to a `Var` or `Form`.
 
-### `Form.Many.ItemOperations` type
+### Form.Many.ItemOperations type
 Operations for managing individual items within a collection form.
 
 * `.Delete: unit -> unit`: Delete the current item from the collection.
@@ -45,7 +45,7 @@ A `Submitter<'T>` is a type defined by WebSharper.UI that updates the value on a
 In this case the `Result<bool>` value will hold a `Failure []` state if the item is not movable in the given direction, and `Success true` otherwise.
 This can be tied into a `Doc.ButtonValidate` helper to render a button that's enabled if the submitter is in valid state.
 
-### `Form.Many.Collection<'T, 'V, 'W, 'Y, 'Z>` type
+### Form.Many.Collection type
 Represents a collection of forms for managing multiple items, including rendering and addition capabilities. Used in conjunction with `Form.Many` to handle dynamic list, which has an additional form part to create a new item before inserting.
 
 * `.View: View<Result<seq<'T>>>`: A view on the resulting collection.
@@ -53,19 +53,19 @@ Represents a collection of forms for managing multiple items, including renderin
 * `.Add: 'T -> unit`: Adds a new item to the collection.
 * `.RenderAdder: 'Y -> Doc`: Render the form that creates new items to be inserted the collection.
 
-### `Form.Many.CollectionWithDefault<'T, 'V, 'W>` type
+### Form.Many.CollectionWithDefault type
 A collection where new items are added with a default value, to be edited in their subforms after adding them.
 
 * `.Add: unit -> unit`: Adds a new item with default value to the collection.
 
-### `Form.Dependent<'TResult, 'U, 'W>` type
+### Form.Dependent type
 A type for forms that depend on previous values, enabling dynamic form structures where subsequent fields or validations depend on prior inputs. This supports conditional rendering and validation.
 
 * `.View: View<Result<'TResult>>`: A view on the result of the dependent form.
 * `.RenderPrimary: 'U -> Doc`: Render the primary part of a dependent form.
 * `.RenderDependent: 'W -> Doc`: Render the dependent part of a dependent form.
 
-### `Form` module
+### Form module
 * `Form.Create: View<Result<'T>> -> ('R -> 'D) -> Form<'T, 'R -> 'D>`: Create a form from a view and a render builder. This is rarely used directly, forms are best created by composition.
 * `Form.Render: 'R -> Form<'T, 'R -> #Doc> -> Doc`: Render a form with a render function.
 * `Form.RenderMany: Many.Collection<'T, 'V, 'W, 'Y, 'Z> -> (Many.ItemOperations -> 'V) -> Doc`: Render the items of a collection with the provided rendering function.
@@ -103,7 +103,7 @@ A type for forms that depend on previous values, enabling dynamic form structure
 * `<*>`: An alias for `Form.Apply`.
 * `<*?>`: Passes the full result of the value-carrying form to the function-carrying form.
 
-### `Validation` module
+### Validation module
 * `Validation.Is: ('T -> bool) -> string -> Form<'T, 'R -> 'D> -> Form<'T, 'R -> 'D>`: If the form value passes the predicate, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsNotEmpty: string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value is not an empty string, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsMatch: string -> string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value matches the given regexp, it is passed on; else, `Failwith msg` is passed on.
@@ -126,15 +126,15 @@ let PersonForm (init: Person) =
 
 ## UI helpers for form rendering
 
-### Module Attr
+### Attr module
 * `Attr.SubmitterValidate: Submitter<Result<'T>> -> Attr`: Add a click handler that triggers a submitter, and disable the element when the submitter's input is a failure.
 
-### Module Doc
+### Doc module
 * `Doc.ButtonValidate: string -> seq<Attr> -> Submitter<Result<'T>> -> Elt`: Create a button that triggers a submitter when clicked, and is disabled when the submitter's input is a failure.
 * `Doc.ShowErrors: View<Result<'T>> -> (list<ErrorMessage> -> Doc) -> Doc`: Renders a document only when the view is in failure state, passing the error messages to the provided function.
 * `Doc.ShowSuccess: View<Result<'T>> -> ('T -> Doc) -> Doc`: Renders a document only when the view is in success state, passing the value to the provided function.
 
-### Extensions on `View<'T>`
+### Extensions for Views
 * `.Through: View<Result<'T>> * Var<'U> -> View<Result<'T>>`: Filters the error messages in a result view to only those associated with the given `Var`, for localized error display.
 * `.Through: View<Result<'T>> * Form<'U, 'R> -> View<Result<'T>>`: Filters the error messages in a result view to only those associated with the given `Form`, for localized error display.
 * `.ShowErrors: View<Result<'T>> * (list<ErrorMessage> -> Doc) -> Doc`: When the input View is a failure, show the given `Doc`; otherwise, show an empty `Doc`.
