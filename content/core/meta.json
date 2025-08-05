@@ -19,6 +19,7 @@
     "webcontext",
     "webworkers",
     "websockets",
+    "metaprogramming",
     "interface-generator",
     "testing",
     "math"
