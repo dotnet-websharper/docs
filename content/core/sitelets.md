@@ -9,7 +9,7 @@ Sitelets parse incoming requests into these endpoint values, and then generate t
 While link generation takes an endpoint value and produces an URL, which is the inverse of route parsing.
 By encapsulating these concepts, sitelets allow you to define a website's URL scheme, content, and linking in a type-safe manner.
 
-In addition, if the router part is defined separately, it can be used the client-side too, for client-side routing and linking.
+In addition, if the router part is defined separately, it can be used on the client side too, for client-side routing and linking.
 
 Below is a minimal example of a complete site serving one HTML page:
 
@@ -39,7 +39,7 @@ module SampleSite =
 
 First, a custom endpoint type is defined. It is used for linking requests to content within your sitelet. Here, you only need one endpoint, `EndPoint.Index`, corresponding to your only page.
 
-The content of the index page is defined as a `Content.Page`, where the body consists of a server side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
+The content of the index page is defined as a `Content.Page`, where the body consists of a server-side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
 
 The `MySampleWebsite` value has type `Sitelet<EndPoint>`. It defines a complete website: the URL scheme, the `EndPoint` value corresponding to each served URL (only one in this case), and the content to serve for each endpoint. It uses the `Sitelet.Content` operator to construct a sitelet for the Index endpoint, associating it with the `/index` URL and serving `IndexContent` as a response.
 

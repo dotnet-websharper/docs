@@ -19,12 +19,12 @@ The following templates are available:
 
 * `websharper-web`: A client-server application template that includes both server-side and client-side code.
 * `websharper-html`: An application template that allows you to generate static HTML sites.
-* `websharper-spa`: A single-page application template that you can add routing to handle navigation all on the client-side.
+* `websharper-spa`: A single-page application template that you can add routing to handle navigation all on the client side.
 * `websharper-svc`: An application template for creating web services.`
 * `websharper-lib`: A library template for creating reusable WebSharper libraries.
 * `websharper-min`: A minimal application template that provides a clean starting point for WebSharper applications.
 * `websharper-ext`: A template for creating JavaScript bindings for WebSharper, allowing you to use external JavaScript libraries from within .NET code.
-* `websharper-prx`: A template for creating a WebSharper proxy assembly for an existing .NET library, enabling you to use that library in the client-side of a WebSharper project.
+* `websharper-prx`: A template for creating a WebSharper proxy assembly for an existing .NET library, enabling you to use that library in the client side of a WebSharper project.
 
 ## Adding WebSharper to an existing project
 

@@ -32,7 +32,7 @@ See the [json documentation](json) for restrictions on the types that can be use
 
 ## Defining server agents
 
-An server agent is a function that has a signature conforming to one of the following types:
+A server agent is a function that has a signature conforming to one of the following types:
 
 ```fsharp
 type Agent<'S2C, 'C2S> = WebSocketClient<'S2C, 'C2S> -> Async<Message<'C2S> -> unit>
@@ -44,7 +44,7 @@ type CustomAgent<'S2C, 'C2S, 'Custom, 'State> = CustomWebSocketAgent<'S2C, 'C2S,
 
 The `Agent` type is the simplest form, where there is no state maintained between messages.
 This means that each message can be processed independently.
-The message handler function is expected to be returned wrapped in an `Async` computation, which means some asynchronous computation is possible to be done before the websocket server goes live.
+The message handler function is expected to be returned wrapped in an `Async` computation, allowing for asynchronous operations before the websocket server goes live.
 
 For example:
 

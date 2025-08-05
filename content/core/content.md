@@ -133,7 +133,7 @@ let Website = Application.MultiPage (fun ctx endpoint ->
 
 ### Content.Bundle
     
-A helper for marking client-side to be included in a specific bundle.
+A helper for marking client-side code to be included in a specific bundle.
 This is useful when you want to create helper functions on the server that creates content that has client-side dependencies, but you do it outside of the `Content.Page` scope.
 It takes a `WebSharper.Web.INode` sequence and a bundle name, and it will return a `WebSharper.Web.INode` sequence that also marks for the server-side rendering which bundle to use.
 This means you can drop the `Bundle ` argument in `Content.Page`.

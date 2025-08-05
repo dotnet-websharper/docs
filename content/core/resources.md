@@ -156,7 +156,7 @@ You can put a `Require` attribute on a Resource type to make it depend on anothe
 
 ### In Server-side WebSharper code
 
-Sometimes you might need to depend on a resource without having any client-side
+Sometimes you might need to depend on a resource without having any client side
 code; typically, a CSS file. In this case, you can add the web control
 `WebSharper.Web.Require` anywhere in your page. This control does not directly
 output any HTML at the location where you put it, but it incurs a dependency on

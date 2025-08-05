@@ -2,10 +2,13 @@
 title: Functional Reactive Programming and HTML
 ---
 
-WebSharper.UI is a library providing a novel, pragmatic and convenient approach to UI reactivity. It includes:
+WebSharper.UI is a library providing a novel, practical, and user-friendly approach to UI reactivity. It includes:
 
-* An [HTML library](#constructing-html) usable both from the server side and from the client side, which you can use to build HTML pages either by calling F# functions to create elements, or by instantiating template HTML files.
-* A [reactive layer](reactive) for expressing user inputs and values computed from them as time-varying values. This approach is related to Functional Reactive Programming (FRP). This reactive system integrates with the HTML library to create reactive documents. If you are familiar with Facebook React, then you will find some similarities with this approach: instead of explicitly inserting, modifying and removing DOM nodes, you return a value that represents a DOM tree based on inputs. The main difference is that these inputs are nodes of the reactive system, rather than a single state value associated with the component.
+* An [HTML library](#constructing-html) usable on both server and client sides, allowing you to build HTML pages either by calling F# functions to create elements or by using template HTML files.
+* A [reactive layer](reactive) for expressing user inputs and values computed from them as time-varying values, related to Functional Reactive Programming (FRP). 
+  This reactive system integrates with the HTML library to create reactive documents.
+  If familiar with React, you'll notice similarities: instead of explicitly inserting, modifying, or removing DOM nodes, you return a value representing a DOM tree based on inputs.
+  The main difference is that these inputs are nodes of the reactive system, not a single state value associated with the component.
 * Client-side [routing](routing) using the same endpoint type declaration as [WebSharper server-side routing](../core/routing).
 
 This page is an overview of the capabilities of WebSharper.UI.
@@ -21,7 +24,9 @@ Additionally, client-side Docs can be reactive. A same Doc can consist of differ
 <a name="html"></a>
 ### Constructing HTML
 
-The main means of creating Docs is by using the functions in the `WebSharper.UI.Html` module. Every HTML element has a dedicated function, such as `div` or `p`, which takes a sequence of [attributes](#attrs) (of type `Attr`) and a sequence of child nodes (of type `Doc`). Additionally, the `text` function creates a text node.
+The main means of creating Docs is by using the functions in the `WebSharper.UI.Html` module.
+Every HTML element has a dedicated function, such as `div` or `p`, which takes a sequence of [attributes](#attrs) and child nodes, of type `Attr` and `Doc`  respectively.
+Additionally, the `text` function creates a text node.
 
 ```fsharp
 open WebSharper.UI.Html
@@ -29,7 +34,7 @@ open WebSharper.UI.Html
 let myDoc =
     div [] [
         h1 [] [ text "Functional Reactive Programming and HTML" ]
-        p [] [ text "WebSharper.UI is a library providing a novel, pragmatic and convenient approach to UI reactivity. It includes:" ]
+        p [] [ text "WebSharper.UI is a library providing a novel, practical, and user-friendly approach to UI reactivity. It includes:" ]
         ul [] [
             li [] [ text "..." ]
         ]

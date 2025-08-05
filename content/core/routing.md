@@ -10,7 +10,7 @@ The handler is responsible for handling endpoints, by returning content (a synch
 
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
-* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately, is that you can add a `[<JavaScript>]` attribute on it, so that the client can generate links from endpoint values too. `WebSharper.UI` contains functionality for client-side routing too, making it possible to handle all or a subset of internal links without browser navigation. Sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
+* Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately is that you can add a `[<JavaScript>]` attribute on it, so that the client can generate links from endpoint values too. `WebSharper.UI` contains functionality for client-side routing too, making it possible to handle all, or a subset of internal links without browser navigation. Sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
 * Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
 * Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
@@ -136,7 +136,7 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [sitelets documentation](sitelets).
 * `Router.Table`: Creates a router mapping between a list of static endpoint values and paths.
 * `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
-* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on server-side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
+* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on the server side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
 * `Router.Json` creates a router that parses the request body by the JSON format derived from the type argument.
 * `Router.FormData` creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
 * `Router.Delay` can be used to construct routers for recursive data types. Takes a `unit -> Router<'T>` function, and evaluates it firsthe t time the router is used for parsing and writing (never just when combining them).
@@ -149,7 +149,7 @@ A useful helper to have in the file defining your router is:
         let Link page content =
             a [ attr.href (Router.Link router page) ] [ text content ]
     ```
-This works the same on both server and client-side to create basic `<a>` links to pages of your web application.
+This works the same on both server and client side to create basic `<a>` links to pages of your web application.
 * `Sitelet.New` creates a sitelet from a router and handler. Example:
 ```fsharp
     [<Website>]

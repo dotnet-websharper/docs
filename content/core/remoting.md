@@ -237,14 +237,14 @@ type MyType() =
     member this.MyMethod(...) = //...
 ```
 
-You don't need to properly create an instance of the type on the client-side, instead there is a helper to create a shim, like this:
+You don't need to properly create an instance of the type on the client side, instead there is a helper to create a shim, like this:
 
 ```fsharp
 //open WebSharper.JavaScript
 Remote<MyType>.MyMethod(...)
 ```
 
-To have a handler for this type, you need to register an instance of it on the server-side.
+To have a handler for this type, you need to register an instance of it on the server side.
 
 ```fsharp
 WebSharper.Core.Remoting.AddHandler typeof<MyType> (new MyType())

@@ -9,7 +9,7 @@ To integrate WebSharper into your web application, use the `WebSharper.AspNetCor
 Configuring the startup for an ASP.NET Core application has two distinct stages: first setting up services and then the application pipeline. WebSharper relies on some services to run.
 
 - Call `builder.Services.AddWebSharper()` to set up required singleton service (or `services.AddWebSharper()` in the `ConfigureServices` method of your `Startup` class). Any of the following methods also calls this implicitly, so you can use them instead if those are more specific to your needs.
-- Call `builder.Services.AddSitelet(mySitelet)` to register a WebSharper sitelet. This is now not the recommended method, set your sitelet in the pipeline configuration.
+- Call `builder.Services.AddSitelet(mySitelet)` to register a WebSharper sitelet. However, this is no longer the recommended method; instead, set your sitelet in the pipeline configuration as described below.
 - Call `builder.Services.AddWebSharperRemoting<THandler>()` to register a WebSharper remoting handler for instance-based remoting. This is a typed alternative to `WebSharper.Core.Remoting.AddHandler`. This method has 3 overloads, you can pass it a single type argument which will be instantiated, two type arguments where the first is the type of the handler and the second is the type of the implementation class, or one type argument and pass it an instance of that type.
 - Call `builder.Services.AddWebSharperContent()` to register a scoped service to allow embedding WebSharper content into Razor pages.
 
@@ -17,7 +17,7 @@ Next are the middleware to put in the application pipeline.
 
 WebSharper has two main middleware, one is for serving pages (sitelets), and the other for API endpoints generated for automatic remoting.
 
-- Add `app.UseWebSharper()` for a basic setup of both remoting, and sitelets if configured. It has a builder parameter that can be used for additional configuration:
+- Add `app.UseWebSharper()` for a basic setup of both remoting and sitelets if configured. It has a builder parameter that can be used for additional configuration:
   - `Sitetet` passes a sitelet instance to server.
   - `DiscoverSitelet` looks for a class property with the `[Website]` attribute to obtain the sitelet instance.
   - `UseSitelets(false)` turns off serving a sitelet entirely. `UseSitelets(true)` has no effect, it's the default.
@@ -39,7 +39,7 @@ WebSharper has two main middleware, one is for serving pages (sitelets), and the
 
 If you have any client-side code, then it will need access to compiled JavaScript files, which the WebSharper middleware does not provide. So you need to add the default static files provider `app.UseStaticFiles()`.
 
-Note that `UseStaticFiles` should be called _after_ `UseWebSharper`. This way, `WebSharper` sitelets and remoting have a chance to handle requests even if they also happen to match a static file.
+Note that `UseStaticFiles` should be called _after_ `UseWebSharper`. This way, WebSharper sitelets and remoting have a chance to handle requests even if they also happen to match a static file.
 
 ## Authentication
 

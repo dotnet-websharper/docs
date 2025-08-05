@@ -2,7 +2,7 @@
 title: Client-side routing
 ---
 
-If you have a `WebSharper.Sitelets.Router<'T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page client-side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
+If you have a `WebSharper.Sitelets.Router<'T>` value, it can be shared between server and client. A router encapsulates two things: parsing an URL path to an abstract value and writing a value as an URL fragment. So this allows generating links safely on both client  When initializing a page on the client side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
 
 ### Install client-side routing
 
@@ -22,7 +22,7 @@ let ClientMain() =
         | Contact p -> div [] [ text (sprintf "Contact name:%s, age:%d" p.Name p.Age) ]
     )
 ```
-First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server-side correctly), which could be a home or an error page.
+First argument (`Home`) specifies which page value to fall back on if the URL path cannot be parsed (although this won't happen if you set up your server side correctly), which could be a home or an error page.
 
 Also, you need to make sure that your router value is `[<JavaScript>]` annotated (or a containing type, module or the assembly is), so that it is available for cross-tier use.
 

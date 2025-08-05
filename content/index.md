@@ -20,15 +20,15 @@ Here is an overview of WebSharper's capabilities.
 
 WebSharper [sitelets](core/sitelets) is an API to parse HTTP requests and serve content in a strongly typed and functional way.
 HTTP endpoints are represented by values of a user-defined
-EndPoint type, which are parsed from requests based on their shape and some
+EndPoint type, which are parsed from requests based on their structure and
 attributes. With sitelets, you can:
 
 * Discriminate endpoints based on the HTTP method, URL path, query arguments,
   and request body (JSON or form body).
-* Parse and generate JSON based on the shape and attributes of your data type,
+* Parse and generate JSON based on the structure and attributes of your data type,
   for easy REST APIs.
 * Generate links from EndPoint values, practically eliminating the risk of
-  internal dead links. You can also generate links from client-side or handle part of the routing on the client and it's all type safe.
+  internal dead links. You can also generate links from the client side or handle part of the routing on the client, and it is all type safe.
 * Generate HTML content from template files or directly in C#/F# with a clean
   syntax.
 

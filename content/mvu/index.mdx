@@ -20,7 +20,7 @@ Finally, all changes to the model are applied by a pure **Update** function (als
 
 ## Differences with other MVU libraries
 
-The main point that differenciates WebSharper.Mvu from other MVU libraries is the way the render function works.
+The main point that differentiates WebSharper.Mvu from other MVU libraries is the way the render function works.
 
 In most MVU libraries, the view function directly takes a Model value as argument. It is called every time the model changes, and returns a new representation of the rendered document every time. This new representation is then applied to the DOM by a diffing DOM library such as React.
 
@@ -33,8 +33,8 @@ See the [WebSharper.UI reactive programming](../ui/reactive) for more informatio
 Follow these steps to get started with a simple component/application:
 * Define a `Model` type that represents the state of your component/application. Usually, this is a record type with fields for each piece of state you want to keep track of.
 * Define a `Message` (sometimes also called Action) type that represents the actions that can be performed on the model. Usually, this is a discriminated union type with one case for each action.
-* Write an `Update` function with the signature `(msg: Message) -> (model: Model) -> option<Model>`. This function takes a message and the current model, and returns a new model if any change is made. Return `None` if no change is made, this leads to less unnecessary re-rendering.
-* Write a `Render` function with the signature `(dispatch: Message -> unit) -> (state: View<Model>) -> Doc`. You can create the UI based on the `View` and use the `dispatch` function to send messages through the updater. The return type is not fixed, you also can bind to the page directly and return `unit`.
+* Write an `Update` function with the signature `(msg: Message) -> (model: Model) -> option<Model>`. This function takes a message and the current model, and returns a new model if any change is made. Return `None` if no change is made, which leads to less unnecessary re-rendering.
+* Write a `Render` function with the signature `(dispatch: Message -> unit) -> (state: View<Model>) -> Doc`. You can create the UI based on the `View` and use the `dispatch` function to send messages through the updater. The return type is not fixed, you can also bind to the page directly and return `unit`.
 * Tie it together with `App.CreateSimple initModel Update Render |> App.Run`, where `initModel` is the initial state of your component/application.
 
 We will see more advanced features later.
@@ -65,7 +65,7 @@ You can iterate on this example to create a list of counters that operate indepe
 ### Advanced Update functions
 
 `App.Create` is more powerful than `App.CreateSimple`.
-It allows you to define a more complex update function that can decide on how to update the model with finer detail by returning an `Action<'Message, 'Model>`.
+It allows you to define a more complex update function that can decide on how to update the model with more available options by returning an `Action<'Message, 'Model>`.
 This type is a discriminated union with cases:
 * `DoNothing`:  Does nothing, it is useful to avoid unnecessary re-rendering.
 * `SetModel of 'Model`: Sets the model to a new value, replacing the current model.

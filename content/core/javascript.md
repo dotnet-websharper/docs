@@ -2,7 +2,7 @@
 title: JavaScript translation and WebSharper attributes
 ---
 
-WebSharper reads F# or C# source code and outputs modern module-based JavaScript code. Instead of translating an entire project or files, WebSharper only looks at code that are annotated to be used client-side. This allows full-stack applications within a single project, sharing data types and code between layers.
+WebSharper reads F# or C# source code and outputs modern module-based JavaScript code. Instead of translating an entire project or files, WebSharper only looks at code that are annotated to be used client side. This allows full-stack applications within a single project, sharing data types and code between layers.
 
 ### Scope of the JavaScript translation
 
@@ -16,7 +16,7 @@ Lastly, in `wsconfig.json`, the `"javascript"` setting can be a bool or an array
 
 Sometimes it is preferred that the same class have different implementation on the server and the client. In this case a `[<Proxy(typeof<TargetType>)>]`  or `[<Proxy("fullyQualifiedTypeName")>]` attribute on the client-side implementation will tell WebSharper, that in any translation, treat the two types as equivalent.
 
-Also, this can be used to implement a client-side for standard library .NET types. WebSharper provides a good number of these proxies out of the box, for example may basic `System`, `System.Collections.Generic`, and `FSharp.Core` types are supported.
+Also, this can be used to implement a client side for standard library .NET types. WebSharper provides a good number of these proxies out of the box, for example may basic `System`, `System.Collections.Generic`, and `FSharp.Core` types are supported.
 
 Use the `InternalProxy` attribute instead to limit the effect of a proxy to the current project only.
 
@@ -313,7 +313,7 @@ The following is an overview of all attributes provided by WebSharper to guide t
 ### Remoting-specific attributes
 
 - `Remote` - marks a server-side method for remoting.
-- `RemotingProvider` - on a server side method, specifies a client-side wrapper object that remoting calls will go through.
+- `RemotingProvider` - on a server-side method, specifies a client-side wrapper object that remoting calls will go through.
 
 ### Bundle-specific attributes
 
