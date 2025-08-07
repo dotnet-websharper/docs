@@ -28,7 +28,7 @@ attributes. With sitelets, you can:
 * Parse and generate JSON based on the structure and attributes of your data type,
   for easy REST APIs.
 * Generate links from EndPoint values, practically eliminating the risk of
-  internal dead links. You can also generate links from the client side or handle part of the routing on the client, and it is all type safe.
+  internal dead links. You can also generate links from the client side or handle part of the routing on the client, and it is all type-safe.
 * Generate HTML content from template files or directly in C#/F# with a clean
   syntax.
 

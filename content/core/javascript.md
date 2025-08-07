@@ -331,9 +331,9 @@ The following is an overview of all attributes provided by WebSharper to guide t
 
 ### Sitelets routing-specific attributes
 
-- `EndPoint` - specifies an URL or URL fragment for sitelets routing.
+- `EndPoint` - specifies a URL or URL fragment for sitelets routing.
 - `Method` - specifies the HTTP method.
 - `Json` - marks a field to deserialize request body JSON data into.
 - `Query` - marks a field to fill in from query parameter.
 - `FormData` - marks a field to fill in from request body form data.
-- `Wildcard` - marks a field that will take any unrecognized remaining part of an URL as string.
+- `Wildcard` - marks a field that will take any unrecognized remaining part of a URL as string.

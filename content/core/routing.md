@@ -11,7 +11,7 @@ The handler is responsible for handling endpoints, by returning content (a synch
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
 * Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately is that you can add a `[<JavaScript>]` attribute on it, so that the client can generate links from endpoint values too. `WebSharper.UI` contains functionality for client-side routing too, making it possible to handle all, or a subset of internal links without browser navigation. Sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
-* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want an URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
+* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want a URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
 * Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
 The following example shows how you can create a router of type `WebSharper.Sitelets.IRouter<EndPoint>` by writing the two mappings manually:

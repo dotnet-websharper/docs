@@ -6,12 +6,12 @@ Sitelets are WebSharper's primary way to create server-side content. They provid
 
 The key concept is the **endpoint**: a value of a user-defined type that represents a specific request route.
 Sitelets parse incoming requests into these endpoint values, and then generate the appropriate content based on the endpoint.
-While link generation takes an endpoint value and produces an URL, which is the inverse of route parsing.
+Link generation takes an endpoint value and produces a URL, which is the inverse of route parsing.
 By encapsulating these concepts, sitelets allow you to define a website's URL scheme, content, and linking in a type-safe manner.
 
 In addition, if the router part is defined separately, it can be used on the client side too, for client-side routing and linking.
 
-Below is a minimal example of a complete site serving one HTML page:
+Below is a minimal example of a complete site, serving one HTML page:
 
 ```fsharp
 namespace SampleWebsite
@@ -39,7 +39,7 @@ module SampleSite =
 
 First, a custom endpoint type is defined. It is used for linking requests to content within your sitelet. Here, you only need one endpoint, `EndPoint.Index`, corresponding to your only page.
 
-The content of the index page is defined as a `Content.Page`, where the body consists of a server-side HTML element.  Here the current time is computed and displayed within an `<h1>` tag.
+The content of the index page is defined as a `Content.Page`, where the body consists of a server-side HTML element that computes and displays the current time within an `<h1>` tag.
 
 The `MySampleWebsite` value has type `Sitelet<EndPoint>`. It defines a complete website: the URL scheme, the `EndPoint` value corresponding to each served URL (only one in this case), and the content to serve for each endpoint. It uses the `Sitelet.Content` operator to construct a sitelet for the Index endpoint, associating it with the `/index` URL and serving `IndexContent` as a response.
 
@@ -60,16 +60,16 @@ Based on this, a sitelet is a value that represents the following mappings:
 
 * Mapping from endpoints to URLs. This allows you to have internal links that are verified by the type system, instead of writing URLs by hand and being at the mercy of a typo or a change in the URL scheme. You can read more on this [in the Content doc](content#using-the-context).
 
-* Mapping from endpoints to content. Once a request has been parsed, this determines what content (HTML or other) must be returned to the client.
+* Mapping from endpoints to content. Once a request has been parsed, this determines what content (e.g., HTML, JSON, or other formats) must be returned to the client.
 
 A number of primitives are available to create and compose sitelets.
 
 ### Trivial sitelets
 
-Two helpers exist for creating a sitelet with a trivial router: only handling requests on the root.
+Two helpers exist for creating a sitelet with a trivial router that only handles requests on the root.
 
 * `Application.Text` takes just a `Context<_> -> string` function and creates a sitelet that serves the result string as a text response.
-* `Application.SinglePage`takes a `Context<_> -> Async<Content<_>>` function and creates a sitelet that serves the returned content.
+* `Application.SinglePage` takes a `Context<_> -> Async<Content<_>>` function and creates a sitelet that serves the returned content.
 
 <a name="sitelet-infer"></a>
 ### Sitelet.Infer
@@ -110,9 +110,9 @@ module SampleSite =
                     Body = [text (sprintf "Article id %i, slug %s" id slug)])
 ```
 
-The above sitelets accepts URLs with the following shape:
+The above sitelet accepts URLs with the following shape:
 
-```xml
+```
 Accepted Request:    GET /Index
 Parsed Endpoint:     Index
 Returned Content:    <!DOCTYPE html>
@@ -501,7 +501,7 @@ By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to
 
 * `ParseRequestResult.MissingFormData of 'EndPoint * name: string`: The URL was successfully parsed but a form data parameter with the given name was missing or wrongly formatted. The endpoint value contains a default value (`Unchecked.defaultof<_>`) where the form body-decoded value should be.
 
-If multiple of these kinds of errors happen, only the last one is reported.
+If multiple errors of these kinds occur, only the last one is reported.
 
 If the URL path isn't matched, then the request falls through as with `Sitelet.Infer`.
 
@@ -595,7 +595,7 @@ The following functions are available to build simple sitelets or compose more c
     // Same as above.
     ```
 
-For the mathematically enclined, the functions `Sitelet.Empty` and `+` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
+For the mathematically inclined, the functions `Sitelet.Empty` and `+` make sitelets a monoid. Note that it is non-commutative: if a URL is accepted by both sitelets, the left one will be chosen to handle the request.
 
 * `Sitelet.Shift` takes a sitelet and shifts it by a path segment.
 
