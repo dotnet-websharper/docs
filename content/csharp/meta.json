@@ -1,0 +1,12 @@
+{
+  "root": false,
+  "title": "C# Support",
+  "description": "Documentation for WebSharper C#",
+  "icon": "Palette",
+  "pages": [
+    "lang-support",
+    "csharp-fsharp-interop",
+    "linq",
+    "testing"
+  ]
+}

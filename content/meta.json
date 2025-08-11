@@ -4,6 +4,7 @@
     "ui",
     "mvu",
     "forms",
+    "csharp",
     "cli"
   ]
 }

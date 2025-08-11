@@ -152,7 +152,6 @@ A useful helper to have in the file defining your router is:
 This works the same on both server and client side to create basic `<a>` links to pages of your web application.
 * `Sitelet.New` creates a sitelet from a router and handler. Example:
 ```fsharp
-    [<Website>]
     let Main =
         Sitelet.New rPages (fun ctx ep ->
             match ep with 

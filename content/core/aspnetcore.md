@@ -19,7 +19,7 @@ WebSharper has two main middleware, one is for serving pages (sitelets), and the
 
 - Add `app.UseWebSharper()` for a basic setup of both remoting and sitelets if configured. It has a builder parameter that can be used for additional configuration:
   - `Sitetet` passes a sitelet instance to server.
-  - `DiscoverSitelet` looks for a class property with the `[Website]` attribute to obtain the sitelet instance.
+  - `DiscoverSitelet` looks for a class property with the `[<Website>]` attribute to obtain the sitelet instance. This is now deprecated.
   - `UseSitelets(false)` turns off serving a sitelet entirely. `UseSitelets(true)` has no effect, it's the default.
   - `UseRemoting(false)` turns off using remoting entirely. `UseRemoting(true, headers)` can be used to define additional headers to return.
   - `Use` registers an additional action to be executed after the `WebSharperOptions` object is constructed.

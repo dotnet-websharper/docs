@@ -91,7 +91,6 @@ module SampleSite =
         | Stats of username: string
         | BlogArticle of id: int * slug: string
 
-    [<Website>]
     let MyWebsite =
         Sitelet.Infer <| fun context endpoint ->
             match endpoint with
@@ -514,7 +513,6 @@ module SampleSite =
     type EndPoint =
     | [<Method "GET"; Query "page">] Articles of page: int
 
-    [<Website>]
     let MySitelet = Sitelet.InferWithCustomErrors <| fun context endpoint ->
         match endpoint with
         | ParseRequestResult.Success (Articles page) ->
