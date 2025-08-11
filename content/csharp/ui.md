@@ -1,4 +1,6 @@
-# Functional Reactive Programming and HTML
+---
+title: UI in C#
+---
 
 WebSharper.UI is a library providing a novel, pragmatic and convenient approach to UI reactivity. It includes:
 
