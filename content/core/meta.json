@@ -21,6 +21,7 @@
     "metaprogramming",
     "interface-generator",
     "testing",
-    "math"
+    "math",
+    "ws-ai-plugin"
   ]
 }

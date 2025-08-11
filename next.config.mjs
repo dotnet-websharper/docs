@@ -9,7 +9,10 @@ const config = {
   reactStrictMode: true,
   output: 'export',
   assetPrefix: '',
-  basePath: basePathToUse
+  basePath: basePathToUse,
+  images: {
+    unoptimized: true,
+  },
 };
 
 
