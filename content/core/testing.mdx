@@ -2,6 +2,8 @@
 title: Unit testing
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 The `WebSharper.Testing` library (available on [NuGet](https://www.nuget.org/packages/websharper.testing)) exposes a clean F# syntax to write unit tests for libraries, services and websites.
 It is a wrapper around `QUnit` for presentation which provides transparent handling of synchronous and asynchronous expressions, and generating random data for property testing.
 The tests page is meant to be ran in a browser, but the server side of a website can be tested too by making remote calls from the tests.
@@ -119,6 +121,7 @@ Later, in server-side code, serve this on a [sitelet](sitelets) endpoint:
         Body = client <@ RunAllTests() @>
     )
 ```
+
 <a name="expect"></a>
 ### Expect
 
@@ -143,6 +146,13 @@ let MyTests =
         }
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="CategoriesTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..21,25..41,43..47,51,52"
+  defTab="preview"
+/>
 
 <a name="assertions"></a>
 ## Assertions
@@ -179,6 +189,13 @@ The negated versions of the above, the test passes if the expression evaluates t
     }
 ```
 
+<FSharpSnippetTabs
+  snippet="AssertionsTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..22,24..30"
+  defTab="preview"
+/>
+
 <a name="equality-checks"></a>
 ## Equality checks
 
@@ -211,6 +228,8 @@ The negated version of the above, fails if values are equal with WebSharper's eq
 Checks if the two expressions evaluate to equal values as tested with JavaScript's `==` operator.
 This is the same as using the `==.` operator in F# code (available with `open WebSharper.JavaScript`),
 which is directly translated to `==` in JavaScript.
+
+#### Example:
 
 ```fsharp
     Test "Equality" {
@@ -270,6 +289,13 @@ Compares floating point numbers, where a difference of `< 0.0001` is accepted.
 
 The negated version of the above, fails if the difference of the two values is `< 0.0001`.
 
+<FSharpSnippetTabs
+  snippet="EqualityChecksTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..30"
+  defTab="preview"
+/>
+
 <a name="exception-testing"></a>
 ## Exception testing
 
@@ -292,6 +318,13 @@ when the test are running.
     }
 ```
 
+<FSharpSnippetTabs
+  snippet="ExceptionTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..22"
+  defTab="preview"
+/>
+
 <a name="asynchronous-tests"></a>
 ## Asynchronous tests
 
@@ -308,6 +341,13 @@ run synchronously for optimal performance.
         equal one 1
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="AsynchronousTesting"
+  liveSnippetHeight="500"
+  highlightLines="15..19"
+  defTab="preview"
+/>
 
 <a name="property-testing"></a>
 ## Property testing
@@ -380,13 +420,20 @@ See [RandomValues.Sample](#randomvaluessample) below.
 
 ```fsharp
     Test "Equality on ints is reflexive" {
-        propertyWithSample (RandomValues.Sample [| 1; 2; 3 |]) (fun (x: int) ->
+        propertyWithSample (RandomValues.Sample [ 1; 2; 3 ]) (fun (x: int) ->
             Do {
                 equal x x 
             }
         )
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="PropertyTesting"
+  liveSnippetHeight="500"
+  highlightLines="17..23,26..32,35..41"
+  defTab="preview"
+/>
 
 <a name="looping"></a>
 ## Looping
@@ -408,6 +455,13 @@ Its use is similar to property testing, you can use `Do` to define the body of t
         )
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="LoopTesting"
+  liveSnippetHeight="500"
+  highlightLines="17..23"
+  defTab="preview"
+/>
 
 <a name="sample-value-generators"></a>
 ## Sample value generators

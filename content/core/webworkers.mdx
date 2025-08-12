@@ -2,6 +2,8 @@
 title: Web workers
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 Web workers are a browser feature that allows running client-side code in parallel. Every worker runs on a separate thread, and they communicate by posting messages to one another.
 
 In WebSharper, creating a web worker is very simple; much simpler, in fact, than in plain JavaScript.
@@ -39,6 +41,13 @@ The above code will:
     ```
 
 - terminate the worker thread.
+
+<FSharpSnippetTabs
+  snippet="SimpleWebWorker"
+  liveSnippetHeight="500"
+  highlightLines="19..25"
+  defTab="preview"
+/>
 
 <a name="behind-the-scenes"></a>
 ## What's happening behind the scenes
@@ -94,6 +103,13 @@ echoWorker.PostMessage("Hello world!")
 echoWorker.PostMessage("Hi again!")
 ```
 
+<FSharpSnippetTabs
+  snippet="MessagePassingWorker"
+  liveSnippetHeight="500"
+  highlightLines="19..25"
+  defTab="preview"
+/>
+
 ## Using external dependencies
 
 It is possible to use external script dependencies in a Worker. 
@@ -112,6 +128,13 @@ let myWorker = new Worker(fun self ->
 // This will print "4 * x + 3":
 myWorker.PostMessage("2x^2 + 3x + 4")
 ```
+
+<FSharpSnippetTabs
+  snippet="ExternalDependenciesWorker"
+  liveSnippetHeight="500"
+  highlightLines="20..26,33,34"
+  defTab="preview"
+/>
 
 If you are using non-module JavaScript dependencies, it will use a helper function called `LoadScript` that fetches the script and evaluates it.
 

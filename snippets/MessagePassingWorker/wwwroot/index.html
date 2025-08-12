@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MessagePassingWorker</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/MessagePassingWorker.css" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] { display: none; }
+        p {
+            white-space: pre-line;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/MessagePassingWorker.head.js"></script>
+</head>
+<body>
+    <h1>Message Passing Web Worker Example</h1>
+    <div id="main" ws-children-template="Main">
+        <button ws-onclick="RunWorker">Run worker</button>
+        <p>${WorkerResponse}</p>
+    </div>
+    <script type="module" src="Scripts/MessagePassingWorker.min.js"></script>
+</body>
+</html>
