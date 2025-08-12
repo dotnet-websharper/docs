@@ -129,6 +129,13 @@ let myWorker = new Worker(fun self ->
 myWorker.PostMessage("2x^2 + 3x + 4")
 ```
 
+<FSharpSnippetTabs
+  snippet="ExternalDependenciesWorker"
+  liveSnippetHeight="500"
+  highlightLines="20..26,33,34"
+  defTab="preview"
+/>
+
 If you are using non-module JavaScript dependencies, it will use a helper function called `LoadScript` that fetches the script and evaluates it.
 
 If you are using esbuild, make sure the following section is present in your `esbuild.config.mjs`:
