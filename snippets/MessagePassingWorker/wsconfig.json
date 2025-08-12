@@ -1,7 +1,7 @@
 ﻿{
     "$schema": "https://websharper.com/wsconfig.schema.json",
     "project": "spa",
-    "scriptBaseUrl": "/snippets/SimpleWebWorker/Scripts/",
+    "scriptBaseUrl": "/snippets/MessagePassingWorker/Scripts/",
     "outputDir": "wwwroot/Scripts",
     "release": {
         "outputDir": "build"
