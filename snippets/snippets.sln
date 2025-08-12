@@ -45,6 +45,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimpleWebWorker", "SimpleWe
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AssertionsTesting", "AssertionsTesting\AssertionsTesting.fsproj", "{7198C7CA-7667-4D3F-B305-25B75B77ADBE}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExceptionTesting", "ExceptionTesting\ExceptionTesting.fsproj", "{295AC946-9AFB-42B2-A448-04CE706A5443}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{7198C7CA-7667-4D3F-B305-25B75B77ADBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7198C7CA-7667-4D3F-B305-25B75B77ADBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7198C7CA-7667-4D3F-B305-25B75B77ADBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295AC946-9AFB-42B2-A448-04CE706A5443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295AC946-9AFB-42B2-A448-04CE706A5443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295AC946-9AFB-42B2-A448-04CE706A5443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295AC946-9AFB-42B2-A448-04CE706A5443}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

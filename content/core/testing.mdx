@@ -229,6 +229,8 @@ Checks if the two expressions evaluate to equal values as tested with JavaScript
 This is the same as using the `==.` operator in F# code (available with `open WebSharper.JavaScript`),
 which is directly translated to `==` in JavaScript.
 
+#### Example:
+
 ```fsharp
     Test "Equality" {
         jsEqual 1 1
@@ -308,6 +310,13 @@ when the test are running.
         raisesMsgAsync (async { failwith "should fail" }) "Failure is expected from inside async"
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="ExceptionTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..22"
+  defTab="preview"
+/>
 
 <a name="asynchronous-tests"></a>
 ## Asynchronous tests
