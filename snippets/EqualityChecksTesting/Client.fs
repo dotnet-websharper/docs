@@ -1,4 +1,4 @@
-namespace ExceptionTesting
+namespace EqualityChecksTesting
 
 open WebSharper
 open WebSharper.JavaScript
@@ -13,17 +13,26 @@ module Client =
     // and refresh your browser, no need to recompile unless you add or remove holes.
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
-    let RaisesTest = 
-        Test "Exceptions" {
-            raises (failwith "should fail")
-            raisesMsg (failwith "should fail") "Failure is expected"
-            raisesAsync (async { failwith "should fail" })
-            raisesMsgAsync (async { failwith "should fail" }) "Failure is expected from inside async"
+    let EqualTest = 
+        Test "Equality" {
+            equal (Some 1) (Some 1)
+            equalMsg (Some 1) (Some 1) "Option equality"
+            equalAsync (async { return Some 1 }) (Some 1)
+            equalMsgAsync (async { return Some 1 }) (Some 1) "Option equality, async version"
+        }
+
+    let JsEqualTest = 
+        Test "Equality" {
+            jsEqual 1 1
+            jsEqualMsg 1 1 "One equals one"
+            jsEqualAsync (async { return 1 }) 1
+            jsEqualMsgAsync (async { return 1 }) 1 "One equals one, async version"
         }
 
     let MyTests = 
         TestCategory "MyTests" {
-            RaisesTest
+            EqualTest
+            JsEqualTest
         }
 
     let RunAllTests() =

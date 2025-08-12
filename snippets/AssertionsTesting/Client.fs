@@ -44,7 +44,3 @@ module Client =
     let Main () =
         RunAllTests() 
         |> fun control -> control.ReplaceInDom(JS.Document.GetElementById "test-root")
-
-        IndexTemplate.Main()
-            .Doc()
-        |> Doc.RunById "main"
