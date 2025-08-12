@@ -122,13 +122,6 @@ Later, in server-side code, serve this on a [sitelet](sitelets) endpoint:
     )
 ```
 
-<FSharpSnippetTabs
-  snippet="CategoriesTesting"
-  liveSnippetHeight="500"
-  highlightLines="16..20,22..26,28..31,35,36"
-  defTab="preview"
-/>
-
 <a name="expect"></a>
 ### Expect
 
@@ -153,6 +146,13 @@ let MyTests =
         }
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="CategoriesTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..21,25..41,43..47,51,52"
+  defTab="preview"
+/>
 
 <a name="assertions"></a>
 ## Assertions
@@ -188,6 +188,13 @@ The negated versions of the above, the test passes if the expression evaluates t
         isFalseMsgAsync (async { return 1 = 2 }) "One equals two is false, async version"
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="AssertionsTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..22,24..30"
+  defTab="preview"
+/>
 
 <a name="equality-checks"></a>
 ## Equality checks

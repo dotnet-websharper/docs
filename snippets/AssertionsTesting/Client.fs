@@ -1,4 +1,4 @@
-namespace CategoriesTesting
+namespace AssertionsTesting
 
 open WebSharper
 open WebSharper.JavaScript
@@ -12,35 +12,29 @@ module Client =
     // The templates are loaded from the DOM, so you just can edit index.html
     // and refresh your browser, no need to recompile unless you add or remove holes.
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
-    
-    // Test Example
-    let EqualityTests() =
+
+    let IsTrueTest = 
         Test "Equality" {
-            equal 1 1
-            notEqual 1 2    
+            isTrue (1 = 1)
+            isTrueMsg (1 = 1) "One equals one"
+            isTrueAsync (async { return 1 = 1 }) 
+            isTrueMsgAsync (async { return 1 = 1 }) "One equals one, async version"
         }
 
-    let doNotFail() = ()
+    let IsFalseTest = 
+        Test "Equality" {
+            isFalse (1 = 2)
+            isFalseMsg (1 = 2) "One equals two is false"
+            isFalseAsync (async { return 1 = 2 }) 
+            isFalseMsgAsync (async { return 1 = 2 }) "One equals two is false, async version"
+        }
 
-    // TestCategory Example
-    let MyTests =
+    let MyTests = 
         TestCategory "MyTests" {
-            EqualityTests()
-            Test "Equality" {
-                // Expect example
-                expect 2
-                equal 1 1
-                notEqual 1 2
-            }
-            Test "Not failing" {
-                expect 0
-                // a call to some outside function:
-                doNotFail() 
-                // if this throws an error, that still fails the test case, otherwise ok
-            }
-        }   
+            IsTrueTest
+            IsFalseTest
+        }
 
-    // Runner.RunTests Example
     let RunAllTests() =
         Runner.RunTests [|
             MyTests
@@ -53,4 +47,4 @@ module Client =
 
         IndexTemplate.Main()
             .Doc()
-            |> Doc.RunById "main"
+        |> Doc.RunById "main"
