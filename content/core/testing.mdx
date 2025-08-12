@@ -420,13 +420,20 @@ See [RandomValues.Sample](#randomvaluessample) below.
 
 ```fsharp
     Test "Equality on ints is reflexive" {
-        propertyWithSample (RandomValues.Sample [| 1; 2; 3 |]) (fun (x: int) ->
+        propertyWithSample (RandomValues.Sample [ 1; 2; 3 ]) (fun (x: int) ->
             Do {
                 equal x x 
             }
         )
     }
 ```
+
+<FSharpSnippetTabs
+  snippet="PropertyTesting"
+  liveSnippetHeight="500"
+  highlightLines="17..23,26..32,35..41"
+  defTab="preview"
+/>
 
 <a name="looping"></a>
 ## Looping
