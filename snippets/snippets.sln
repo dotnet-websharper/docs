@@ -39,6 +39,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CounterList", "CounterList\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Paging", "Paging\Paging.fsproj", "{4A55FF80-5242-40FB-B110-E058671ACEE2}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CategoriesTesting", "CategoriesTesting\CategoriesTesting.fsproj", "{13222B1A-ADF4-4FF1-A52D-B8F8A44DBBD3}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimpleWebWorker", "SimpleWebWorker\SimpleWebWorker.fsproj", "{D68CFAC8-5849-4909-99E4-64CF47C52403}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +121,14 @@ Global
 		{4A55FF80-5242-40FB-B110-E058671ACEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A55FF80-5242-40FB-B110-E058671ACEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A55FF80-5242-40FB-B110-E058671ACEE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13222B1A-ADF4-4FF1-A52D-B8F8A44DBBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13222B1A-ADF4-4FF1-A52D-B8F8A44DBBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13222B1A-ADF4-4FF1-A52D-B8F8A44DBBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13222B1A-ADF4-4FF1-A52D-B8F8A44DBBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D68CFAC8-5849-4909-99E4-64CF47C52403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D68CFAC8-5849-4909-99E4-64CF47C52403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D68CFAC8-5849-4909-99E4-64CF47C52403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D68CFAC8-5849-4909-99E4-64CF47C52403}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,8 @@
 title: Web workers
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 Web workers are a browser feature that allows running client-side code in parallel. Every worker runs on a separate thread, and they communicate by posting messages to one another.
 
 In WebSharper, creating a web worker is very simple; much simpler, in fact, than in plain JavaScript.
@@ -39,6 +41,13 @@ The above code will:
     ```
 
 - terminate the worker thread.
+
+<FSharpSnippetTabs
+  snippet="SimpleWebWorker"
+  liveSnippetHeight="500"
+  highlightLines="19..25"
+  defTab="preview"
+/>
 
 <a name="behind-the-scenes"></a>
 ## What's happening behind the scenes

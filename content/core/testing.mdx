@@ -2,6 +2,8 @@
 title: Unit testing
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 The `WebSharper.Testing` library (available on [NuGet](https://www.nuget.org/packages/websharper.testing)) exposes a clean F# syntax to write unit tests for libraries, services and websites.
 It is a wrapper around `QUnit` for presentation which provides transparent handling of synchronous and asynchronous expressions, and generating random data for property testing.
 The tests page is meant to be ran in a browser, but the server side of a website can be tested too by making remote calls from the tests.
@@ -119,6 +121,14 @@ Later, in server-side code, serve this on a [sitelet](sitelets) endpoint:
         Body = client <@ RunAllTests() @>
     )
 ```
+
+<FSharpSnippetTabs
+  snippet="CategoriesTesting"
+  liveSnippetHeight="500"
+  highlightLines="16..20,22..26,28..31,35,36"
+  defTab="preview"
+/>
+
 <a name="expect"></a>
 ### Expect
 
