@@ -57,6 +57,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AsynchronousTesting", "Asyn
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PropertyTesting", "PropertyTesting\PropertyTesting.fsproj", "{1B5BEE6F-60E4-45FC-B207-8EB453DF3280}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "LoopTesting", "LoopTesting\LoopTesting.fsproj", "{B6ABAED8-A95C-4E25-A334-E8C75EDE1423}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{1B5BEE6F-60E4-45FC-B207-8EB453DF3280}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B5BEE6F-60E4-45FC-B207-8EB453DF3280}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B5BEE6F-60E4-45FC-B207-8EB453DF3280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6ABAED8-A95C-4E25-A334-E8C75EDE1423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6ABAED8-A95C-4E25-A334-E8C75EDE1423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6ABAED8-A95C-4E25-A334-E8C75EDE1423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6ABAED8-A95C-4E25-A334-E8C75EDE1423}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
