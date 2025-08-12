@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="WebSharper" Version="10.0.0.597-beta1" />    
     <PackageReference Include="WebSharper.FSharp" Version="10.0.0.597-beta1" />    
-    <PackageReference Include="WebSharper.MathJS" Version="10.0.0.580-beta1" />
+    <PackageReference Include="WebSharper.Testing" Version="10.0.0.597-beta1" />
     <PackageReference Include="WebSharper.UI" Version="10.0.0.597-beta1" />
     <PackageReference Include="WebSharper.AspNetCore" Version="10.0.0.597-beta1" />
   </ItemGroup>

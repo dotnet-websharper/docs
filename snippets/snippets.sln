@@ -53,6 +53,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessagePassingWorker", "Mes
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExternalDependenciesWorker", "ExternalDependenciesWorker\ExternalDependenciesWorker.fsproj", "{93C1E9F1-BAD9-42C5-B050-521D48CE60A9}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AsynchronousTesting", "AsynchronousTesting\AsynchronousTesting.fsproj", "{83261D67-48AD-4CE9-97D9-67CF773C9457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{93C1E9F1-BAD9-42C5-B050-521D48CE60A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93C1E9F1-BAD9-42C5-B050-521D48CE60A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93C1E9F1-BAD9-42C5-B050-521D48CE60A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83261D67-48AD-4CE9-97D9-67CF773C9457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83261D67-48AD-4CE9-97D9-67CF773C9457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83261D67-48AD-4CE9-97D9-67CF773C9457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83261D67-48AD-4CE9-97D9-67CF773C9457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
