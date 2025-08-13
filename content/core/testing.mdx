@@ -12,45 +12,6 @@ All functionality within are accessible with the `WebSharper.Testing` namespace.
 Code samples below are also assuming that the module or assembly containing them is annotated with `[<JavaScript>]` except
 when referring to being server-side code.
 
-## Contents
-
-- [Categories and tests](#categories-and-tests): organizing and running tests
-    - [TestCategory](#testcategory)
-    - [Test](#test)
-    - [Expect](#expect)
-    - [Runner.RunTests](#runnerruntests)
-- [Assertions](#assertions): simple assertions
-    - [isTrue](#istrue)
-    - [isFalse](#isfalse)
-- [Equality checks](#equality-checks): equality/non-equality checkers
-    - [equal](#equal)
-    - [notEqual](#notequal)
-    - [jsEqual](#jsequal)
-    - [notJsEqual](#notjsequal)
-    - [strictEqual](#strictequal)
-    - [notStrictEqual](#notstrictequal)
-    - [deepEqual](#deepequal)
-    - [notDeepEqual](#notdeepequal)
-    - [propEqual](#propequal)
-    - [notPropEqual](#notpropequal)
-    - [approxEqual](#approxequal)
-    - [notApproxEqual](#notapproxequal)
-- [Exception testing](#exception-testing): check for a raised exception
-    - [raises](#raises)
-- [Asynchronous tests](#asynchronous-tests): using `Async` values inside test workflows
-- [Property testing](#property-testing): property testing with random values
-    - [Do](#do)
-    - [property](#property)
-    - [propertyWith](#propertywith)
-    - [propertyWithSample](#propertywithsample)
-- [Looping](#looping): registering multiple tests with a loop
-    - [forEach](#foreach)
-- [Sample value generators](#sample-value-generators): compose complex test values 
-    - [RandomValues.Generator](#randomvaluesgenerator)
-    - [RandomValues.Sample](#randomvaluessample)
-    - [Random generator constructors](#random-generator-constructors)
-    - [Random generator combinators](#random-generator-combinators)
-
 <a name="categories-and-tests"></a>
 ## Categories and tests
 
@@ -96,6 +57,18 @@ These all have four versions for optionally naming it and/or using it with an as
 
 * operations with `Msg` also accept a name for that single assertion,
 * operations with `Async` accept a value of type `Async<'T>` as the actual value instead. Expected value is still provided as a value of `'T`.
+
+### Skipped, todo, and conditional tests
+
+Use the `Skip` function instead of `Test` to skip a test case.
+This is useful alternative to commenting out the test code, to still have it visible in the test runner.
+
+You can also use `Todo` to mark a test as not fully passing yet.
+QUnit will show it as passing until there is at least one assertion failing or there is an exception.
+If the test passes, it will be shown failing to signal that it can now be changed to a regular test.
+
+All the test builders have an `...If` variant that also takes a boolean condition.
+When the condition is `false`, the test is fully skipped.
 
 <a name="runnerruntests"></a>
 ### Runner.RunTests
