@@ -6,6 +6,7 @@
   "pages": [
     "lang-support",
     "sitelets",
+    "ui",
     "linq",
     "testing"
   ]

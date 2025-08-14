@@ -12,7 +12,7 @@ Below is the C# equivalent of the minimal example:
 using System;
 using System.Threading.Tasks;
 using WebSharper.Sitelets;
-using static WebSharper.UI.CSharp.Html;
+using static WebSharper.UI.Html;
 
 namespace MyWebsite
 {
@@ -74,7 +74,6 @@ This creates a `Sitelet<object>`, which means it has less type safety than the F
 For example, using the endpoint types defined [in the above section](#routing), you can create the following Sitelet:
 
 ```csharp
-[Website]
 public static Sitelet<object> MySampleWebsite =>
     new SiteletBuilder()
         .With<Index>((ctx, endpoint) =>
@@ -449,7 +448,7 @@ SiteletBuilder()
 <a name="sitelet-combinators"></a>
 ### Other Constructors and Combinators
 
-The same combinators are available in C# as in F#.
+Many of the same combinators are available in C# as in F#. See the [F# documentation](../core/sitelets#other-constructors-and-combinators).
 The main differences are: 
 * `Sitelet.Sum` and `Sitelet.Folder` have `params` arguments, so you can pass multiple sitelets as an array or as a comma-separated list. 
 * Methods that modify a single sitelet are available as extension methods on `Sitelet<T>`, while those that combine multiple sitelets are available as static methods in the `Sitelet` class. These are `.Box`, `.Protect`, `.Map`, and `.Shift`.
@@ -467,13 +466,13 @@ Sitelet.Infer<string>(ArticleContent).Map(t => new Article() { Title = t }, a =>
 <a name="content"></a>
 ## Content
 
-Similar content-creating functions are available in C# as in F#. See the [F# documentation](../core/content) for more details.
+Similar content-creating functions are available in C# as in F#. See the [F# documentation](../core/content).
 The main difference is that the content functions return a `Task<Content>` instead of `Async<Content>`.
 
 For example, the following code creates a simple HTML page:
 
 ```csharp
-using static WebSharper.UI.CSharp.Html;
+using static WebSharper.UI.Html;
 
 new SiteletBuilder()
     .With<T>((ctx, endpoint) =>
