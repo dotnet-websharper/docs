@@ -254,42 +254,7 @@ var myPage = new Template.MyTemplate().Doc();
 //     );
 ```
 
-Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](#inner-templates).
-
-You can also declare a template from multiple files at once using a comma-separated list of file names. In this case, the template for each file is a nested class named after the file, truncated of its file extension.
-
-```csharp
-// myTemplate.html:
-// <div>
-//   <h1>Welcome!</h1>
-//   <p>Welcome to my site.</p>
-// </div>
-
-// secondTemplate.html:
-// <div>
-//   <h2>This is a section.</h2>
-//   <p>And this is its content.</p>
-// </div>
-
-var myPage =
-    doc(
-        new Template.MyTemplate().Doc(),
-        new Template.SecondTemplate().Doc()
-    )
-
-// equivalent to:
-// var myPage =
-//     doc(
-//         div(
-//             h1("Welcome!"),
-//             p("Welcome to my site.")
-//        ),
-//         div(
-//             h2("This is a section."),
-//             p("And this is its content.")
-//        )
-//    );
-```
+Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](../ui/templates#inner-templates).
 
 ### Controlling the loading of templates
 
