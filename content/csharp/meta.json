@@ -5,6 +5,7 @@
   "icon": "Palette",
   "pages": [
     "lang-support",
+    "sitelets",
     "linq",
     "testing"
   ]
