@@ -214,7 +214,7 @@ To include client-side elements inside a page, use the static `client` method of
 ## HTML Templates
 
 As far as the HTML is concerned, the very same syntax and features are available for C# templating as for F#.
-See the [HTML Templates](../ui/templates) page in the F# documentation for details.
+See the [HTML Templates](../ui/templating) page in the F# documentation for details.
 However, the mechanism is different, F# uses type providers, while C# uses a code generator that creates a class for each HTML file.
 
 ### Setup
@@ -257,7 +257,7 @@ var myPage = new Template.MyTemplate().Doc();
 //     );
 ```
 
-Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](../ui/templates#inner-templates).
+Note that the template doesn't have to be a full HTML document, but can simply be a snippet or sequence of snippets. This is particularly useful to build a library of widgets using [inner templates](../ui/templating#inner-templates).
 
 ### Controlling the loading of templates
 
