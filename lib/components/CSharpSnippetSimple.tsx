@@ -17,8 +17,8 @@ export function CSharpSnippetSimple({ snippet, liveSnippetHeight = "600", highli
           break;
   }
   return (
-    <Tabs items={["F#", "Result"]} defaultIndex={defIndex}>
-      <Tab value="F#" className="not-prose">
+    <Tabs items={["C#", "Result"]} defaultIndex={defIndex}>
+      <Tab value="C#" className="not-prose">
         <CustomSyntaxHighlighterWithCopy id={`snippet_${snippet}_cs`} code={csCode} language="csharp" highlightLines={highlightLines}></CustomSyntaxHighlighterWithCopy>
       </Tab>
       <Tab value="Result">
