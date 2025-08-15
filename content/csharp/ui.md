@@ -219,16 +219,20 @@ However, the mechanism is different, F# uses type providers, while C# uses a cod
 
 ### Setup
 
-To generate code based on a HTML file, include the `.html` as a `Content` element in your project.
-WebSharper's build as well as the analyzer then creates a `.g.cs` file with the same name.
-Include this too in your project, recommended way (for an `index.html`) is:
+To generate code based on a HTML file, include the `.html` as a `AdditionalFiles` element in your project.
+The `WebSharper.UI.CSharp.Templating.Generator` code generator then creates a `.g.cs` file with the same name.
+The recommended setup is to let the code generator write the generated files into disk for development, and then exclude them for not running into duplicated code errors.
+The way to do this is to add the following to your `.csproj` file, which is already included in WebSharper templates:
 
 ```xml
-    <Compile Include="index.g.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>index.html</DependentUpon>
-    </Compile>
+  <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Exclude the earlier output of source generators from the C# compilation -->
+    <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+  </ItemGroup
 ```
 
 The generated class will be in a namespace that is created from the assembly name and appending `.Template`.
@@ -242,7 +246,6 @@ To instantiate it, call your type's constructor and then its `.Doc()` method.
 //   <h1>Welcome!</h1>
 //   <p>Welcome to my site.</p>
 // </div>
-
 
 var myPage = new Template.MyTemplate().Doc();
 
