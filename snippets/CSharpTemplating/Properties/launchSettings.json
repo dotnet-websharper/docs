@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CSharpTemplating": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7617;http://localhost:7618"
+    }
+  }
+}

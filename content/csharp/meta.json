@@ -8,6 +8,7 @@
     "sitelets",
     "ui",
     "linq",
-    "testing"
+    "testing",
+    "samples"
   ]
 }

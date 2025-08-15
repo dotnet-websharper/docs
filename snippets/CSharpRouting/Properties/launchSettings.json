@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CSharpRouting": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:8211;http://localhost:8212"
+    }
+  }
+}
