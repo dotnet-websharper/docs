@@ -22,6 +22,11 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Restore NuGet packages
+        run: |
+            dotnet tool restore
+            dotnet paket restore
+
       - name: Build and Resolve Femto for all snippet projects
         run: |
           for proj in snippets/*/*.*proj; do
