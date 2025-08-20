@@ -26,6 +26,7 @@ jobs:
         run: |
             dotnet tool restore
             dotnet paket restore
+        working-directory: ./snippets
 
       - name: Build and Resolve Femto for all snippet projects
         run: |
