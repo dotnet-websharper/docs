@@ -29,8 +29,7 @@ namespace CSharpVShorthand
                 // Name input with two-way binding
                 div(
                     "Enter your name: ",
-                    //input(state.V.Name), // this is an upcoming feature, needs manual lensing for now
-                    input(state.Lens(st => st.Name, (st, v) => st with { Name = v })),
+                    input(state.V.Name),
                     // Display the current name
                     div(
                         $"Current name: {state.V.Name}"

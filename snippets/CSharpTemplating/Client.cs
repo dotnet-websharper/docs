@@ -18,13 +18,8 @@ namespace CSharpTemplating
             // Create a reactive variable for the counter
             var countVar = Var.Create(0);
 
-            // Helper function to create indexed list model
-            Func<(int Index, string Item), int> getIndex = (i) => i.Index;
-
             // Create a list model, keyed by an index
-            // Note: FSharpConvert.Fun will not be necessary when the API improved for C#
-            // Also in an upcoming release, [] will be supported to create an empty IEnumerable
-            var myList = ListModel.Create(FSharpConvert.Fun(getIndex), Enumerable.Empty<(int Index, string Item)>());
+            var myList = new ListModel<int, (int Index, string Item)>(i => i.Index);
 
             // Create an index for uniquely tracking items
             var itemIndex = 0;

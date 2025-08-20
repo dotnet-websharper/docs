@@ -39,7 +39,7 @@ namespace CSharpRouting
                 currentRoute.View.Doc(route =>
                     route switch
                     {
-                        Root.About _ =>
+                        Root.About =>
                             div(
                                 h2("About Us"),
                                 p("Learn more about our application."),
@@ -47,17 +47,17 @@ namespace CSharpRouting
                                     () => currentRoute.Set(new Root.Contact())
                                 )
                             ),
-                        Root.Contact _ =>
+                        Root.Contact =>
                             div(
                                 h2("Contact Us"),
                                 p("Get in touch with us!")
                             ),
-                        Root.NotFound _ =>
+                        Root.NotFound =>
                             div(
                                 h2("404 - Page Not Found"),
                                 p("The page you requested does not exist.")
                             ),
-                        Root _ =>
+                        Root =>
                             div(
                                 h2("Welcome to the Home Page"),
                                 p("This is the main page of our SPA.")

@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebSharper" Version="9.1.4.586" />    
-    <PackageReference Include="WebSharper.CSharp" Version="9.1.4.586" />
-    <PackageReference Include="WebSharper.UI" Version="9.1.4.586" />
-    <PackageReference Include="WebSharper.UI.CSharp" Version="9.1.4.586" />
-    <PackageReference Include="WebSharper.AspNetCore" Version="9.1.4.586" />
+    <PackageReference Include="WebSharper" Version="9.1.7.598" />
+    <PackageReference Include="WebSharper.CSharp" Version="9.1.7.598" />
+    <PackageReference Include="WebSharper.UI" Version="9.1.7.598" />
+    <PackageReference Include="WebSharper.UI.CSharp" Version="9.1.7.598" />
+    <PackageReference Include="WebSharper.AspNetCore" Version="9.1.7.598" />
   </ItemGroup>
 
   <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile" Condition=" '$(Configuration)' == 'Release' ">
