@@ -30,7 +30,7 @@ Differences from F#:
   defTab="preview"
 />
 
-* NOTE: there is a [bug](https://github.com/dotnet-websharper/core/issues/1501) currently that makes the input defocus after an edit change. This is not intended and will be fixed. Also, lensing on C# records is not yet supported.
+* Lensing on C# records is supported, so `input(state.V.Name)` creates an `input` element with two-way immutable binding to the `Name` property of the `state` record.
 * Instead of a `V` function, the `V.V` helper is used to create reactive expressions.
 
 ## HTML templates
@@ -43,8 +43,7 @@ Differences from F#:
 />
 
 * The C# version sets `ClientLoad = FromDocument` in a HTML comment, for the templating code generator to use.
-* Creating a `ListModel` currently needs an `FSharpConvert` helper. This will be improved in the future. See the [issue](https://github.com/dotnet-websharper/ui/issues/294).
-* Instead of `Enumerable.Empty`, a modern way would be is to use the `[]` collection initializer syntax. This needs a fix in the WebSharper compiler yet. See the [issue](https://github.com/dotnet-websharper/core/issues/1502).
+* The `ListModel` type requires a key for each element, so we use a C# tuple with named elements.
 * C# template holes do not automatically support the `.V` shorthand, so the `V.V` helper is used.
 
 ## Client-side routing
@@ -58,4 +57,3 @@ Differences from F#:
 
 * The endpoints must be declared as a base class, and subclasses that are nested inside it. This enables `Router.Infer` to work.
 * Fullly qualified names are used for the `Router` and `Doc` types for disambiguation. This is intended to be improved in the future. See the [issue](https://github.com/dotnet-websharper/ui/issues/295).
-* In the `switch` expression, discard patterns are used like `Root.About _`, although this is not strictly necessary for C#, but WebSharper currently does not handle the type check without it. See the [issue](https://github.com/dotnet-websharper/core/issues/1503).

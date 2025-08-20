@@ -36,4 +36,4 @@ snippets/*/websharper.log
 snippets/*/build
 snippets/*/node_modules
 .fake
-/.vs
+.vs
