@@ -1,0 +1,21 @@
+source https://nuget.pkg.github.com/dotnet-websharper/index.json
+source https://api.nuget.org/v3/index.json
+
+references: strict
+redirects: on
+framework: net8.0
+strategy: min
+storage: none
+
+nuget FSharp.Core ~> 9.0
+nuget WebSharper ~> 9.1
+nuget WebSharper.AspNetCore ~> 9.1
+nuget WebSharper.CSharp ~> 9.1
+nuget WebSharper.Forms ~> 9.1
+nuget WebSharper.FSharp ~> 9.1
+nuget WebSharper.MathJax ~> 9.1
+nuget WebSharper.MathJS ~> 9.1
+nuget WebSharper.Mvu ~> 9.1
+nuget WebSharper.Testing ~> 9.1
+nuget WebSharper.UI ~> 9.1
+nuget WebSharper.UI.CSharp ~> 9.1

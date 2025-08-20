@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{65AF115F-CDB7-47F1-BD74-1D92052064A4}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Bignumbers", "BigNumbers\Bignumbers.fsproj", "{B6D98CD8-2475-49C8-A671-CF8FD3E0F898}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ComplexNumber", "ComplexNumber\ComplexNumber.fsproj", "{4447069B-0C5F-4120-AC6F-27D44741F45C}"
