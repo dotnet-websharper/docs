@@ -23,6 +23,7 @@
     "interface-generator",
     "testing",
     "math",
+    "date",
     "ws-ai-plugin"
   ]
 }
