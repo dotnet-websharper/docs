@@ -1,0 +1,10 @@
+{
+  "name": "DateFNS",
+  "version": "1.0.0",
+  "devDependencies": {
+    "esbuild": "^0.19.9"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  }
+}
