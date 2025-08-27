@@ -2,7 +2,7 @@
   "name": "websharper-docs-snippets",
   "version": "1.0.0",
   "devDependencies": {
-    "esbuild": "^0.25.3"
+    "esbuild": "0.25.3"
   },
   "dependencies": {
     "mathjs": "^12.4.3",
