@@ -35,5 +35,6 @@ snippets/*/wwwroot/Scripts
 snippets/*/websharper.log
 snippets/*/build
 snippets/*/node_modules
+/snippets/node_modules
 .fake
 .vs

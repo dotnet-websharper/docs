@@ -7,12 +7,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="package.json" />
     <None Include="wsconfig.json" />
     <None Include="paket.references" />
   </ItemGroup>
   <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="npm install" />
+    <Exec Command="npm install" WorkingDirectory=".." />
     <Exec Command="node ./esbuild.config.mjs" />
   </Target>
   <Import Project="..\.paket\Paket.Restore.targets" />
