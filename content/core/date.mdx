@@ -75,24 +75,21 @@ defTab="preview"
 
 type Template = Template<"index.html", ClientLoad.FromDocument>
 
-let dateVar = Var.Create System.DateTime.Now
-// using DateFNS
-// let dateVar = Var.Create (Date())
+let dateVar = Var.Create ""
+let resultVar = Var.Create ""
 
 let Main() = 
     Template.Main()
-        .DateOutput(
-            dateVar.V.ToString("yyyy-MM-dd")
-
-            // DateFNS output
-            // DateFNS.Format(dateVar.V, "yyyy-MM-dd")
-        )
-        .AddDay(fun _ ->
-            dateVar.Value <- dateVar.Value.AddDays(1.0)
+        .dateTimeVar(dateVar.V)
+        .dateTimeOutput(resultVar.V)
+        .OnDateChange(fun _ -> 
+            let dateTime = System.DateTime.Parse dateVar.Value
+            resultVar.Value <- (dateTime.ToShortDateString())
 
             // using DateFNS
-            // dateVar.Value <- DateFNS.AddDays(dateVar.Value, 1)
-        )      
+            // let dateTime = Date(dateVar.Value)
+            // resultVar.Value <- DateFNS.Format(dateTime, "yyyy-MM-dd")
+        )
         .Doc() 
     |> Doc.RunById "main"
 ```
@@ -100,8 +97,8 @@ let Main() =
 index.html:
 
 ```html
-<p ws-hole="DateOutput"></p>
-<button ws-onclick="AddDay">+1 Day</button>
+<input type="date" ws-var="dateTimeVar" ws-onchange="OnDateChange" />
+<p ws-hole="dateTimeOutput"></p>
 ```
 
 (*See [WebSharper Templating](../ui/templating.md) for more.*)
@@ -110,22 +107,25 @@ index.html:
 
 ```fsharp
 open WebSharper.UI.Html
+open WebSharper.UI.Client
 // if you are using DateFNS
 // open WebSharper.DateFNS 
 
-let dateVar = Var.Create System.DateTime.Now
+let dateVar   = Var.Create ""
+let resultVar = Var.Create ""
+
+let onChange (_: Dom.Element) (_: Dom.Event) =
+    let dateTime = System.DateTime.Parse dateVar.Value
+    resultVar.Value <- (dateTime.ToShortDateString())
+
+    // using DateFNS
+    // let dateTime = Date(dateVar.Value)
+    // resultVar.Value <- DateFNS.Format(dateTime, "yyyy/MM/dd")
 
 div [] [
-    p [] [text (dateVar.V.ToString("yyyy-MM-dd"))]
-
-    // DateFNS output
-    // p [] [text (DateFNS.Format(dateVar.V, "yyyy-MM-dd"))]
-    button [on.click (fun element mouseEvent -> 
-        dateVar.Value <- dateVar.Value.AddDays(1.0)
-
-        // using DateFNS
-        // dateVar.Value <- DateFNS.AddDays(dateVar.Value, 1)
-    )] [text "+1 Day"]            
+    // This creates a bound <input type="date" ...>
+    Doc.InputType.Text [attr.``type`` "date"; on.change onChange] dateVar
+    p [] [resultVar.View |> Doc.TextView]
 ]
 |> Doc.RunById "main"
 ```
