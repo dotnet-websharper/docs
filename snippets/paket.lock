@@ -427,6 +427,8 @@ NUGET
       WebSharper (9.1.7.599)
     WebSharper.CSharp (9.1.7.599)
       WebSharper (9.1.7.599)
+    WebSharper.DateFNS (9.1.0.554)
+      WebSharper (>= 9.1 < 9.2)
     WebSharper.Forms (9.1.0.557)
       WebSharper (>= 9.1.1 < 9.2)
       WebSharper.UI (>= 9.1.1 < 9.2)

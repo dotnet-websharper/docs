@@ -18,3 +18,4 @@ nuget WebSharper.Mvu ~> 9.1
 nuget WebSharper.Testing ~> 9.1
 nuget WebSharper.UI ~> 9.1
 nuget WebSharper.UI.CSharp ~> 9.1
+nuget WebSharper.DateFNS ~> 9.1

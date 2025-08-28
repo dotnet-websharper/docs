@@ -72,6 +72,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpTemplating", "CSharpT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpRouting", "CSharpRouting\CSharpRouting.csproj", "{BDC8B13F-BB68-4D80-A86E-BB5F75609E42}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SystemDateTime", "SystemDateTime\SystemDateTime.fsproj", "{DB844512-8304-4D38-9B38-04DDFF9910E2}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DateFNS", "DateFNS\DateFNS.fsproj", "{4F64A224-FE8A-4EC1-A2AA-D691BB424CBD}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".npm", ".npm", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		package-lock.json = package-lock.json
@@ -214,6 +218,14 @@ Global
 		{BDC8B13F-BB68-4D80-A86E-BB5F75609E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDC8B13F-BB68-4D80-A86E-BB5F75609E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDC8B13F-BB68-4D80-A86E-BB5F75609E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB844512-8304-4D38-9B38-04DDFF9910E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB844512-8304-4D38-9B38-04DDFF9910E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB844512-8304-4D38-9B38-04DDFF9910E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB844512-8304-4D38-9B38-04DDFF9910E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F64A224-FE8A-4EC1-A2AA-D691BB424CBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F64A224-FE8A-4EC1-A2AA-D691BB424CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F64A224-FE8A-4EC1-A2AA-D691BB424CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F64A224-FE8A-4EC1-A2AA-D691BB424CBD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Release|Any CPU.ActiveCfg = Release|Any CPU

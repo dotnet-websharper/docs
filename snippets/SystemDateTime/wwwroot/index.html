@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SystemDateTime</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Scripts/SystemDateTime.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.png" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+
+        .panel {
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .grid {
+            display: grid;
+            gap: .5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: 10rem 1fr;
+        }
+
+        .buttons > button {
+            margin-right: .5rem;
+            margin-bottom: .5rem;
+        }
+
+        code {
+            background: #f6f8fa;
+            padding: .1rem .3rem;
+            border-radius: 4px;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/SystemDateTime.head.js"></script>
+</head>
+<body>
+    <h1>System.DateTime demo</h1>
+
+    <div id="main" class="panel grid" ws-children-template="Main">
+        <h2>Working with <code>System.DateTime</code></h2>
+
+        <div class="grid grid-2">
+            <div>Now:</div>
+            <div><span ws-hole="NowText"></span></div>
+
+            <div>Tomorrow (+1 day):</div>
+            <div><span ws-hole="TomorrowText"></span></div>
+
+            <div>Start of month:</div>
+            <div><span ws-hole="StartOfMonthText"></span></div>
+        </div>
+
+        <div class="buttons">
+            <button ws-onclick="SetNow">Set Now</button>
+            <button ws-onclick="AddDay">+1 Day</button>
+            <button ws-onclick="AddWeek">+1 Week</button>
+            <button ws-onclick="ToStartOfMonth">Start of Month</button>
+        </div>
+
+        <div>
+            <input ws-var="NDays" type="number" placeholder="Days to add" />
+            <button ws-onclick="AddNDays">Add N Days</button>
+        </div>
+    </div>
+    <script type="module" src="Scripts/SystemDateTime.min.js"></script>
+</body>
+</html>
