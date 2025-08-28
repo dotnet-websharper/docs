@@ -1,0 +1,156 @@
+---
+title: Dependent forms
+---
+
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
+Forms can be dependent on each other. For example, you might want to show or hide certain fields based on the value of another field above.
+Or show an entirely different sub-form based on a selection. Both are equally possible.
+
+## Defining dependent forms
+
+The first design choice is to what value the final form should return, which should contain all information. This is can be done with records with optional fields or discriminated unions.
+
+For example, consider a form where the user can select between two options, to enter information about a teacher or a student. Based on the selection, we will show a different sub-form.
+First we define our data type, and the form that chooses between the two options.
+For the latter, because we only have two options, we can use a `bool` value for simplicity, but this could be expanded to use unions too for more options.
+
+```fsharp
+type Subject =
+    | Math | English | History
+    with override this.ToString() = $"%A{this}"
+
+type TeacherOrStudent =
+    | Teacher of Subject 
+    | Student of year: int
+
+let IsTeacherForm() = 
+    Form.Yield true
+
+let TeacherForm() =
+    Form.Yield Math
+
+let StudentForm() =
+    Form.Yield (Valid (1, "1")) // of type CheckedInput<int>
+    |> Validation.Is (function Valid _ -> true | _ -> false) "Please enter a valid number."
+    |> Validation.Is (function Valid (y, _) when y >= 1 && y <= 12 -> true | _ -> false) "Please enter a valid school year (1-12)."
+    |> Form.Map (function Valid (y, _) -> y | _ -> 0) //  by this time, we have already filtered out non-valid values
+```
+
+The `StudentForm` is already prepared to work with a `WebSharper.UI.Client.CheckedInput<int>` value internally which is produced by UI helpers to aid validating and parsing nubmer inputs.
+Then if the value passes validators, it is safe to map it to an `int`.
+
+The next step is to take a look at the signatures of `TeacherForm` and `StudentForm` to see what arguments their render function takes.
+For `TeacherForm` it is `Var<Subject>`, and for `StudentForm` it is `Var<CheckedInput<int>>`.
+We need to create a helper union type that can switch between these two reactive vars, because to create a dependent form, we need to have a uniform input side too.
+
+```fsharp
+type TeacherOrStudentInput =
+    | TeacherInput of Var<Subject>
+    | StudentInput of Var<CheckedInput<int>>
+```
+
+Now, we are ready to use the `Form.Dependent` function to show a different sub-form based on the value of the `IsTeacherForm`.
+On both sub-forms, we use `Form.MapRenderArgs` to unify the types of the input side, and `Form.Map` to unify the types of the form result.
+This sets things up well for both rendering and running the form, where the types itself will guide writing correct code.
+
+```fsharp
+let TeacherOrStudentForm() =
+    Form.Dependent (IsTeacherForm()) (fun isTeacher ->
+        if isTeacher then
+            TeacherForm()
+            |> Form.MapRenderArgs TeacherInput
+            |> Form.Map Teacher
+        else
+            StudentForm()
+            |> Form.MapRenderArgs StudentInput
+            |> Form.Map Student
+    )
+    |> Form.WithSubmit
+```
+## Using `Form.Do` computation expression
+
+Alternatively, you can use the `Form.Do` computation expression to achieve the same result.
+This can be more readable, especially when you have multiple dependent forms, it avoids nested lambdas, but otherwise it's syntax sugar only.
+
+```fsharp
+let TeacherOrStudentForm() =
+    Form.Do {
+        let! isTeacher = IsTeacherForm()
+        if isTeacher then
+            return!
+                TeacherForm()
+                |> Form.MapRenderArgs TeacherInput
+                |> Form.Map Teacher
+        else
+            return!
+                StudentForm()
+                |> Form.MapRenderArgs StudentInput
+                |> Form.Map Student
+    }
+    |> Form.WithSubmit
+```
+
+Every use of `let!` will create a dependent form.
+We use `return!` to return a final form without an extra layer of dependent forms, as `return` would only allow to return a form result value.
+
+## Rendering dependent forms
+
+When rendering dependent forms, we can start with `Forms.Render` as with other forms.
+The rendering function will get a value of type `Form.Dependent<_,_,_>`, which enables rendering the two sub-forms, called primary and dependent.
+
+```fsharp
+let ShowErrorMessage v =
+    v |> Doc.BindView (function
+        | Success _ -> Doc.Empty
+        | Failure msgs ->
+            div [attr.style "color:red"] [for msg in msgs -> p [] [text msg.Text] ]
+    )
+
+let Form =
+    TeacherOrStudentForm2
+    |> Form.Render (fun dep submit ->            
+        div [] [
+            // render the primary IsTeacherForm
+            dep.RenderPrimary (fun rvIsTeacher ->
+                p [] [
+                    label [] [Doc.InputType.Radio [] true rvIsTeacher; text "I am a teacher"]
+                    label [] [Doc.InputType.Radio [] false rvIsTeacher; text "I am a student"]
+                ]
+            )
+            // render the dependent TeacherForm or StudentForm
+            dep.RenderDependent (fun rvTeacherOrStudent ->
+                match rvTeacherOrStudent with
+                | TeacherInput rvSubject ->
+                    Doc.InputType.Select [] string [Math; English; History] rvSubject
+                | StudentInput rvYear ->
+                    Doc.Concat [
+                        Doc.InputType.Int [ attr.min "1"; attr.max "12" ] rvYear
+                        ShowErrorMessage (submit.View.Through rvYear)
+                    ]
+            )
+            p [] [Doc.Button "Submit" [] submit.Trigger]
+            submit.View |> View.Map (function
+                | Success (Teacher subject) ->
+                    div [] [text ("You registered as a teacher of " + string subject + ".")]
+                | Success (Student year) ->
+                    div [] [text ("You registered as a student in year " + string year + ".")]
+                | _ -> Doc.Empty
+            )
+            |> Doc.EmbedView
+        ]
+    )
+```
+In the rendering function, we use `dep.RenderPrimary` to render the first form, which selects between student and teacher.
+Then we use `dep.RenderDependent` to render the sub-form based on the selection. The `submit.View.Through rvYear` is used to show validation messages for the student form's input.
+
+## Complete example
+
+Here is now the complete example, showcasing all the elements described in this tutorial.
+
+<FSharpSnippetTabs
+  snippet="forms_example_2"
+  liveSnippetHeight="500"
+  highlightLines=""
+  defTab="preview"
+/>

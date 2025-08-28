@@ -5,6 +5,7 @@
   "icon": "Palette",
   "pages": [
     "index",
+    "dependent-forms",
     "api"
   ]
 }
