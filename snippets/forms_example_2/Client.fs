@@ -27,7 +27,7 @@ module Client =
         Form.Yield Math
 
     let StudentForm() =
-        Form.Yield (Valid (1, "1")) // of type CheckedInput<int>
+        Form.Yield (CheckedInput.Make 1)
         |> Validation.Is (function Valid _ -> true | _ -> false) "Please enter a valid number."
         |> Validation.Is (function Valid (y, _) when y >= 1 && y <= 12 -> true | _ -> false) "Please enter a valid school year (1-12)."
         |> Form.Map (function Valid (y, _) -> y | _ -> 0) //  by this time, we have already filtered out non-valid values

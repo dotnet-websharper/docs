@@ -31,7 +31,7 @@ let TeacherForm() =
     Form.Yield Math
 
 let StudentForm() =
-    Form.Yield (Valid (1, "1")) // of type CheckedInput<int>
+    Form.Yield (CheckedInput.Make 1)
     |> Validation.Is (function Valid _ -> true | _ -> false) "Please enter a valid number."
     |> Validation.Is (function Valid (y, _) when y >= 1 && y <= 12 -> true | _ -> false) "Please enter a valid school year (1-12)."
     |> Form.Map (function Valid (y, _) -> y | _ -> 0) //  by this time, we have already filtered out non-valid values
@@ -52,7 +52,7 @@ type TeacherOrStudentInput =
 
 Now, we are ready to use the `Form.Dependent` function to show a different sub-form based on the value of the `IsTeacherForm`.
 On both sub-forms, we use `Form.MapRenderArgs` to unify the types of the input side, and `Form.Map` to unify the types of the form result.
-This sets things up well for both rendering and running the form, where the types itself will guide writing correct code.
+This sets things up well for both rendering and running the form, where the types themselves will guide writing correct code.
 
 ```fsharp
 let TeacherOrStudentForm() =
