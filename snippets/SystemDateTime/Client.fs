@@ -23,13 +23,13 @@ module Client =
         let viewTomorrow   = current.View |> View.Map (fun date -> date.AddDays(1.))
         let viewStartMonth = current.View |> View.Map (fun date -> DateTime(date.Year, date.Month, 1))
 
-        let setNow () = current.Value <- DateTime.Now
-        let addDay () = current.Value <- current.Value.AddDays(1.)
-        let addWeek () = current.Value <- current.Value.AddDays(7.)
+        let setNow () = current.Set <| DateTime.Now
+        let addDay () = current.Set <| current.Value.AddDays(1.)
+        let addWeek () = current.Set <| current.Value.AddDays(7.)
         let toStartMo () = 
-            let dateTime = current.Value in current.Value <- DateTime(dateTime.Year, dateTime.Month, 1)
+            let dateTime = current.Value in current.Set <| DateTime(dateTime.Year, dateTime.Month, 1)
 
-        let addNDays () = current.Value <- current.Value.AddDays(nDays.Value)
+        let addNDays () = current.Set <| current.Value.AddDays(nDays.Value)
 
         IndexTemplate.Main()
             .NowText(current.V.ToString(format))

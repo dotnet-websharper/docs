@@ -84,11 +84,11 @@ let Main() =
         .dateTimeOutput(resultVar.V)
         .OnDateChange(fun _ -> 
             let dateTime = System.DateTime.Parse dateVar.Value
-            resultVar.Value <- (dateTime.ToShortDateString())
+            resultVar.Set <| (dateTime.ToShortDateString())
 
             // using DateFNS
             // let dateTime = Date(dateVar.Value)
-            // resultVar.Value <- DateFNS.Format(dateTime, "yyyy-MM-dd")
+            // resultVar.Set <| DateFNS.Format(dateTime, "yyyy-MM-dd")
         )
         .Doc() 
     |> Doc.RunById "main"
@@ -116,15 +116,15 @@ let resultVar = Var.Create ""
 
 let onChange (_: Dom.Element) (_: Dom.Event) =
     let dateTime = System.DateTime.Parse dateVar.Value
-    resultVar.Value <- (dateTime.ToShortDateString())
+    resultVar.Set <| (dateTime.ToShortDateString())
 
     // using DateFNS
     // let dateTime = Date(dateVar.Value)
-    // resultVar.Value <- DateFNS.Format(dateTime, "yyyy/MM/dd")
+    // resultVar.Set <| DateFNS.Format(dateTime, "yyyy/MM/dd")
 
 div [] [
     // This creates a bound <input type="date" ...>
-    Doc.InputType.Text [attr.``type`` "date"; on.change onChange] dateVar
+    Doc.InputType.Date [on.change onChange] dateVar
     p [] [resultVar.View |> Doc.TextView]
 ]
 |> Doc.RunById "main"
@@ -141,7 +141,7 @@ open WebSharper.DateFNS
 
 let dateTime = System.DateTime.Now
 let jsDate = Var.Create dateTime.JS          // convert to JS Date
-jsDate.Value <- DateFNS.AddDays(jsDate.Value, 1)
+jsDate.Set <| DateFNS.AddDays(jsDate.Value, 1)
 ```
 
 This lets you mix both systems smoothly.

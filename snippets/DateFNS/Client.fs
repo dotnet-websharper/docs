@@ -23,11 +23,11 @@ module Client =
         let viewTomorrow   = current.View |> View.Map (fun date -> DateFNS.AddDays(date, 1))
         let viewStartMonth = current.View |> View.Map (fun d -> DateFNS.StartOfMonth(d))
 
-        let setNow () = current.Value <- Date()
-        let addDay () = current.Value <- DateFNS.AddDays(current.Value, 1)
-        let addWeek () = current.Value <- DateFNS.AddWeeks(current.Value, 1)
-        let toStartMo () = current.Value <- DateFNS.StartOfMonth(current.Value)
-        let addNDays () = current.Value <- DateFNS.AddDays(current.Value, nDays.Value)
+        let setNow () = current.Set <| Date()
+        let addDay () = current.Set <| DateFNS.AddDays(current.Value, 1)
+        let addWeek () = current.Set <| DateFNS.AddWeeks(current.Value, 1)
+        let toStartMo () = current.Set <| DateFNS.StartOfMonth(current.Value)
+        let addNDays () = current.Set <| DateFNS.AddDays(current.Value, nDays.Value)
 
         IndexTemplate.Main()
             .NowText(
