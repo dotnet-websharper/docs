@@ -12,8 +12,6 @@ WebSharper supports date and time manipulation through two complementary approac
 - **Native support** via the .NET `System.DateTime` API, fully usable in WebSharper.
 - **Functional, JavaScript-style operations** via the [`WebSharper.DateFNS`](https://github.com/dotnet-websharper/datefns) binding, which exposes the [`date-fns`](https://date-fns.org/) library.
 
----
-
 ### Why Use `System.DateTime`?
 
 The .NET `System.DateTime` type is ideal when you need:
@@ -35,7 +33,7 @@ let formatted = today.ToString("yyyy-MM-dd")
 <FSharpSnippetTabs
 snippet="SystemDateTime"
 liveSnippetHeight="400"
-highlightLines="1,2,3"
+highlightLines="3,20,,23,24,26..30,32"
 defTab="preview"
 />
 
@@ -56,26 +54,107 @@ let formatted = DateFNS.Format(today, "yyyy-MM-dd")
 
 This style is especially convenient in client-side F# where you want short, declarative date code similar to JavaScript.
 
+> Note: please make sure you install `date-fns` via `npm install date-fns`
+
 <FSharpSnippetTabs
 snippet="DateFNS"
 liveSnippetHeight="400"
-highlightLines="1,2,3"
+highlightLines="8,20,23,24,26..30"
 defTab="preview"
 />
 
 ---
 
+## Date Input & Interop
+
+### Templating with WebSharper.UI
+
+```fsharp
+// if you are using DateFNS
+// open WebSharper.DateFNS 
+
+type Template = Template<"index.html", ClientLoad.FromDocument>
+
+let dateVar = Var.Create System.DateTime.Now
+// using DateFNS
+// let dateVar = Var.Create (Date())
+
+let Main() = 
+    Template.Main()
+        .DateOutput(
+            dateVar.V.ToString("yyyy-MM-dd")
+
+            // DateFNS output
+            // DateFNS.Format(dateVar.V, "yyyy-MM-dd")
+        )
+        .AddDay(fun _ ->
+            dateVar.Value <- dateVar.Value.AddDays(1.0)
+
+            // using DateFNS
+            // dateVar.Value <- DateFNS.AddDays(dateVar.Value, 1)
+        )      
+        .Doc() 
+    |> Doc.RunById "main"
+```
+
+index.html:
+
+```html
+<p ws-hole="DateOutput"></p>
+<button ws-onclick="AddDay">+1 Day</button>
+```
+
+(*See [WebSharper Templating](../ui/templating.md) for more.*)
+
+### HTML Combinator Style
+
+```fsharp
+open WebSharper.UI.Html
+// if you are using DateFNS
+// open WebSharper.DateFNS 
+
+let dateVar = Var.Create System.DateTime.Now
+
+div [] [
+    p [] [text (dateVar.V.ToString("yyyy-MM-dd"))]
+
+    // DateFNS output
+    // p [] [text (DateFNS.Format(dateVar.V, "yyyy-MM-dd"))]
+    button [on.click (fun element mouseEvent -> 
+        dateVar.Value <- dateVar.Value.AddDays(1.0)
+
+        // using DateFNS
+        // dateVar.Value <- DateFNS.AddDays(dateVar.Value, 1)
+    )] [text "+1 Day"]            
+]
+|> Doc.RunById "main"
+```
+
+(*See WebSharper’s [HTML Combinators](../ui/html.md) for more.*)
+
+### Passing `System.DateTime` to DateFNS
+
+You can convert a `System.DateTime` to a JS Date using `.JS` (common interop pattern):
+
+```fsharp
+open WebSharper.DateFNS
+
+let dateTime = System.DateTime.Now
+let jsDate = Var.Create dateTime.JS          // convert to JS Date
+jsDate.Value <- DateFNS.AddDays(jsDate.Value, 1)
+```
+
+This lets you mix both systems smoothly.
+
 ## When to Use Which
 
-| Your Priority                           | Choose `System.DateTime` | Choose `DateFNS` (WebSharper binding)                                                            |
-| --------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------ |
-| Full compatibility with .NET APIs       | Excellent fit            | More awkward to interop                                                                          |
-| Immutability & functional code style    | Manual handling required | Built‑in immutable functions                                                                     |
-| Bundle size & tree‑shaking              | Minimal overhead         | Only imports used functions                                                                      |
-| Rich client-side date toolkit           | Basic features           | Extensive helper functions                                                                       |
-| Need performant date arithmetic parsing | OK for common use        | Typically faster in benchmarks ([dev.to][1], [stackoverflow.com][2], [spin.atomicobject.com][3]) |
-
----
+| Scenario                          | Use `System.DateTime`    | Use `DateFNS` (WebSharper binding) |
+| --------------------------------- | ------------------------ | ---------------------------------- |
+| Full compatibility with .NET APIs | Native integration       | Less direct                        |
+| Immutable / functional style      | Manual handling required | Built-in pure functions            |
+| Tree-shaking & bundle management  | Minimal overhead         | Only imported functions included   |
+| Rich client-side date utilities   | Basic functionality      | Extensive toolkit via `date-fns`   |
+| Interop between systems           | .NET-first design        | JS-friendly style                  |
 
 ### Quick Decision Flow
 
