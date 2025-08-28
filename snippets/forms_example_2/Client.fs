@@ -49,22 +49,6 @@ module Client =
         )
         |> Form.WithSubmit
 
-    let TeacherOrStudentForm2 =
-        Form.Do {
-            let! isTeacher = IsTeacherForm()
-            if isTeacher then
-                return!
-                    TeacherForm()
-                    |> Form.MapRenderArgs TeacherInput
-                    |> Form.Map Teacher
-            else
-                return!
-                    StudentForm()
-                    |> Form.MapRenderArgs StudentInput
-                    |> Form.Map Student
-        }
-        |> Form.WithSubmit
-
     let ShowErrorMessage v =
         v |> Doc.BindView (function
             | Success _ -> Doc.Empty
@@ -73,7 +57,7 @@ module Client =
         )
 
     let Form =
-        TeacherOrStudentForm2
+        TeacherOrStudentForm()
         |> Form.Render (fun dep submit ->            
             div [] [
                 // render the primary IsTeacherForm

@@ -108,7 +108,7 @@ let ShowErrorMessage v =
     )
 
 let Form =
-    TeacherOrStudentForm2
+    TeacherOrStudentForm()
     |> Form.Render (fun dep submit ->            
         div [] [
             // render the primary IsTeacherForm
