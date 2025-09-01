@@ -1,76 +1,91 @@
 ---
-title: Working with vscode (Experimental)
+title: Working with VS Code
+description: Offline, privacy-first AI code reviews for F# and WebSharper in VS Code.
 ---
 
-A Visual Studio Code extension designed for **offline, privacy AI-assisted code reviews** tailored to **F#** and **WebSharper** development.
-It integrates with a **local Large Language Model (LLM)** (e.g., Ollama running `qwen2.5-coder:7b-instruct`) to provide real-time suggestions and improvements for selected code, with strict respect for user-defined preferences.
+![Demo](/ws-ai-plugin/small-file-suggestion.gif)
 
-The system never sends code to cloud services, ensuring **full code privacy**.
+**WS Code Review** is a Visual Studio Code extension for **offline, privacy-first** AI code reviews tailored to **F#** and **WebSharper**.
 
-## **Features**
+* Runs entirely on your machine via **Ollama**.
+* Uses a local coder model (default: **`qwen2.5-coder:7b-instruct`**).
+* **No code is sent to cloud services.**
 
-* **AI-Powered F# Code Review**:
-  Reviews *only the selected code* while considering full file context.
-* **Local LLM Integration**:
-  Connects to `http://localhost:11434/api/generate` (Ollama API).
-* **Custom AI Preferences**:
-  Store and modify preferences (e.g., "no renames", "functional style").
-* **Git Integration**:
-  * View staged/unstaged changes.
-  * Undo last AI suggestion.
-* **Webview-based UI**:
-  Interactive suggestion panel with Accept/Reject options.
+> **Links**
+> * Marketplace: https://marketplace.visualstudio.com/items?itemName=souvanxay.ws-code-review  
+> * GitHub + README: https://github.com/Got17/ai-code-review-vscode
 
-## **Workflow**
+## Key features
 
-1. **User selects F# code** in the editor.
-    ![User Select Code](/ws-ai-plugin/select-code.png)
+* **Selection-based reviews** with **streamed markdown** and a **diff preview**.
 
-2. **Trigger the `Show Suggestion` command** from the Command Palette (`Ctrl + Shift + P` on Windows/Linux, `Cmd + Shift + P` on macOS). 
+* **Apply mode**:
+  * Normal files: applies an improved **full file** — primarily the selected region changes, but related code may also be adjusted if required (e.g., imports, types, call sites).
 
-    ![Trigger Show Suggestion Command](/ws-ai-plugin/trigger-show-suggestion.png)
+  * Large files (≥ **600** lines): applies changes to the **selected region** only.
 
-3. **Extension builds AI prompt** (`buildPrompt`) including:
-   * Selected snippet
-   * Full file content
-   * User preferences
-   * Sends prompt to local AI API (`queryAIStream`).
-4. AI streams back suggestions to **Suggestion Webview**.
-    ![Suggestion Webview Panel 1](/ws-ai-plugin/suggestion-webview-1.png)
-    ![Suggestion Webview Panel 2](/ws-ai-plugin/suggestion-webview-2.png)
+* **Model switcher** (in webview + command). Default model is `qwen2.5-coder:7b-instruct`.
 
-5. User can:
+* **RAG pill** (ON/OFF) in the top bar of the webview to enrich reviews with bundled references.
 
-   * **Accept** (applies improved full file)
+* **Shadow Git snapshots** (optional): accepted suggestions are snapshot-committed to a private repo in extension storage—your real repo is untouched.
 
-      Before Accept: 
-      ![Before Accept Button](/ws-ai-plugin/select-code.png)
+* **AI preferences**: store style/constraints (e.g., "functional style", "no renames") and show them in the webview.
 
-      After Accept:
-      ![After Accept Button](/ws-ai-plugin/after-accept-button.png)
-   
-   * **Reject** (closes panel without changes).
-6. Optionally **Undo Last Suggestion** (via Git checkout).
+## Quick start
 
-## **Security & Privacy**
+1. **Install** from the Marketplace (link above).
 
-* No external API calls except to **local AI server**.
-* User code and preferences are **never sent to cloud services**.
-* Preferences stored locally via VS Code `globalState`.
+Here’s the updated **Quick start → Step 2** you can paste in:
 
-## **Technical Requirements**
+2. Install and start **Ollama**:
+    * Download and install Ollama for your OS (from the [official site](https://ollama.com/download)).
 
-* **VS Code 1.85+**
-* **Node.js 18+**
-* **Ollama** installed and running locally.
-* Model: `qwen2.5-coder:7b-instruct` (configurable via `constants.ts`).
+    * Pull the **coder** model:
+    ```bash
+    ollama pull qwen2.5-coder:7b-instruct
+    ```
 
-## **Example Usage**
+    * Run the **Ollama Server**
+    ```bash
+    ollama serve
+    ```
 
-```plaintext
-Highlight a block of F# code.
-Run "AI Code Review: Show Suggestion".
-View suggested changes in side panel.
-Accept or reject AI improvements.
-Use "Undo Last Suggestion" if needed.
-```
+    By default, Ollama serves at `http://localhost:11434`, open it in your browser to verify (you should see "Ollama is running").
+
+> Tip: If you prefer another local model, pull it first (e.g., `ollama pull <model:tag>`) and run `WS Code Review: Change Ollama Model` on Command Palette to switch before running `Show Suggestion`.
+
+
+3. Open an **`.fs`** file, **select code**, then run:
+
+    * **WS Code Review: Show Suggestion**
+    * Shortcut: **Ctrl+Alt+R** (Windows/Linux) or **Ctrl+Cmd+R** (macOS)
+
+4. Review the streamed suggestion and **diff** → **Accept** or **Reject**.
+5. (Optional) Click the **RAG pill** (ON/OFF) and press **Refresh** to re-run.
+6. (Optional) Enable **Shadow Git** in settings to keep private snapshot history.
+
+## Commands
+
+* **WS Code Review: Show Suggestion** — run review on the current selection.
+* **WS Code Review: Change Ollama Model** — pick a local model or enter a tag.
+* **WS Code Review: Set / Show / Clear AI Preferences** — manage reviewer hints.
+* **WS Code Review: Show Shadow Git History (Current File)** — browse snapshot commits.
+* **WS Code Review: Clear Shadow Git History** — purge the private snapshot repo.
+
+> See the GitHub **README** for the full command list, options, and troubleshooting.
+
+## Settings (high level)
+
+* `wsCodeReview.rag.enable` — toggle retrieval-augmented context (also via the RAG pill).
+* `wsCodeReview.git.enable` — enable private Shadow Git snapshotting on **Accept**.
+
+> Endpoint and model are configurable via **Change Ollama Model**.
+> Default endpoint: `http://localhost:11434/api/generate`
+> Default model: `qwen2.5-coder:7b-instruct`
+
+## Privacy
+
+This extension communicates **only** with a **local** Ollama server.
+No source code or preferences are sent to external/cloud services.
+Shadow Git history is stored in the extension’s private storage and can be cleared at any time.
