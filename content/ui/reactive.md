@@ -171,7 +171,7 @@ You can create Views using the following functions and combinators from the `Vie
     // [[v]] = 42
     ```
 
-* `View.ConstAnyc` is similar to `Const`, but is initialized asynchronously. Until the async returns, the resulting View is uninitialized.
+* `View.ConstAsync` is similar to `Const`, but is initialized asynchronously. Until the async returns, the resulting View is uninitialized.
 
 * <a name="view-map"></a>`View.Map` takes an existing View and maps its value through a function.
 
