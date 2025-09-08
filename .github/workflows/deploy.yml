@@ -22,6 +22,10 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+        working-directory: ./snippets
+      
       - name: Add credentials for Paket
         run:
           paket config
@@ -30,9 +34,7 @@ jobs:
             --password ${{ secrets.PAT_PACKAGE }}
 
       - name: Restore NuGet packages
-        run: |
-            dotnet tool restore
-            dotnet paket restore
+        run: dotnet paket restore
         working-directory: ./snippets
 
       - name: Build and Resolve Femto for all snippet projects
