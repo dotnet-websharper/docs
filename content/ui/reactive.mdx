@@ -359,7 +359,7 @@ There are different versions of these functions, which differ in how they decide
     // so it is not re-rendered as Bobby.
     ```
 
-* `View.MapSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> 'V) -> View<seq<'V>> covers the situation where items are identified by a key function and can be updated. Instead of passing the item's value to the mapping function, it passes a View of it, so you can react to the changes.
+* `View.MapSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> 'V) -> View<seq<'V>>` covers the situation where items are identified by a key function and can be updated. Instead of passing the item's value to the mapping function, it passes a View of it, so you can react to the changes.
 
     ```fsharp
     varPeople.View
