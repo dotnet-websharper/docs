@@ -2,6 +2,8 @@
 title: Client-side routing
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 If you have a `WebSharper.Sitelets.Router<'T>` value, it can be shared between server and client. A router encapsulates two things: parsing a URL path to an abstract value and writing a value as a URL fragment. So this allows generating links safely on both client  When initializing a page on the client side, you can decide to install a custom click handler for your page which recognizes some or all local links to handle without browser navigation.
 
 ### Install client-side routing
@@ -58,3 +60,16 @@ let ContactMain() =
 
 You can navigate programmatically with `location.Value <- newLoc`, `location |> Var.Set newLoc` or `location := newLoc` (if you have `open WebSharper.UI.Next.Notation`). 
 
+### Sample
+
+This sample demonstrates:
+* Defining a router with `Router.Infer` and an `EndPoint` type.
+* Using `Router.InstallHash` to set up client-side routing.
+* Handling URL changes and rendering different content based on the current route.
+
+<FSharpSnippetTabs
+  snippet="Routing"
+  liveSnippetHeight="500"
+  highlightLines="66,71"
+  defTab="preview"
+/>

@@ -2,6 +2,8 @@
 title: Reactive programming
 ---
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
 
 ### Vars
@@ -392,6 +394,21 @@ These functions map each item of the sequence to a Doc and then concatenates the
 
 Finally, all of the above functions are also available as extension methods on the `View<seq<'T>>` type. `.MapSeqCached()` overloads correspond to `View.MapSeqCached*` functions, and `.DocSeqCached()` overloads correspond to `Doc.BindSeqCached*` functions.
 
+#### Sample for `Var` and `View`
+
+This sample demonstrates:
+
+* Creating Vars for state.
+* Composing views with View.Map2.
+* Two-way binding via events and Doc.TextView for reactive display.
+
+<FSharpSnippetTabs
+  snippet="Vars"
+  liveSnippetHeight="500"
+  highlightLines="15,18"
+  defTab="preview"
+/>
+
 <a name="lens"></a>
 ### Vars and lensing
 
@@ -609,6 +626,23 @@ let myForm =
             (varPerson.Lens (fun p -> p.LastName) (fun p n -> { p with LastName = n }))
     ]
 ```
+
+#### Sample for `.V` shorthand
+
+This sample demonstrates:
+
+* Combining the application state into a single variable.
+* Automatic mapping and lensing of Vars.
+* Using `.Update` to ensure updates are applied correctly on increase/decrease.
+
+<FSharpSnippetTabs
+  snippet="VShorthand"
+  liveSnippetHeight="500"
+  highlightLines="27,34,37,44,47"
+  defTab="preview"
+/>
+
+This is equivalent to the `Var` sample but with a cleaner approach for combining and displaying values.
 
 ### ListModels
 

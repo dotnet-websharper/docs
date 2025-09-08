@@ -2,6 +2,8 @@
 title: HTML Templates
 --- 
 
+import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
+
 WebSharper.UI's syntax for creating HTML is compact and convenient, but sometimes you do need to include a plain HTML file in a project. It is much more convenient for designing to have a .html file that you can touch up and reload your application without having to recompile it. This is what Templates provide. Templates are HTML files that can be loaded by WebSharper.UI, and augmented with special elements and attributes that provide additional functionality:
 
 * Declaring Holes for nodes, attributes and event handlers that can be filled at runtime by F# code;
@@ -645,3 +647,18 @@ let myPage =
         .Doc()
 ```
 
+### Sample
+
+This sample demonstrates:
+
+* Using `ws-template` to define a reusable HTML structure.
+* Binding data to HTML inputs with `ws-var`, displaying text via the `${Hole}` syntax.
+* Handling events like clicks with `ws-onclick`.
+* Creating and using a `ListModel` for dynamic lists.
+
+<FSharpSnippetTabs
+  snippet="Templating"
+  liveSnippetHeight="500"
+  highlightLines="28,43"
+  defTab="preview"
+/>
