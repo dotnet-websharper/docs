@@ -28,7 +28,7 @@ jobs:
       
       - name: Add credentials for Paket
         run:
-          paket config
+          dotnet paket config
             add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
             --username intellifactory-gh 
             --password ${{ secrets.PAT_PACKAGE }}
