@@ -15,7 +15,7 @@ nuget WebSharper.Forms prerelease
 nuget WebSharper.FSharp prerelease
 nuget WebSharper.MathJax prerelease
 nuget WebSharper.MathJS prerelease
-nuget WebSharper.Mvu 10.0.0.610-beta1
+nuget WebSharper.Mvu prerelease
 nuget WebSharper.Testing prerelease
 nuget WebSharper.UI prerelease
 nuget WebSharper.UI.CSharp prerelease
