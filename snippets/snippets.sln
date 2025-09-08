@@ -84,6 +84,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".npm", ".npm", "{02EA681E-C
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "forms_example_2", "forms_example_2\forms_example_2.fsproj", "{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Flow", "Flow\Flow.fsproj", "{458E1EC6-7BBB-760F-384C-8E4174F67615}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -230,6 +232,10 @@ Global
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61EDA13D-AD37-4845-F0C4-E7F549ABBF15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{458E1EC6-7BBB-760F-384C-8E4174F67615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{458E1EC6-7BBB-760F-384C-8E4174F67615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{458E1EC6-7BBB-760F-384C-8E4174F67615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{458E1EC6-7BBB-760F-384C-8E4174F67615}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
