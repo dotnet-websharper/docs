@@ -32,6 +32,7 @@ jobs:
             add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
             --username intellifactory-gh 
             --password ${{ secrets.PAT_PACKAGE }}
+        working-directory: ./snippets
 
       - name: Restore NuGet packages
         run: dotnet paket restore
