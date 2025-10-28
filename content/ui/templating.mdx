@@ -265,6 +265,7 @@ You can add holes to your template that will be filled by F# code. Each hole has
     * `Target: Dom.Element` is the element itself.
     * `Event: Dom.Event` is the event triggered.
     * `Vars` has a field for each of the `Var`s associated to `ws-var`s in the template.
+    * `Anchors` has a field for each of the elements associated to `ws-anchor`s and `ws-dom`s in the template.
 
     my-template.html:
 
@@ -281,6 +282,12 @@ You can add holes to your template that will be filled by F# code. Each hole has
             .Click(fun t -> JS.Alert("Hi, " + t.Vars.Name.Value))
             .Doc()
     ```
+
+* The attribute `ws-anchor` marks an element to be exposed by the type provider under the `.Anchors` property of a `TemplateEvent` with the type `Dom.Element`. This can be used instead of `JS.Document.QuerySelector` to look up elements in a statically typed way that's tied to the template.
+
+* The attribute `ws-dom` is similar to `ws-anchor`, it also creates a property under `.Anchors`, hovewer with the type `Var<option<Dom.Element>>`. This `Var` can be used to dynamically access, remove, or set the element replacing the original.
+
+* The attribute `ws-preserve` marks the element to be exempt from WebSharper template parsing on the server side. This can be used to serve templates in HTML to be used by the client side.
 
 ### Filling holes
 
@@ -315,6 +322,14 @@ There are two ways to fill the content for a given hole.
             .With("Name", "my friend")
             .Doc()
     ```
+
+### Using HTML5 templates
+
+As an alternative, the standard HTML5 `template` tags are also recognized.
+
+A `template` tag with an `id` is equivalent to using `ws-children-template`, it uses the contents of the element to create the template.
+
+An element with a `slot` attribute is equivalent to using `ws-hole`, it defines an element to which content is inserted into. The `name` attribute is used by the type provider to create the method for filling it in, or if not present (default slot), it will be available as `.Default`.
 
 <a name="inner-templates"></a>
 ### Inner templates
@@ -580,7 +595,7 @@ Result after Client.Startup() has run:
 Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
 
 * In event handlers, it is available as the `Vars` property of the handler argument.
-* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with two properties: `Doc`, which returns the template itself, and `Vars`, which contains the Vars. This method is only available when instantiating the template from the client side.
+* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with the properties: `.Doc`, which returns the template itself (also `.Elt` if the template is a single element), and `.Vars`, which contains the vars. This method is only available when instantiating the template from the client side.
 
     my-template.html:
 

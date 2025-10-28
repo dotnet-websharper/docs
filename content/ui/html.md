@@ -387,6 +387,8 @@ let MyPage (ctx: Context<EndPoint>) =
     )
 ```
 
+This overload that takes a single `Doc` can also take `Status`, `ExtraContentHeaders`, and `Bundle` arguments (all optional) to set status code, response headers and sitelet bundle name to use. 
+
 To include client-side elements inside a page, use the `client` method, from inside `WebSharper.UI.Html`.
 
 ```fsharp
@@ -408,3 +410,4 @@ module Server =
         )
 ```
 
+The overload that accepts `Title`, `Head`, `Body`, `Doctype`, and `Bundle` (all optional arguments) is creating a full page automatically, where the head will include any necessary WebSharper scripts to initialize the contents in `Body` automatically.
