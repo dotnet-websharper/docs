@@ -20,6 +20,7 @@
     "webworkers",
     "websockets",
     "metaprogramming",
+    "codegeneration",
     "interface-generator",
     "testing",
     "math",

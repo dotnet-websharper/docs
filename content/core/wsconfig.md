@@ -55,6 +55,12 @@ If the value is `false`, the WebSharper F# compiler will not use a backend proce
 
 If the value is `false`, the WebSharper F# compiler service will not create a `websharper.log` file. If set to `true`, it will use logging even if `WebSharperBuildServiceLogging` environment variable is `false`.
 
+## "changeTracking"
+
+**Type**: bool (default is `false`)
+
+(Experimental feature in WebSharper 10+) If the value is `true`, a `.websharper` folder will be created in the project folder. It contains earlier builds which is automatically used for keeping changes made in the output by hand by 3-way merging it with the new output. See [Output merging](codegeneration#output-merging) for details.
+
 <a name="configurationName"></a>
 ## Configuration name (usually `"Debug"` or `"Release"`)
 
