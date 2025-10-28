@@ -9,7 +9,20 @@ To use external JavaScript files in your WebSharper project, there are a couple 
 
 First we'll see how to embed/link external JavaScript in library projects.
 
-## Embedding a file
+## Embedding files with `extra.files` file
+
+If an `extra.files` file is present in the project root folder, it supports embedding or copying files to output directory based on project type. This is how it works:
+
+* Create an `extra.files` file next to your project file. It should be a plain text file. 
+    * Comment lines can be added with `//`.
+    * The rest of the lines must be like `FilePattern` and `{FilePattern}`, where a file pattern can be a single file name relative to project root.
+    * Patterns can also include `*` and `**` wildcards for any partial name and partial paths.
+* For `web`, `spa`, `bundleonly`, and `html` project files, a `FilePattern` copies over the matched files to the output directory. For other project types it does nothing.
+* For `web`, `spa`, `bundleonly`, and `html` project files, a `{FilePattern}` copies over the matched files under the correct assembly-specific output folder like `outputDir/Scripts/WebSharper/AssemblyName`. This ensures that import paths from F#/C# code will work if they are relative paths from the project directory to the file location, as the relative path is preserved.
+* For other project types, a `{FilePattern}` embeds the files in the assembly, with the relative path preserved in the embed key, and it will be unpacked with the same relative path in a web project. This ensures the same guarantee for libraries/WIG projects, that resources at relative paths will continue to work when they are utilized.
+* The `WebSharper.WebResource` attribute is now obsoleted, but still works. Recommended approach is to remove these assembly-level attributes, as well as removing the files as `EmbeddedResource` from the projects (for F#, you can keep them as `None` for VS solution tree visibility), and use `extra.files` instead.
+
+## Embedding a file with atribute (old method)
 
 If you have a JavaScript file, first you need to add it as an embedded resource in your project file.
 
@@ -47,6 +60,7 @@ type SayHi [<Inline "new $import()">] () =
 ```
 
 Here, the `Import` attribute specifies the JavaScript file to import, and the `Inline` attribute is used to define how the function or variable should be called in JavaScript.
+You can use the `$import` special value to refer to the imported valu defined by the `Import` attribute.
 
 Alternatively, you can use the `WebSharper.JavaScript.JS.Import` family of function to import a JavaScript module and use its exports directly in your code.
 ```fsharp

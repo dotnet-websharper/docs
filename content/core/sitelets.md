@@ -327,6 +327,8 @@ It is possible to annotate your endpoint type with attributes to customize `Site
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
+  This is an alternative to specifying the query argument within an `EndPoint` attriubute, for example `[<EndPoint "/BlogArticle/?id={id}">]`, where the name in braces identifies the field that it gets bound to.
+
 * You can of course mix Query and non-Query parameters.
 
     ```fsharp

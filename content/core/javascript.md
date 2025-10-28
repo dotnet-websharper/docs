@@ -12,6 +12,14 @@ Also, `[<JavaScript("fileName")>]` and `[<JavaScript("typeName")>]` can be used 
 
 Lastly, in `wsconfig.json`, the `"javascript"` setting can be a bool or an array of strings. `"javascript": true` will annotate the whole project for translation without changing any files, this is a useful feature for client-only project. Or an array of strings can contain both file and type names, to describe the scope of translation.
 
+### JavaScript translation flags
+
+The `JavaScript` attribute can also take a `JavaScriptOptions` enum value, which adds some special translation rules:
+
+* `JavaScriptOptions.DefaultToUndefined` erases generic parameters inside current scope. It can be used to deal with generics in an unsafe manner in JavaScript code, for example one effect is `Unchecked.defaultof<'T>` will be `undefined` independent of the type. Without this flag, you would get an error to mark the method with `[<Inline>]` so that proper default value depending on type can be resolved.
+* `JavaScriptOptions.NoDefaultInterfaceImplementation` skips using any default implementation of interfaces. This is used by some WebSharper standard library proxies to avoid infinite loops, for example `IEnumerable<'T>.GetEnumerator` uses a default implemetation in WebSharper translation to handle JavaScript arrays and strings without touching their prototypes.
+* `JavaScriptOptions.SharedEventHandlers` translates the whole function but also all quotations found inside separately. This is useful when a function constructs some DOM fragment that is used both on the client and the server side with client-side event handlers.
+
 ### Proxies
 
 Sometimes it is preferred that the same class have different implementation on the server and the client. In this case a `[<Proxy(typeof<TargetType>)>]`  or `[<Proxy("fullyQualifiedTypeName")>]` attribute on the client-side implementation will tell WebSharper, that in any translation, treat the two types as equivalent.

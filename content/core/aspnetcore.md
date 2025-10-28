@@ -4,33 +4,47 @@ title: Setting up WebSharper in ASP.NET Core
 
 To integrate WebSharper into your web application, use the `WebSharper.AspNetCore` nuget package. This documentation is for WebSharper version 9.1.3 and above. 
 
-# Configuring startup
+# Configuring options and startup
 
-Configuring the startup for an ASP.NET Core application has two distinct stages: first setting up services and then the application pipeline. WebSharper relies on some services to run.
+Configuring an ASP.NET Core application has two distinct stages: first setting up services and then the application pipeline. WebSharper relies on some services to run.
 
-- Call `builder.Services.AddWebSharper()` to set up required singleton service (or `services.AddWebSharper()` in the `ConfigureServices` method of your `Startup` class). Any of the following methods also calls this implicitly, so you can use them instead if those are more specific to your needs.
-- Call `builder.Services.AddSitelet(mySitelet)` to register a WebSharper sitelet. However, this is no longer the recommended method; instead, set your sitelet in the pipeline configuration as described below.
-- Call `builder.Services.AddWebSharperRemoting<THandler>()` to register a WebSharper remoting handler for instance-based remoting. This is a typed alternative to `WebSharper.Core.Remoting.AddHandler`. This method has 3 overloads, you can pass it a single type argument which will be instantiated, two type arguments where the first is the type of the handler and the second is the type of the implementation class, or one type argument and pass it an instance of that type.
-- Call `builder.Services.AddWebSharperContent()` to register a scoped service to allow embedding WebSharper content into Razor pages.
+- Call `builder.Services.AddWebSharper()` to set up required singleton service (or `services.AddWebSharper()` in the `ConfigureServices` method of your `Startup` class for older versions of ASP.NET Core). It can take an optional action to set properties of the `WebSharperOptions` object, these are:
+    - `DefaultAssembly`: The assembly to load runtime metadata from to run WebSharper sitelets and remoting. Defaults to the entry assembly.
+    - `AuthenticationScheme`: The authentication scheme to use for WebSharper's built-in cookie authentication. Defaults to `"WebSharper"`.
+    - `Configuration`: An `IConfiguration` object accessible from WebSharper `Context`. Defaults to the `"websharper"` section of the main `IConfiguration` instance available (usually loaded from `appsettings.json` by Kestrel defaults).
+    - `ContentRootPath`: The content root path used by WebSharper. Defaults to the `ContentRootPath` from the `IHostingEnvironment` instance.
+    - `WebRootPath`: The web root path used by WebSharper. Defaults to the `WebRootPath` from the `IHostingEnvironment` instance.
+- Call `builder.Services.AddWebSharperServices()` for the same setup, the difference is that it returns a builder for additional WebSharper service helpers. These are:
+    - `.AddRemotingHandler<THandler>()` to register a WebSharper remoting handler for instance-based remoting. This is a typed, service-level alternative to `WebSharper.Core.Remoting.AddHandler`. This method has 3 overloads, you can pass it a single type argument which will be instantiated, two type arguments where the first is the type of the handler and the second is the type of the implementation class, or one type argument and pass it an instance of that type.
+    - `.AddMvc()` registers a scoped service to allow embedding WebSharper content into Razor pages.
+    - `.AddSiteletRef(siteletRef)` registers a `ref<Sitelet<'T>>` to serve as a fallback if no static sitelet value is configured in the pipeline. This can be used to make a site where the sitelet is expanded dynamically.
+    - `.AddRuntimeRef(runtimeRef)` registers a reference to all objects needed for the WebSharper runtime, these are the sitelet value, runtime metadata, dependency graph, json serializer, and remoting server. This can be used to make fully dynamic WebSharper servers.
+
+Additionally, these are the services you can directly configure with `.AddSingleton` or `.AddScoped`, overriding the defaults set by `AddWebSharper`/`AddWebSharperServices`:
+
+- `IOptions<WebSharperOptions>`: another way to access and configure the `WebSharperOptions` object.
+- `IWebSharperSiteletService`: provides a sitelet to serve as a fallback if no static instance is configured in the middleware. It is not set by default.
+- `IWebSharperMetadataService`: provides WebSharper runtime metadata (for example used for looking up sitelet bundles, remote functions, rendering page initialization code).
+- `IWebSharperRemotingServerService`: provides the WebSharper remoting server.
+- `IWebSharperJsonProviderService`: provides the WebSharper json serializer.
+- `ILogger<WebSharperInitializationService>`: the logger used by WebSharper initialization.
+- `ILogger<WebSharperSiteletMiddleware>`: the logger used by sitelets runtime.
 
 Next are the middleware to put in the application pipeline.
 
 WebSharper has two main middleware, one is for serving pages (sitelets), and the other for API endpoints generated for automatic remoting.
+
+## Configuring the pipeline
 
 - Add `app.UseWebSharper()` for a basic setup of both remoting and sitelets if configured. It has a builder parameter that can be used for additional configuration:
   - `Sitetet` passes a sitelet instance to server.
   - `DiscoverSitelet` looks for a class property with the `[<Website>]` attribute to obtain the sitelet instance. This is now deprecated.
   - `UseSitelets(false)` turns off serving a sitelet entirely. `UseSitelets(true)` has no effect, it's the default.
   - `UseRemoting(false)` turns off using remoting entirely. `UseRemoting(true, headers)` can be used to define additional headers to return.
-  - `Use` registers an additional action to be executed after the `WebSharperOptions` object is constructed.
+  - `Use` registers an additional action will get the instance of `IWebSharperInitializationService`.
   - `Logger` adds a logger for WebSharper startup, default to the discoverable `ILogger<IWebSharperService>` service. Alternatively you can also pass it an `ILoggerFactory`.
 - The following options are also available in the builder, but usually not necessary to override defaults:
   - `SiteletAssembly` specifies which assembly contains the runtime metadata, defaults to the calling assembly having the startup code.
-  - `Metadata` allows passing WebSharper metadata, defaults to the deserialized runtime metadata.
-  - `Config` allows passing runtime configuration, defaults to the `"websharper"` section of `"appsettings.json"`.
-  - `ContentRootPath` specifies the application root for the WebSharper context, defaults to `hostingEnvironment.ContentRootPath`.
-  - `WebRootPath` specifies the web root for the WebSharper context, defaults to `hostingEnvironment.WebRootPath`.
-  - `AuthenticationScheme` Defines the name of the authentication scheme to use `WebSharper.Web.Context.UserSession`, defaults to `"WebSharper"`.
 - Add `app.UseWebSharperRemoting` as a shortcut to use remoting only. It also allows to define additional headers to return as a shortcut to using the builder.
 - Add `app.UseWebSharperSitelets` as a shortcut to use sitelets only.
 - Add `app.UseWebSharperScriptRedirect` to set up script redirection to a localhost server. If the `startVite` parameter is set to `true`, it starts up `vite` in a separate console window for local debugging. The `redirectUrlRoot` argument defines the local url to use, defaults to the `websharper:DebugScriptRedirectUrl` setting from config.
@@ -75,22 +89,22 @@ public IActionResult Index()
 
 ## Embed WebSharper controls into Razor pages
 
-Remember to add required service with `builder.Services.AddWebSharperContent()`. Then, add a placeholder for WebSharper-generated startup script in your layout page:
+Remember to add required service with `builder.Services.AddWebSharperServices().AddMvc()`. Then, add a placeholder for WebSharper-generated startup script in your layout page:
 
 ```html
-@inject WebSharper.AspNetCore.IWebSharperContentService WebSharperContentService
+@inject WebSharper.AspNetCore.IWebSharperMvcService WebSharperMvcService
 ...
 <head>
   ...
-  @WebSharperContentService.Head()
+  @WebSharperMvcService.Head()
 </head>
 ```
 
-Then in your Razor PageModel file (code backend), use the `IWebSharperContentService` service with dependency injection, and then you can create a property that defines a WebSharper content embedded into the page. Here with also creating a named optimized bundle for the page:
+Then in your Razor PageModel file (code backend), use the `IWebSharperMvcService` service with dependency injection, and then you can create a property that defines a WebSharper content embedded into the page. Here with also creating a named optimized bundle for the page:
 
 ```csharp
       public IHtmlContent MyWebSharperControl =>
-          _webSharperContentService.Render(                
+          _webSharperMvcService.Render(                
               WebSharper.Sitelets.Content.Bundle("index", new MyWebSharperControl()));
 ```
 

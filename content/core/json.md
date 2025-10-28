@@ -59,6 +59,7 @@ where any generic parameters are also JSON-serializable types:
 * enums
 * `Map<'K, 'V>`
 * `Set<'T>`
+* `System.Collections.Generic.IEnumerable<'T>`
 * `System.Collections.Generic.List<'T>`
 * `System.Collections.Generic.Queue<'T>`
 * `System.Collections.Generic.Stack<'T>`

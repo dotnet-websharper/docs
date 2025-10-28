@@ -26,6 +26,8 @@ The following templates are available:
 * `websharper-ext`: A template for creating JavaScript bindings for WebSharper, allowing you to use external JavaScript libraries from within .NET code.
 * `websharper-prx`: A template for creating a WebSharper proxy assembly for an existing .NET library, enabling you to use that library in the client side of a WebSharper project.
 
+You can use the `-f` or `--framework` argument to specify which .NET version to create the project with.
+
 ## Adding WebSharper to an existing project
 
 If you have an existing .NET project and want to add WebSharper support, you can do so by following these steps:
