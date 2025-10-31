@@ -5,6 +5,7 @@
   "icon": "Heart",
   "pages": [
     "getting-started",
+    "nuget",
     "wsconfig",
     "javascript",
     "async",
