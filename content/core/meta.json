@@ -26,6 +26,7 @@
     "testing",
     "math",
     "date",
-    "ws-ai-plugin"
+    "ws-ai-plugin",
+    "compiler"
   ]
 }
