@@ -35,3 +35,9 @@ The `WebSharper.Core.Metadata.MetadataOptions` type can specify a filter on whic
 When metadata are loaded from all references of a project, they must be merged into a single `WebSharper.Core.Metadata.Info` object for optimized dictionary lookups. This can be done with the `Metadata.Info.UnionWithoutDependencies` static method which takes a collection of metadata objects. The method name clarifies that the merged metadata will not contain a merge of the code dependency graph. This is because the dependency graph is only required for DCE (dead code elimination), not for any other compilation steps, so it should be done separately when neeeded, see later.
 
 The `UnionWithoutDependencies` method can raise exceptions when conflicting members are found (for example the same member is proxied in two different references). This is a fatal error because it cannot be determined which client-side representation to use for a consistently working translation.
+
+## Creating a compilation
+
+For translating F# or C# source, the next step is to create a `WebSharper.Compiler.Compilation` object with the metadata passed in to the constructor. It has another optional constructor argument `hasGraph`, which is `true` by default, you can set it to `false` if you don't want to do any dead code elimination later.
+
+Then you can populate it with `WebSharper.Compiler.FSharp.ProjectReader.TransformAssembly` or `WebSharper.Compiler.CSharp.ProjectReader.TransformAssembly` that takes an `FSharp.Compiler.Service` or `Microsoft.CodeAnalysis.CSharp` (Roslyn) representation of a checked project and extracts all code marked for WebSharper.

@@ -6,7 +6,7 @@ WebSharper uses NuGet packages to ship the **core tools** (the F#/C# to JS compi
 
 ## Configuring the WebSharper developer feed
 
-WebSharper and its components are available on [nuget.org](https://www.nuget.org/). In addition, if you would also like to access the latest developer packages, you can find them on the WebSharper GitHub packages feed at [https://nuget.pkg.github.com/dotnet-websharper/index.json](https://nuget.pkg.github.com/dotnet-websharper/index.json):
+WebSharper and its components are available on [nuget.org](https://www.nuget.org/). In addition, if you would also like to access the latest developer packages, you can find them on the WebSharper GitHub packages feed at https://nuget.pkg.github.com/dotnet-websharper/index.json (see the searchable UI for it at https://github.com/orgs/dotnet-websharper/packages):
 
 The standard NuGet feed should come configured on your system when installing the .NET SDK. If you want to configure the WebSharper GitHub feed as well, you can do so as follows:
 

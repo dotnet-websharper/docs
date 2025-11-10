@@ -161,15 +161,16 @@ This works the same on both server and client side to create basic `<a>` links t
 ```
 Here we return a static page for the root, but call into a client-side generated content in the `Contact` pages, which is parsing the URL again to show the contact details from the URL.
 Sitelets are only a server-side type.
-* `Router.Ajax` makes a request from an endpoint value on the client and executes it using `jQuery.ajax`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
+* `Router.XHR` makes a request from an endpoint value on the client and executes it using an `XMLHttpRequest`. Returns an `async<string>`, which raises an exception internally if the request fails. Example:
 ```fsharp
     // [<EndPoint "/get-data">] GetData of int
 
     let GetDataAsyncSafe i =
         async {
             try
-                return! Some (Router.Ajax router (GetData i))
+                return! Some (Router.XHR router (GetData i))
             with _ ->
                 None
         }
 ```
+* `Router.XHRWith` is the same as `XHR` with additional configurability.

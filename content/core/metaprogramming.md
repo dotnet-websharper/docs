@@ -142,7 +142,7 @@ The `ICompilation` interface provides access to underlying F# and C# code inform
 
 The following methods are available to get information about and affect the current project's compilation:
 
-* `GetCustomTypeInfo`: Get information about an F# records, F# unions, delegates, enums, structs.
+* `GetCustomTypeInfo`: Get information about an F# records, F# unions, delegates, enums, and structs.
 * `GetInterfaceInfo`: Get information about an interface.
 * `GetClassInfo`: Get all information about a class, including what name and module file (address) it is translated.
 * `GetQuotation`: Get information about a translated quotation at a given source position.
