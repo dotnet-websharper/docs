@@ -60,7 +60,7 @@ type SayHi [<Inline "new $import()">] () =
 ```
 
 Here, the `Import` attribute specifies the JavaScript file to import, and the `Inline` attribute is used to define how the function or variable should be called in JavaScript.
-You can use the `$import` special value to refer to the imported valu defined by the `Import` attribute.
+You can use the `$import` special value to refer to the imported value defined by the `Import` attribute.
 
 Alternatively, you can use the `WebSharper.JavaScript.JS.Import` family of function to import a JavaScript module and use its exports directly in your code.
 ```fsharp
