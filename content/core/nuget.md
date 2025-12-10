@@ -6,7 +6,7 @@ WebSharper uses NuGet packages to ship the **core tools** (the F#/C# to JS compi
 
 ## Configuring the WebSharper developer feed
 
-WebSharper and its components are available on [nuget.org](https://www.nuget.org/). In addition, if you would also like to access the latest developer packages, you can find them on the WebSharper GitHub packages feed at https://nuget.pkg.github.com/dotnet-websharper/index.json (see the searchable UI for it at https://github.com/orgs/dotnet-websharper/packages):
+WebSharper and its components are available on [nuget.org](https://www.nuget.org/). In addition, if you would also like to access the latest developer packages, you can find them on the WebSharper GitHub packages feed at `https://nuget.pkg.github.com/dotnet-websharper/index.json` (see the searchable UI for it at https://github.com/orgs/dotnet-websharper/packages):
 
 The standard NuGet feed should come configured on your system when installing the .NET SDK. If you want to configure the WebSharper GitHub feed as well, you can do so as follows:
 
@@ -39,7 +39,7 @@ Below are some of the WebSharper NuGet packages that you will be working with:
 | `WebSharper.Forms` <br /> [![](https://img.shields.io/nuget/v/websharper.forms?label=&style=for-the-badge)](https://nuget.org/packages/WebSharper.Forms) | A reactive [forms library](https://github.com/dotnet-websharper/forms) built on top of `WebSharper.UI`, with support for declarative, composable web forms with retargetable rendering. |
 | `WebSharper.Charting` <br /> [![](https://img.shields.io/nuget/v/websharper.charting?label=&style=for-the-badge)](https://nuget.org/packages/WebSharper.Charting) | A [charting library](https://github.com/dotnet-websharper/charting) with a similar API to [FSharp.Charting](https://fslab.org/FSharp.Charting/) and configurable renderers. |
 | `WebSharper.Testing` <br /> [![](https://img.shields.io/nuget/v/websharper.testing?label=&style=for-the-badge)](https://nuget.org/packages/WebSharper.Testing) | A client-side testing framework for WebSharper. |
-| `WebSharper.Templates` <br /> [![](https://img.shields.io/nuget/v/websharper.templates?label=&style=for-the-badge)](https://nuget.org/packages/WebSharper.Templates) | The WebSharper [project templates]((https://github.com/dotnet-websharper/templates)) for F# and C#. |
+| `WebSharper.Templates` <br /> [![](https://img.shields.io/nuget/v/websharper.templates?label=&style=for-the-badge)](https://nuget.org/packages/WebSharper.Templates) | The WebSharper [project templates](https://github.com/dotnet-websharper/templates) for F# and C#. |
 
 ### Compiler packages
 

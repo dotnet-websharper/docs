@@ -90,4 +90,4 @@ jobs:
         uses: ruzickap/action-my-broken-link-checker@v2
         with:
           url: https://docs.websharper.com/
-          cmd_params: '--buffer-size=8192 --max-connections=5 --color=always --timeout=30 --exclude="(https://docs.websharper.com/cdn-cgi|https://github.com/reduxjs/redux-devtools/|https://en.wikibooks.org/wiki/TeX/def|https://docs.websharper.com/_next/static/media/small-file-suggestion\.d9761795\.gif|https://nuget.pkg.github.com/dotnet-websharper/index.json)"'
+          cmd_params: '--buffer-size=8192 --max-connections=5 --color=always --timeout=30 --exclude="(https://docs.websharper.com/cdn-cgi|https://github.com/reduxjs/redux-devtools/|https://en.wikibooks.org/wiki/TeX/def|https://docs.websharper.com/_next/static/media/small-file-suggestion\.d9761795\.gif)"'
