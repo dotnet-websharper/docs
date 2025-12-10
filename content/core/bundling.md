@@ -84,6 +84,8 @@ let HomePage ctx =
     )
 ```
 
+### Bundle fallbacks
+    
 There is always a bundle called "all" that contains all client-side code that is discovered by the compiler, to serve as a fallback when the bundle to use is badly configured.
 This can happen when you use helper functions that invoke client-side content outside of a `Content.Page` functtion.
 This is when you can use the `Content.Bundle` and `Content.BundleScope` functions to mark those code pieces as part of a bundle too. For example:
@@ -92,6 +94,26 @@ This is when you can use the `Content.Bundle` and `Content.BundleScope` function
     let SidebarWidget () =
         Content.BundleScopes [| "home"; "about" |]
             (div [] [ client (Client.SidebarWidget()) ])
+
+```
+
+You can set a runtime setting to `appsettings.json` to log when a bundle was considered by the runtime, but discarded because of missing imports.
+This will help identify which functions need to be marked with `BundleScope`/`BundleScopes`.
+This log will be a comment in the html response, right above the page initialization `<script>` block.
+
+```json
+  "websharper": {
+    "LogBundleChoice": true
+  }
+```
+
+For offline sitelets, you add runtime settings to your sitelet with with the `Sitelet.WithSettings` helper:
+
+```fsharp
+    MySitelet
+    |> Sitelet.WithSettings [
+        "LogBundleChoice", "true" 
+    ]
 
 ```
 

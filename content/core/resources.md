@@ -57,6 +57,10 @@ type SayHi [<Inline "new $import()">] () =
     // Bar is a separate named export, we redefine the Import attr which hides the one inherited from the type
     [<Import("Bar", "./sayHi.js"); Inline "$import()">]
     static member Bar() = X<string>
+
+    // Here the module is imported for its side effects only, no value used
+    [<Import("./sayHi.js"); Inline "$importFile()>]
+    static member SideEffecting() = X<unit>
 ```
 
 Here, the `Import` attribute specifies the JavaScript file to import, and the `Inline` attribute is used to define how the function or variable should be called in JavaScript.
@@ -77,18 +81,20 @@ let importTestJsAll : obj = JS.ImportAll "./test.js" // alternatively JS.Import(
 [<Inline>]
 let importTestJsDefault : obj = JS.ImportDefault "./test.js" // alternatively JS.Import("default", "./test.js")
 // translates to: import test from "./test.js"
+
+[<Inline>]
+let importTestJsSideEffect : obj = JS.ImportFile "./test.js"
+// translates to: import "./test.js"
 ```
 
 The `JS.ImportDynamic` function can be used to import a module dynamically at runtime, which is useful for code-splitting or loading modules conditionally.
 ```fsharp
 [<Inline>]
-let importTestJsDyn : obj = JS.ImportDynamic("testExport", "./test.js")
+let importTestJsDyn : obj = JS.ImportDynamic("./test.js")
 // translates to: import("./test.js")
 ```
 
 The relative paths are automatically changed by WebSharper when necessary for multi-project solutions, which unpacks each project into its own folder.
-
-`JS.ImportFile` function adds a side-effecting import, that can be used for css and other non-code resources.
 
 ## Importing npm packages
 
@@ -117,6 +123,21 @@ dotnet tool install femto --global
 ```
 
 Then run `femto` in your project folder to install the dependencies into `package.json` file. For C# projects, you need to provide project name like `femto MyProject.csproj`
+
+### Importing other file types for bundling
+
+The most common use case is importing a `.css` file, you can use the same `$importFile` inline or `JS.ImportFile` as for JavaScript side-effect only import. Examples:
+
+```fsharp
+// from an npm module
+JS.ImportFile "prismjs/themes/prism-dark.css"
+
+// from a file embedded in local assembly
+JS.ImportFile "./theme.css"
+
+// from a file embedded in another WebSharper project
+JS.ImportFile "../MyOtherProject/theme.css"
+```
 
 ## Linking to a script
 
