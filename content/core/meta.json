@@ -20,13 +20,10 @@
     "webcontext",
     "webworkers",
     "websockets",
-    "metaprogramming",
-    "codegeneration",
     "interface-generator",
     "testing",
     "math",
     "date",
-    "ws-ai-plugin",
-    "compiler"
+    "ws-ai-plugin"
   ]
 }

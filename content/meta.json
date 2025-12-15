@@ -2,9 +2,11 @@
   "pages": [
     "core",
     "ui",
+    "metaprogramming",
     "mvu",
     "forms",
     "csharp",
-    "cli"
+    "cli",
+    "contributing"
   ]
 }

@@ -1,5 +1,5 @@
 ---
-title: Using the compiler
+title: Using the Compiler API
 ---
 
 Using the WebSharper compiler programmatically involves 3 main steps:

@@ -1,0 +1,9 @@
+{
+  "root": false,
+  "title": "Contribution guide",
+  "description": "Documentation for contributing",
+  "icon": "Heart",
+  "pages": [
+    "contributing"
+  ]
+}

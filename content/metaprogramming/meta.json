@@ -1,0 +1,12 @@
+{
+  "root": false,
+  "title": "Metaprogramming and Compiler API",
+  "description": "Documentation for metaprogramming",
+  "icon": "Heart",
+  "pages": [
+    "macros-and-generators",
+    "fsharp-code-generators",
+    "compiler",
+    "compilation-pipeline"
+  ]
+}

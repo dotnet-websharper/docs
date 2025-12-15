@@ -79,7 +79,7 @@ between the client and the server has never been easier.
 
 * Create [web workers](core/webworkers) just from a function call, all code dependencies will be automatically discovered and included.
 * [Source mapping](core/wsconfig#sourcemap) for easier in-browser debugging.
-* [Metaprogramming](core/metaprogramming): translate calls to specific methods with your custom logic or 
+* [Metaprogramming](metaprogramming/macros-and-generators): translate calls to specific methods with your custom logic or 
 easily include JavaScript code generated at compile-time.
 * Create [npm libraries](core/bundling#npm-package-export) from your .NET code for general JavaScript use.
 * A [DSL for making .NET-to-JavaScript bindings](core/interface-generator) easily

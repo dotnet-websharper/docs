@@ -48,9 +48,8 @@ For website projects without `"preBundle": true` (for example for Debug mode), a
 ### Bundled output
 For web (sitelet) and SPA projects, WebSharper can use source code type information to create dead code eliminated bundles.
 
-By default, a single bundle called `all.js` is created for a web application which contains all necessary code for all pages. If using `Content.Page` to create responses, use the `Bundle` argument to set a name for the bundle to be pre-created for the page. WebSharper creates these bundles by compile-time analysis of the client-side code required to render the page that is passed as the `Body` argument. If you want to send code to a certain bundle without wrapping it in a `Content` object yet, use the `Content.Bundle` helper, which uses the same compile-time analysis.
-
-The `all.js` bundle is always created and serves as a fallback if a page would require code that is not well-contained in any other single bundle. For large sites with different code used accross many pages,
+By default, a single bundle called `all.js` is created for a web application which contains all necessary code for all pages. When using `Content.Page` to create responses, use the `Bundle` argument to set a name for the bundle to be pre-created for the page.
+There are other helpers to mark code for inclusion in bundles, like `Content.Bundle` and `Content.BundleScope`, see [Bundling in multi-page sitelet applications](bundling#bundling-in-multi-page-sitelet-applications) for more information.
 
 ## Core proxies
 
