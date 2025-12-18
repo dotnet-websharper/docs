@@ -67,7 +67,7 @@ Finally, the member is added back to the `Compilation` object as part of the com
 ## Bundling and packaging
 
 The `JavaScriptPackager.fs` file in the `WebSharper.Compiler` project handles bundling and packaging of JavaScript code.
-See the [JavaScript translation](../code/javascript) documentation for output modes.
+See the [JavaScript translation](../core/javascript) documentation for output modes.
 
 ## Writing output
 

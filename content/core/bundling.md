@@ -9,7 +9,6 @@ Bundling in WebSharper refers to three main use cases:
 
 While exporting is the process of creating an npm package from your WebSharper library code.
 
-<a name="spa"></a>
 ## Bundling in SPA projects
 
 First, for SPA projects, the WebSharper compiler will generate a single JavaScript file that contains all the client-side code necessary for your application.
@@ -24,7 +23,6 @@ You can disable this by setting `"dce": false` in your `wsconfig.json` file, but
 You can also include additional JavaScript functions/types, by using the `[<JavaScriptExport>]` attribute on types or methods that you want to be included in the final output.
 This is useful for interoperability with hand-written JavaScript that you might have in your project.
 
-<a name="sitelets"></a>
 ## Bundling in multi-page sitelet applications
 
 For `web` project type production-ready mode, [turn on the prebundling](wsconfig#prebundle) by setting `"prebundle": true` in your `wsconfig.json` file.
@@ -97,6 +95,8 @@ This is when you can use the `Content.Bundle` and `Content.BundleScope` function
 
 ```
 
+If a `Web.Control` or a function with JavaScript-enabled parameter is used outside of such a bundle scope, it will be included in the all bundles automatically.
+
 You can set a runtime setting to `appsettings.json` to log when a bundle was considered by the runtime, but discarded because of missing imports.
 This will help identify which functions need to be marked with `BundleScope`/`BundleScopes`.
 This log will be a comment in the html response, right above the page initialization `<script>` block.
@@ -117,7 +117,18 @@ For offline sitelets, you add runtime settings to your sitelet with with the `Si
 
 ```
 
-<a name="npm"></a>
+### Adding required exports for server-side functionality
+
+This is an advanced use case that UI helpers for creating server-side events depend on.
+The generic abstraction for a server-side rendered element is the `INode` interface.
+It also inherits the `IRequiresResources` interface which has a `Requires` method that returns a sequence of `ClientCode`, a simple AST that allows some built in ways for page initialization.
+This also allows using exported functions from the WebSharper JavaScript output.
+
+However, for optimized sitelet bundles, the compiler needs to know which functions to include in the bundle.
+To achieve this, you can use the `RequireFeature` attribute on the methods that set up the need for some JavaScript export to be available from the bundle.
+This attribute takes a type parameter which must implement the `IBundleExports` interface.
+This has an `Exports` method that returns a sequence of type+method pairs that will be included in the bundle as an export, whenever the compiler finds the annotated method in server-side code.
+
 ## npm package export
 
 To create a library that can be used as an npm package, set `"dce": true` on a libray project and specify an [outputDir](wsconfig#outputdir).

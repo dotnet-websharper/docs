@@ -314,6 +314,7 @@ The following is an overview of all attributes provided by WebSharper to guide t
 ### Dependency-specific attributes
 
 - `Require` - for non-module JavaScript and other code requirements.
+- `RequireFeature` - allows running compile-time code for generating exports required for current bundle.
 - `Import` - for adding module-based imports. 
 - `WebResource` - add to an assembly with a file name to include that file when unpacking the assembly. This is useful for including static files like images, CSS, or JavaScript files in a WebSharper project.
 
