@@ -28,6 +28,30 @@ Also, this can be used to implement a client side for standard library .NET type
 
 Use the `InternalProxy` attribute instead to limit the effect of a proxy to the current project only.
 
+All proxies should be `internal` to avoid use from other projects. In the current project you can use the proxy type too, because a compiler keeps track of the proxy mapping, however during translation, WebSharper maps all uses of the proxy type to the target type, so the proxy type would become unusable for WebSharper translation in other projects.
+
+This is an example of a proxy for `Array.length` function:
+
+```fsharp
+// a module cannot be referenced by type, so we use the fully qualified name
+[<Proxy "Microsoft.FSharp.Collections.ArrayModule, FSharp.Core">]
+module internal ArrayModuleProxy =
+
+    [<Inline "$0.length">]
+    let length<'T> (arr : 'T []) = X<int>
+```
+
+The name and signature (number of type parameters, number and types of arguments, return type) of a proxy member must match exactly those of the member being proxied. WebSharper generates a warning if a target member with the same name exist but signature does not match.
+
+For proxying constructors, F# does not allow any expressions, so you can also use a method called `CtorProxy`.
+
+If you would define a proxy for something that already has a proxy (either provided by `WebSharper.StdLib` or your own), if any member conflicts happen, you will get a compile-time error.
+However, you can extend existing proxies with new proxied members, with one rule: all new members must be translated to either JavaScript functions, or inlines.
+You can use `[<Prototype(false)>]` on the proxy extension to automatically convert instance members to JavaScript functions instead, while static members.
+Static methods will be translated to JavaScript functions anyways if there is no constructor or instance member.
+Constructors must be marked with `[<Inline>]` or `[<Direct>]` attributes.
+A proxy extension cannot contain a static constructor.
+
 ### Overview
 
 Below is a quick overview of the translation process for reference.
