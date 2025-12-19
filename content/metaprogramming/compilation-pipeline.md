@@ -39,6 +39,25 @@ The `WebSharper.Compiler.FSharp` project also has:
 * `Scoping.fs` that analyzes C# code scoping rules to determine variable lifetimes for proper JavaScript translation.
 * `Continuation.fs` that analyzes C# `await`s, `yield return`s, and `goto`s and transforms them to state machines for proper JavaScript translation. (Note: `try`/`finally` in state machines are not yet supported: [issue #542](https://github.com/dotnet-websharper/core/issues/542))
 
+## Project and code readers
+
+These steps are separate for C# and F# although their structure is similar, and the goal is the same to produce `WebSharper.Core` AST.
+
+They use a couple shared helpers from the `WebSharper.Compiler` project, some of these are:
+
+* `assemblyResolution/AssemblyResolver.fs`, which have a separate .NET 4x and modern .NET implementation (the former for the currently defunct C# analyzer). It handles finding references of current compilation to be loaded for metaprogramming, and loading assemblies into an `AssemblyLoadContext` so that they can be unloaded.
+* `Extra.fs` handles parsing and executing on `extra.files` files which enable pattern-based file embedding and copying to output directory.
+* `AttributeReader.fs`, which is the common logic for reading and handling WebSharper-defined attributes.
+* `Recognize.fs` parses `Inline` strings, verified for correctness. Not all JavaScript forms are supported yet.
+* `Stubs.fs` creates inline expressions for members marked with the `[<Stub>]` attribute.
+
+Also there is a third path for creating a WebSharper `Compilation`, from an F# assembly using Reflection on `FShapr.Quotations.Expr` expressions and expressions created and persisted by the compiler in an assembly by the `[<ReflectedDefinition>]` attribute.
+If an F# member has a `ReflectedDefinition`, its expression will be used instead of its source code by the WebSharper F# compiler. The related files are:
+
+* `QuotationReader.fs` handles transforming a single `FShapr.Quotations.Expr`.
+* `ReflectedDefinitionReader.fs` handles interpreting an expression stored as a `ReflectedDefinition`.
+* `QuotationCompiler.fs` handles transforming a whole assembly using its `ReflectedDefinition`s, and allowing to compile individual expressions on top of that. This is not used by any of the standard WebSharper tooling, but available as public API, and is used by the WebSharper Interactive.
+
 ## Name resolver
 
 The `WebSharper.Compiler` project contains the compiler parts that are independent of the source language.
@@ -64,16 +83,41 @@ Then a couple optimization steps are run to simplify the code further:
 
 Finally, the member is added back to the `Compilation` object as part of the compiled dictionaries instead of the compiling queues.
 
+### Helpers
+
+The translator uses some helper files with a bunch of utilities. These are:
+
+* `CompilationHelpers.fs` contains various utilities, analyzers, transformers, visitors, and active patters that help the translation and optimization process.
+* `Optimizations.fs` focuses on optimizing AST forms for shorter and cleaner output.
+* `Breaker.fs` contains the main logic for breaking expressions that internally need to use JavaScript statements (the `StatementExpr` form), often arising from F# because it's an expression-based language.
+
 ## Bundling and packaging
 
-The `JavaScriptPackager.fs` file in the `WebSharper.Compiler` project handles bundling and packaging of JavaScript code.
+The `JavaScriptPackager.fs` file in the `WebSharper.Compiler` project handles bundling and packaging of JavaScript code, meaning creating a full `AST.Statement[]` outputs that will form an output file.
+This involves resolving imports and in case of dead code eliminated bundles, sorting the defined classes in right order of inheritance. 
 See the [JavaScript translation](../core/javascript) documentation for output modes.
+
+The `Bundle.fs` file is the main logic for writing SPA projects, which only create a single dead code eliminated `.js` output and potentially extra bundles for any web workers needed.
 
 ## Writing output
 
 The `JavaScriptWriter.fs` file in the `WebSharper.Compiler` project handles writing JavaScript/TypeScript AST from the WebSharper JavaScript.
+This step resolves local variable names to be non-conflicting, and doing some simple last-catch optimizations, like flattening nested statement blocks if not necessary.
+
 Then the `Writer.fs` file in the `WebSharper.Compiler.JavaScript` project handles writing the final JavaScript/TypeScript code as text.
+This is a straightforward write into a `StringBuilder`.
+If source mapping is turned on, the `CodeWriter` instance also creates `.map` files by using the source position information that was preserved through AST transformations.
 
 ## Creating WebSharper metadata
 
 The `Frontend.fs` file in the `WebSharper.Compiler` project handles creating and serializing WebSharper metadata from the compilation results as well as all other resources that gets embedded into the output `dll`.
+
+There are two types of metadata, the standard one will get embedded as a zippped `WebSharper.meta` file, this is used by WebSharper projects building atop the current project.
+The other is `WebSharper.runtime.meta`, only created for sitelet projects, where the sitelet runtime will use it for resolving remoting, dependencies, and page initialization code.
+
+## WebSharper Interface Generator
+
+WIG is a tool to create JavaScript bindings defined declaratively in F#.
+The API and model types for this is defined in the `WebSharper.InterfaceGenerator` project, while the `WIGCompile.fs` file in `WebSharper.Compiler` can take an assembly definition created using these model types and transform it into a `dll` with `Mono.Cecil`.
+For observability, it creates all the `[<Inline>]` attributes on members.
+It does not create WebSharper metadata based on the original definition, but in a second step uses the produced assembly and inline string to create the WebSharper metadata, this is done by the `Reflector.fs` module.
