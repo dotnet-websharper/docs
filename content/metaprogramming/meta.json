@@ -6,7 +6,8 @@
   "pages": [
     "macros-and-generators",
     "fsharp-code-generators",
+    "compilation-pipeline",
     "compiler",
-    "compilation-pipeline"
+    "fslexyacc"
   ]
 }
