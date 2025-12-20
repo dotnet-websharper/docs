@@ -56,7 +56,7 @@ If an F# member has a `ReflectedDefinition`, its expression will be used instead
 
 * `QuotationReader.fs` handles transforming a single `FShapr.Quotations.Expr`.
 * `ReflectedDefinitionReader.fs` handles interpreting an expression stored as a `ReflectedDefinition`.
-* `QuotationCompiler.fs` handles transforming a whole assembly using its `ReflectedDefinition`s, and allowing to compile individual expressions on top of that. This is not used by any of the standard WebSharper tooling, but available as public API, and is used by the WebSharper Interactive.
+* `QuotationCompiler.fs` handles transforming a whole assembly using its `ReflectedDefinition`s, and allowing to compile individual expressions on top of that. This is not used by any of the standard WebSharper tooling, but available as public API, and is used by the Warp Interactive.
 
 ## Name resolver
 

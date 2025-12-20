@@ -41,3 +41,54 @@ The `UnionWithoutDependencies` method can raise exceptions when conflicting memb
 For translating F# or C# source, the next step is to create a `WebSharper.Compiler.Compilation` object with the metadata passed in to the constructor. It has another optional constructor argument `hasGraph`, which is `true` by default, you can set it to `false` if you don't want to do any dead code elimination later.
 
 Then you can populate it with `WebSharper.Compiler.FSharp.ProjectReader.TransformAssembly` or `WebSharper.Compiler.CSharp.ProjectReader.TransformAssembly` that takes an `FSharp.Compiler.Service` or `Microsoft.CodeAnalysis.CSharp` (Roslyn) representation of a checked project and extracts all code marked for WebSharper.
+
+The third option is to use `WebSharper.Compiler.QuotationCompiler` to transform a runtime assembly's `ReflectedDefinition` expressions with `CompileReflectedDefinitions`. This class creates its own `Compilation` object automatically and exposes it on the `Compilation` property. It can also be used to transform further F# quotations on the fly with `CompileExpression`.
+
+### Run the transformers
+
+Call the `WebSharper.Compiler.Translator.DotNetToJavaScript.CompileFull` method on a `Compilation` to process all of its untranslated types and members. Then you can inspect the `Errors`, and `Warnings` properties for any compilation diagnostics. These lists can also contain source positions, and their message can be read using a `.ToString()`.
+
+Also the WebSharper metadata output becomes available on `.ToCurrentMetadata()`.
+
+## Packaging and writing single files
+
+Three steps remain to get final JavaScipt/TypeScript output. These are:
+* Creating a file package (a `Statement[]` representing file contents) with some funtions from the `WebSharper.Compiler.JavaScriptPackager` module.
+* Using `WebSharper.Compiler.JavaScriptWriter.transformProgram` to convert the `WebSharper.Core` AST Statements into `WebSharper.Core.JavaScript` parse tree.
+* Writing string with `WebSharper.Compiler.JavaScriptPackager.programToString`.
+
+The first step has multiple options corresponding to different WebSharper output modes:
+* `bundleAssembly` allows creating dead code eliminated bundles (SPA mode).
+* `packageEntryPoint` creates separate dead code eliminated page bundles (sitelets prod mode).
+* `packageEntryPointReexport` creates one-file-per-class plus an additional `root.js` that re-exports everything needed for sitelet page initializations (sitelets debug mode).
+* `packageLibraryBundle` creates dead code eliminated library output (npm library output mode).
+
+### Dependency graph and DCE
+
+The modes using dead code elimination also expect a dependency graph. Construct it from your project reference metadata and current compilation like this:
+
+```fsharp
+let graph =
+    depMetas
+    |> Seq.map (fun m -> m.Dependencies)
+    |> Seq.append (Seq.singleton currentMeta.Dependencies)
+    |> WebSharper.Core.DependencyGraph.Graph.FromData
+```
+
+The `bundleAssembly` function does not do the dead code elimination itself, but you can do it by trimming the metadata you pass to it:
+
+```fsharp
+let nodes =
+    graph.GetDependencies [ WebSharper.Core.Metadata.EntryPointNode ]
+    
+let mergedMeta = 
+    WebSharper.Core.Metadata.Info.UnionWithoutDependencies [ metadata; currentMeta ]
+
+let trimmedMeta = WebSharper.Compiler.CompilationHelpers.trimMetadata mergedMeta nodes
+```
+
+Here, `EntryPointNode` will find the member annotated with the `[<EntryPoint>]` attribute. You can create your own list of top level entry point nodes too with other cases like `MethodNode`, `ConstructorNode`, and more.
+
+## Generating all WebSharper resources
+
+To mimic the WebSharper compiler's behavior the closest, you can call `WebSharper.Compiler.FrontEnd.CreateResources`. This takes a record with various settings mapping to WebSharper settings.
