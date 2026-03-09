@@ -3,20 +3,20 @@ source https://nuget.pkg.github.com/dotnet-websharper/index.json
 
 references: strict
 redirects: on
-framework: net8.0
+framework: net10.0
 strategy: min
 storage: none
 
 nuget FSharp.Core
-nuget WebSharper prerelease
-nuget WebSharper.AspNetCore prerelease
-nuget WebSharper.CSharp prerelease
-nuget WebSharper.Forms prerelease
-nuget WebSharper.FSharp prerelease
-nuget WebSharper.MathJax prerelease
-nuget WebSharper.MathJS prerelease
-nuget WebSharper.Mvu prerelease
-nuget WebSharper.Testing prerelease
-nuget WebSharper.UI prerelease
-nuget WebSharper.UI.CSharp prerelease
-nuget WebSharper.DateFNS prerelease
+nuget WebSharper ~> 10.1
+nuget WebSharper.AspNetCore ~> 10.1
+nuget WebSharper.CSharp ~> 10.1
+nuget WebSharper.Forms ~> 10.1
+nuget WebSharper.FSharp ~> 10.1
+nuget WebSharper.MathJax ~> 10.1
+nuget WebSharper.MathJS ~> 10.1
+nuget WebSharper.Mvu ~> 10.1
+nuget WebSharper.Testing ~> 10.1
+nuget WebSharper.UI ~> 10.1
+nuget WebSharper.UI.CSharp ~> 10.1
+nuget WebSharper.DateFNS ~> 10.1

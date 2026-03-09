@@ -1,5 +1,5 @@
 ---
-title: WebSharper compiler configuration
+title: Configuration options
 ---
 
 WebSharper's compiler can be customized by a number of settings. These are read from a `wsconfig.json` located next to the project file.

@@ -1,5 +1,5 @@
 ---
-title: Getting started with WebSharper
+title: Getting started
 ---
 
 Install the WebSharper templates by running the following command in your terminal:

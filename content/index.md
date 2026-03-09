@@ -1,5 +1,5 @@
 ---
-title: WebSharper documentation
+title: Documentation
 ---
 
 WebSharper is a framework and toolset for developing web/mobile applications and web services 

@@ -31,10 +31,8 @@ open WebSharper.Web
 
 [<Remote>]
 let MyRpcFunction () =
+    let context = Remoting.GetContext()
     async {
-        // Retrieve the AsyncLocal context
-        let context = Remoting.GetContext()
-        // Once retrieved, use the context at will here.
         return System.IO.File.ReadAllText(context.RootFolder + "/someContent.txt")
     }
 ```
