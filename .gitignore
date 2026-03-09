@@ -40,3 +40,4 @@ snippets/*/node_modules
 .vs
 
 snippets/*/*.g.cs
+snippets/*/Generated/*
