@@ -20,3 +20,5 @@ nuget WebSharper.Testing ~> 10.1
 nuget WebSharper.UI ~> 10.1
 nuget WebSharper.UI.CSharp ~> 10.1
 nuget WebSharper.DateFNS ~> 10.1
+nuget HtmlAgilityPack ~> 1.12.4
+nuget Microsoft.AspNetCore.Authentication.Abstractions ~> 2.3.9
