@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "prep": "npx esbuild source.config.ts --platform=node --outfile=.source/source.config.mjs --format=esm",
-    "dev": "npm run prep && dotnet build snippets/snippets.sln -c Release && node customServer.mjs",
+    "dev": "npm run prep && cd snippets && npm install && cd ../ && dotnet build snippets/snippets.sln -c Release && node customServer.mjs",
     "start": "next start",
     "postinstall": "fumadocs-mdx"
   },
