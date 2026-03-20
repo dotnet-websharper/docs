@@ -25,6 +25,10 @@ jobs:
       - name: Restore dotnet tools
         run: dotnet tool restore
         working-directory: ./snippets
+
+      - name: Nom install for snippets
+        run: nom install
+        working-directory: ./snippets
       
       - name: Add credentials for Paket
         run:
