@@ -38,3 +38,6 @@ snippets/*/node_modules
 /snippets/node_modules
 .fake
 .vs
+
+snippets/*/*.g.cs
+snippets/*/Generated/*

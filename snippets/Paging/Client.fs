@@ -84,7 +84,7 @@ module Client =
             div [Attr.Class "section"] [
                 label [Attr.Class "label"] [text ("Editing value for key: " + key)]
                 div [Attr.Class "field has-addons"] [
-                    div [Attr.Class "control"] [Doc.Input [Attr.Class "input"] var]
+                    div [Attr.Class "control"] [Doc.InputType.Text [Attr.Class "input"] var]
                     div [Attr.Class "control"] [
                         button [
                             Attr.Class "button"
@@ -113,7 +113,7 @@ module Client =
         }
 
     [<SPAEntryPoint>]
-    let Main =
+    let Main () =
         App.CreateSimplePaged InitModel Update Render
         |> App.WithLocalStorage "mvu-tests"
         |> App.Run

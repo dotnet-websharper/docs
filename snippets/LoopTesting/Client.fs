@@ -15,7 +15,7 @@ module Client =
 
     let LoopTest = 
         Test "Equality on ints is reflexive" {
-            forEach { 1 .. 3 } (fun x -> 
+            forEach (seq { 1 .. 3 }) (fun x -> 
                 Do {
                     equal x x
                 }

@@ -2,7 +2,7 @@
 title: Asynchronous workflows
 ---
 
-WebSharper supports [F# asynchronous workflows][https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/async-expressions] on the client,
+WebSharper supports [F# asynchronous workflows](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/async-expressions) on the client,
 implementing them with JavaScript callbacks.
 
 As in F#, a workflow of type `Async<'T>` represents a program that can

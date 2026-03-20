@@ -1,5 +1,5 @@
 ---
-title: Serving content with sitelets
+title: Sitelets - serving content
 ---
 
 Content describes the response to send back to the client: its HTTP status, headers and body. Content is always worked with asynchronously: all the constructors and combinators described below take and return values of type `Async<Content<'EndPoint>>`. You will find various functions that create different types of content: ordinary text (`Content.Text`), file content (`Content.File`), HTML (`Content.Page`), HTML based on templates (`Content.WithTemplate`), JSON (`Content.Json`), custom content (`Content.Custom`), and HTTP error codes and redirects.

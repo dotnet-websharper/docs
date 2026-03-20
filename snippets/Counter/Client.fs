@@ -27,7 +27,7 @@ module Counter =
         ]
 
     [<SPAEntryPoint>]
-    let Main =
+    let Main () =
         App.CreateSimple { Counter = 0 } Update Render
         |> App.Run
         |> Doc.RunById "main"
