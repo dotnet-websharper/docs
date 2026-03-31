@@ -12,6 +12,25 @@ Also, `[<JavaScript("fileName")>]` and `[<JavaScript("typeName")>]` can be used 
 
 Lastly, in `wsconfig.json`, the `"javascript"` setting can be a bool or an array of strings. `"javascript": true` will annotate the whole project for translation without changing any files, this is a useful feature for client-only project. Or an array of strings can contain both file and type names, to describe the scope of translation.
 
+## The `IsClient` helper
+
+You can use the `IsClient` value (available in `WebSharper.Pervasives` which is auto-opened with `open WebSharper`) to create conditional code that only runs differentlyon the client and the server. Only two patterns are supported: `if IsClient then ... else ...` and `if not IsClient then ... else ...`, for example no boolean operators or `match` expressions are supported.
+
+The non-client branch of the condition is not translated to JavaScript, so you can use this to write server-only code in a client-side annotated scope, for example:
+
+```fsharp
+[<JavaScript>]
+module MyClientModule =
+    let myFunction() =
+        if IsClient then
+            // Client-side code
+            ()
+        else
+            // Server-side code
+            ()
+```
+
+
 ### JavaScript translation flags
 
 The `JavaScript` attribute can also take a `JavaScriptOptions` enum value, which adds some special translation rules:
