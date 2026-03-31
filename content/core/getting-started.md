@@ -46,3 +46,4 @@ If you have an existing .NET project and want to add WebSharper support, you can
   No JavaScript files will be written, but they will be included as resources in the compiled library for quick use by other projects for debug mode.
   To see the compiled JavaScript right away, you can add the `"jsOutput": "folderName"` setting to your `wsconfig.json`.
 * If your project is a web application, take a look at the [ASP.NET Core integration](aspnetcore) to set up WebSharper in your application pipeline.
+* Note: assemblies named as `System.*` or `Microsoft.*` are not treated as WebSharper-enabled assemblies, to improve performance. Do not use these prefixes for your own assemblies if you want to use WebSharper features in them.

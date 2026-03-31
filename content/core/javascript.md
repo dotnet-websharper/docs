@@ -30,7 +30,6 @@ module MyClientModule =
             ()
 ```
 
-
 ### JavaScript translation flags
 
 The `JavaScript` attribute can also take a `JavaScriptOptions` enum value, which adds some special translation rules:
