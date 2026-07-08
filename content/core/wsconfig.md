@@ -126,6 +126,15 @@ Alternatively, you can pass an array of strings, containing file or type names. 
 
 Writes the generated `.js` code only, (usually one class per file) compiled output for current assembly to given location.
 
+<a name="localMetaprogramming"></a>
+## "localMetaprogramming"
+
+**Type**: bool (default is `false`)
+
+If the value is `true`, macros and generators defined **within the current project** can be used from that same project. By default (`false`), this is not allowed: applying a macro/generator to code in the same assembly that defines it raises a compile error directing you to opt in with this setting, or to move the macro/generator to a separate, referenced assembly.
+
+Whether a macro/generator is picked up at all (gating) is unaffected by this setting for **referenced**-assembly macros/generators: those are always attempted. However, this setting also controls whether a load failure (of any macro/generator, current-project or referenced) is a compile error or only a warning with `Undefined` fallback: with `"localMetaprogramming": true`, a load failure is a compile error; with the default `false`, it is a warning.
+
 <a name="outputDir"></a>
 ## "outputDir"
 
