@@ -142,6 +142,8 @@ Specifies the path of the compilation output directory relative to the project f
 
 If the value is `true`, the WebSharper F# compiler overlaps F# IL emission with WebSharper translation, rather than running them one after the other, for faster builds. This requires [`useLocalReflection`](#useLocalReflection) to be `false` (translation must not need to reflect into the not-yet-complete current-project assembly); if `useLocalReflection` is `true`, `parallelCompilation` is ignored with a warning.
 
+A related, MSBuild-only property (not settable via `wsconfig.json`, since it changes MSBuild target ordering before `wsconfig.json` is ever read) is `WebSharperExternalFSharpCompiler` (F# only, default `False`): when `True`, the real `fsc` produces the assembly as its own build step, and `wsfsc` runs translation-only against it, instead of also owning F# compilation. It is combinable with `parallelCompilation`, though currently they don't overlap with each other (the real `fsc` finishes before `wsfsc` starts either way); set via `<WebSharperExternalFSharpCompiler>true</WebSharperExternalFSharpCompiler>` in the project file.
+
 <a name="prebundle"></a>
 ## "prebundle"
 
