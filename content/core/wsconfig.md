@@ -126,15 +126,6 @@ Alternatively, you can pass an array of strings, containing file or type names. 
 
 Writes the generated `.js` code only, (usually one class per file) compiled output for current assembly to given location.
 
-<a name="localMetaprogramming"></a>
-## "localMetaprogramming"
-
-**Type**: bool (default is `false`)
-
-If the value is `true`, macros and generators defined **within the current project** can be used from that same project. By default (`false`), this is not allowed: applying a macro/generator to code in the same assembly that defines it raises a compile error directing you to opt in with this setting, or to move the macro/generator to a separate, referenced assembly.
-
-Whether a macro/generator is picked up at all (gating) is unaffected by this setting for **referenced**-assembly macros/generators: those are always attempted. However, this setting also controls whether a load failure (of any macro/generator, current-project or referenced) is a compile error or only a warning with `Undefined` fallback: with `"localMetaprogramming": true`, a load failure is a compile error; with the default `false`, it is a warning.
-
 <a name="outputDir"></a>
 ## "outputDir"
 
@@ -143,6 +134,13 @@ Obligatory if [project](#project) is `web`; optional otherwise.
 **Type**: string (relative or absolute folder path)
 
 Specifies the path of the compilation output directory relative to the project file. Default folder is `./Content` for SPAs and `./bin/html` for HTML apps.
+
+<a name="parallelCompilation"></a>
+## "parallelCompilation"
+
+**Type**: bool (default is `false`), F# only
+
+If the value is `true`, the WebSharper F# compiler overlaps F# IL emission with WebSharper translation, rather than running them one after the other, for faster builds. This requires [`useLocalReflection`](#useLocalReflection) to be `false` (translation must not need to reflect into the not-yet-complete current-project assembly); if `useLocalReflection` is `true`, `parallelCompilation` is ignored with a warning.
 
 <a name="prebundle"></a>
 ## "prebundle"
@@ -233,12 +231,28 @@ Enable source maps for the generated JavaScript code. This is useful for debuggi
 
 If the value is `true`, WebSharper treats all interfaces in current project as if marked by the `Stub` attribute. This has the effect that interfaces act as easy interop tools with JavaScript, all method names are kept as is. By default, WebSharper creates longer unique names, so that .NET semantics can be used for interfaces, where a class can implement methods of the same name and signature from multiple interfaces.
 
+<a name="useLocalReflection"></a>
+## "useLocalReflection"
+
+**Type**: bool (default is `false`)
+
+If the value is `true`, code in the current project is allowed to reflect into types **defined within that same project** during compilation: macros/generators, `[<ReflectedDefinition>]` member bodies, and `RequireFeature` types. By default (`false`), this is not allowed: using any of these on a type defined in the same assembly raises a compile error directing you to opt in with this setting, or to move the type to a separate, referenced assembly.
+
+Whether a macro/generator is picked up at all (gating) is unaffected by this setting for **referenced**-assembly macros/generators: those are always attempted. However, this setting also controls whether a load failure (of any macro/generator, current-project or referenced) is a compile error or only a warning with `Undefined` fallback: with `"useLocalReflection": true`, a load failure is a compile error; with the default `false`, it is a warning.
+
 <a name="useJavaScriptSymbol"></a>
 ## "useJavaScriptSymbol"
 
 **Type**: bool (default is `true` for `proxy` projects, `false` otherwise)
 
 If the value is `true`, for the JavaScript compilation a `JAVASCRIPT` conditional compilation symbol is added.
+
+<a name="verifyRPCSignatures"></a>
+## "verifyRPCSignatures"
+
+**Type**: bool (default is `false`)
+
+If the value is `true`, the compiler verifies that remote (RPC) method parameter and return types can be encoded/decoded as JSON, reporting a compile-time error/warning for types that can't. Default changed to `false`: previously this check always ran; now it is opt-in.
 
 <a name="warnOnly"></a>
 ## "warnOnly"

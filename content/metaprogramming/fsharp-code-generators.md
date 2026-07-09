@@ -20,7 +20,7 @@ The `ISourceGenerator` interface has a single `Generate` method to implement tha
 
 The `Generate` method must return an `option<string[]>`. `None` signifies that no update is necessary, use this only if `PreviousOutputFiles` has a `Some` value and the files are checked to be present and up to date. Return a `Some` value with an array of file paths otherwise. The generator implementation must take care of writing the generated files to disk so it should returns the file locations only.
 
-Note: this `ISourceGenerator` is a different concept from a `WebSharper.Core.Generator` (used to generate the JavaScript translation of a method, similar to a macro). If such a generator is defined and used within the same project, the `localMetaprogramming` wsconfig setting must be set to `true`; see [wsconfig.md](../core/wsconfig#localMetaprogramming). Generators used from a referenced assembly are unaffected.
+Note: this `ISourceGenerator` is a different concept from a `WebSharper.Core.Generator` (used to generate the JavaScript translation of a method, similar to a macro). If such a generator is defined and used within the same project, the `useLocalReflection` wsconfig setting must be set to `true`; see [wsconfig.md](../core/wsconfig#useLocalReflection). Generators used from a referenced assembly are unaffected.
 
 ### Output merging
 
