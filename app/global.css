@@ -2,6 +2,38 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+/* Match websharper.com's palette (see website-template WebSharperWebsite/Styles/app.css):
+   white / slate-950 page, slate-100 / slate-900 surfaces, sky-blue brand accent. */
+@theme {
+  --color-brand-primary: #36b9ff;
+}
+
+:root {
+  --color-fd-background: #ffffff;
+  --color-fd-card: #f1f5f9;
+  --color-fd-popover: #ffffff;
+}
+
+.dark {
+  --color-fd-background: #020617;
+  --color-fd-card: #0f172a;
+  --color-fd-popover: #0f172a;
+}
+
+/* The sidebar collapse toggle lives in the top menu bar (lib/components/menuBar.tsx),
+   so hide Fumadocs' built-in trigger (and its now-empty header row) plus its floating
+   fallback control. */
+#nd-sidebar .flex.flex-col.gap-3 > div.flex.flex-row,
+#nd-docs-layout > div.fixed.animate-fd-fade-in {
+  display: none;
+}
+
+/* The sidebar's extra links block (our "Home" link) should sit flush with the page
+   tree, spaced like the other sections. */
+#nd-sidebar .mb-4.empty\:hidden {
+  margin-bottom: 0;
+}
+
 code[class*="language-"] {
     white-space: pre-wrap !important;
     word-break: break-word !important;

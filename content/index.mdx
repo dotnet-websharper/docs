@@ -1,0 +1,112 @@
+---
+title: WebSharper Documentation
+description: Guides and reference for building full-stack web apps and services in F# and C# with WebSharper.
+full: true
+---
+
+<DocsHero
+  title="Build full-stack web apps in F# and C#"
+  subtitle="WebSharper compiles your .NET code to JavaScript and gives you type-safe client–server communication, a reactive UI library, sitelets, remoting and WebSockets — all from a single, strongly-typed code base."
+  command="dotnet new install WebSharper.Templates"
+/>
+
+## Get started
+
+Go from zero to a running WebSharper project in three steps.
+
+<Steps>
+
+<Step>
+
+Install the WebSharper project templates:
+
+```bash
+dotnet new install WebSharper.Templates
+```
+
+</Step>
+
+<Step>
+
+Create a project — pick F# or C#:
+
+<Tabs items={['F#', 'C#']}>
+
+<Tab value="F#">
+
+```bash
+dotnet new websharper-web -lang F# -n MyApp
+```
+
+</Tab>
+
+<Tab value="C#">
+
+```bash
+dotnet new websharper-web -lang C# -n MyApp
+```
+
+</Tab>
+
+</Tabs>
+
+</Step>
+
+<Step>
+
+Run it and open the printed URL:
+
+```bash
+cd MyApp && dotnet run
+```
+
+</Step>
+
+</Steps>
+
+Follow the [Getting started guide](/core/getting-started) for the full walkthrough.
+
+## Browse the docs
+
+<Cards>
+
+<Card title="WebSharper Core" href="/core/getting-started" description="Sitelets, routing, JSON, remoting, WebSockets, bundling, configuration and more." />
+
+<Card title="WebSharper.UI" href="/ui/html" description="Functional-reactive HTML, reactive documents and type-safe templating." />
+
+<Card title="WebSharper Forms" href="/forms" description="Declarative, composable web forms with retargetable rendering and validation." />
+
+<Card title="Model-View-Update" href="/mvu" description="An Elm-like architecture for composing client-side applications." />
+
+<Card title="Metaprogramming" href="/metaprogramming/macros-and-generators" description="Macros, generators and the compiler API for advanced code generation." />
+
+<Card title="C# support" href="/csharp/lang-support" description="Using WebSharper from C#: language support, LINQ, sitelets and testing." />
+
+<Card title="CLI" href="/cli" description="The WebSharper command-line tools for building and serving projects." />
+
+<Card title="Contribution guide" href="/contributing/contributing" description="How to build, test and contribute to WebSharper." />
+
+</Cards>
+
+## Why WebSharper
+
+<Cards>
+
+<Card title="Typed routing with sitelets" href="/core/sitelets" description="Parse requests and generate links from a typed endpoint value — no dead links, no string routing." />
+
+<Card title="Typed client-server" href="/core/remoting" description="Call server-side functions from the client with a plain await, sharing the same types." />
+
+<Card title="Reactive UI" href="/ui/html" description="Let data flow through your UI with WebSharper.UI's functional-reactive abstractions." />
+
+<Card title="WebSockets" href="/core/websockets" description="Exchange automatically serialized messages between the server and the client." />
+
+<Card title="Web workers" href="/core/webworkers" description="Create a web worker from a function call; dependencies are discovered and bundled for you." />
+
+<Card title="JavaScript bindings" href="/core/interface-generator" description="Bind any JavaScript library with a concise, readable F# DSL." />
+
+</Cards>
+
+<Callout type="info" title="Looking for the product site?">
+  Features, examples and downloads live on [websharper.com](https://websharper.com).
+  These pages are the documentation for the framework and its libraries.
+</Callout>
