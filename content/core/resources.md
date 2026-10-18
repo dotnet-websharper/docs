@@ -2,7 +2,7 @@
 title: Using imports and script links
 ---
 
-To use external JavaScript files in your WebSharper project, there are a couple considerations:
+To use external JavaScript files in your WebSharper project, there are a couple of considerations:
 * Is your project a library or a web project? 
 * Is the JavaScript file modular (ES6) or not?
 * If a library, do you want to embed the JavaScript file as a resource or just link to it from a CDN or depend on npm?
@@ -22,7 +22,7 @@ If an `extra.files` file is present in the project root folder, it supports embe
 * For other project types, a `{FilePattern}` embeds the files in the assembly, with the relative path preserved in the embed key, and it will be unpacked with the same relative path in a web project. This ensures the same guarantee for libraries/WIG projects, that resources at relative paths will continue to work when they are utilized.
 * The `WebSharper.WebResource` attribute is now obsoleted, but still works. Recommended approach is to remove these assembly-level attributes, as well as removing the files as `EmbeddedResource` from the projects (for F#, you can keep them as `None` for VS solution tree visibility), and use `extra.files` instead.
 
-## Embedding a file with atribute (old method)
+## Embedding a file with attribute (old method)
 
 If you have a JavaScript file, first you need to add it as an embedded resource in your project file.
 
@@ -66,7 +66,7 @@ type SayHi [<Inline "new $import()">] () =
 Here, the `Import` attribute specifies the JavaScript file to import, and the `Inline` attribute is used to define how the function or variable should be called in JavaScript.
 You can use the `$import` special value to refer to the imported value defined by the `Import` attribute.
 
-Alternatively, you can use the `WebSharper.JavaScript.JS.Import` family of function to import a JavaScript module and use its exports directly in your code.
+Alternatively, you can use the `WebSharper.JavaScript.JS.Import` family of functions to import a JavaScript module and use its exports directly in your code.
 ```fsharp
 open JavaScript
 
@@ -122,7 +122,7 @@ Then when the library is consumed by a web project, the npm package can be insta
 dotnet tool install femto --global
 ```
 
-Then run `femto` in your project folder to install the dependencies into `package.json` file. For C# projects, you need to provide project name like `femto MyProject.csproj`
+Then run `femto` in your project folder to install the dependencies into `package.json` file. For C# projects, you need to provide a project name like `femto MyProject.csproj`
 
 ### Importing other file types for bundling
 
@@ -141,7 +141,7 @@ JS.ImportFile "../MyOtherProject/theme.css"
 
 ## Linking to a script
 
-For non-modular JavaScript files or css, you can create a script/link in your HTML pages automatically by using the `Require` attribute on a type or method.
+For non-modular JavaScript files or CSS, you can create a script/link in your HTML pages automatically by using the `Require` attribute on a type or method.
 It expects a type argument that implements the `WebSharper.Core.Resources.IResource` interface, which provides full control over what to write into the HTML head section. For example:
 
 ```fsharp
@@ -160,7 +160,7 @@ In all cases when defining a resource, we then can annotate the code that requir
 type MyWidget() = ...
 ```
 
-For most cases, you don't need to implement a resource class from scratch but can inherit from the `WebSharper.Core.Resources.BaseResource` type which provides robust functionality to handle both embedded resources and extarnal URLs.
+For most cases, you don't need to implement a resource class from scratch but can inherit from the `WebSharper.Core.Resources.BaseResource` type which provides robust functionality to handle both embedded resources and external URLs.
 
 For an embedded resource, you can use:
 
@@ -243,7 +243,7 @@ from the application configuration file.
 
 ### Downloading resources
 
-The `BaseResource` class also supports a toggle to download external URL scripts at compile-time, to serve from local server.
+The `BaseResource` class also supports a toggle to download external URL scripts at compile-time, to serve from a local server.
 To do this, first set the `"downloadResources"` setting in [wsconfig.json](wsconfig) to `true`.
 Also add this runtime setting to `appsettings.json` so that WebSharper runtime will insert the links to downloaded files in your pages instead of online resources:
 

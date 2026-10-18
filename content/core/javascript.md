@@ -2,7 +2,7 @@
 title: JavaScript translation and WebSharper attributes
 ---
 
-WebSharper reads F# or C# source code and outputs modern module-based JavaScript code. Instead of translating an entire project or files, WebSharper only looks at code that are annotated to be used client side. This allows full-stack applications within a single project, sharing data types and code between layers.
+WebSharper reads F# or C# source code and outputs modern module-based JavaScript code. Instead of translating an entire project or files, WebSharper only looks at code that is annotated to be used client side. This allows fullstack applications within a single project, sharing data types and code between layers.
 
 ### Scope of the JavaScript translation
 
@@ -10,11 +10,11 @@ Most common method of annotating for translation is using the `[<JavaScript>]` a
 
 Also, `[<JavaScript("fileName")>]` and `[<JavaScript("typeName")>]` can be used on the assembly level to annotate whole files or types without changing the target file themselves.
 
-Lastly, in `wsconfig.json`, the `"javascript"` setting can be a bool or an array of strings. `"javascript": true` will annotate the whole project for translation without changing any files, this is a useful feature for client-only project. Or an array of strings can contain both file and type names, to describe the scope of translation.
+Lastly, in `wsconfig.json`, the `"javascript"` setting can be a bool or an array of strings. `"javascript": true` will annotate the whole project for translation without changing any files, this is a useful feature for a client-only project. Or an array of strings can contain both file and type names, to describe the scope of translation.
 
 ## The `IsClient` helper
 
-You can use the `IsClient` value (available in `WebSharper.Pervasives` which is auto-opened with `open WebSharper`) to create conditional code that only runs differentlyon the client and the server. Only two patterns are supported: `if IsClient then ... else ...` and `if not IsClient then ... else ...`, for example no boolean operators or `match` expressions are supported.
+You can use the `IsClient` value (available in `WebSharper.Pervasives` which is auto-opened with `open WebSharper`) to create conditional code that only runs differently on the client and the server. Only two patterns are supported: `if IsClient then ... else ...` and `if not IsClient then ... else ...`, for example no boolean operators or `match` expressions are supported.
 
 The non-client branch of the condition is not translated to JavaScript, so you can use this to write server-only code in a client-side annotated scope, for example:
 
@@ -35,14 +35,14 @@ module MyClientModule =
 The `JavaScript` attribute can also take a `JavaScriptOptions` enum value, which adds some special translation rules:
 
 * `JavaScriptOptions.DefaultToUndefined` erases generic parameters inside current scope. It can be used to deal with generics in an unsafe manner in JavaScript code, for example one effect is `Unchecked.defaultof<'T>` will be `undefined` independent of the type. Without this flag, you would get an error to mark the method with `[<Inline>]` so that proper default value depending on type can be resolved.
-* `JavaScriptOptions.NoDefaultInterfaceImplementation` skips using any default implementation of interfaces. This is used by some WebSharper standard library proxies to avoid infinite loops, for example `IEnumerable<'T>.GetEnumerator` uses a default implemetation in WebSharper translation to handle JavaScript arrays and strings without touching their prototypes.
+* `JavaScriptOptions.NoDefaultInterfaceImplementation` skips using any default implementation of interfaces. This is used by some WebSharper standard library proxies to avoid infinite loops, for example `IEnumerable<'T>.GetEnumerator` uses a default implementation in WebSharper translation to handle JavaScript arrays and strings without touching their prototypes.
 * `JavaScriptOptions.SharedEventHandlers` translates the whole function but also all quotations found inside separately. This is useful when a function constructs some DOM fragment that is used both on the client and the server side with client-side event handlers.
 
 ### Proxies
 
-Sometimes it is preferred that the same class have different implementation on the server and the client. In this case a `[<Proxy(typeof<TargetType>)>]`  or `[<Proxy("fullyQualifiedTypeName")>]` attribute on the client-side implementation will tell WebSharper, that in any translation, treat the two types as equivalent.
+Sometimes it is preferred that the same class have a different implementation on the server and the client. In this case a `[<Proxy(typeof<TargetType>)>]`  or `[<Proxy("fullyQualifiedTypeName")>]` attribute on the client-side implementation will tell WebSharper, that in any translation, treat the two types as equivalent.
 
-Also, this can be used to implement a client side for standard library .NET types. WebSharper provides a good number of these proxies out of the box, for example may basic `System`, `System.Collections.Generic`, and `FSharp.Core` types are supported.
+Also, this can be used to implement a client side for standard library .NET types. WebSharper provides a good number of these proxies out of the box, for example many basic `System`, `System.Collections.Generic`, and `FSharp.Core` types are supported.
 
 Use the `InternalProxy` attribute instead to limit the effect of a proxy to the current project only.
 
@@ -59,14 +59,14 @@ module internal ArrayModuleProxy =
     let length<'T> (arr : 'T []) = X<int>
 ```
 
-The name and signature (number of type parameters, number and types of arguments, return type) of a proxy member must match exactly those of the member being proxied. WebSharper generates a warning if a target member with the same name exist but signature does not match.
+The name and signature (number of type parameters, number and types of arguments, return type) of a proxy member must match exactly those of the member being proxied. WebSharper generates a warning if a target member with the same name exists but signature does not match.
 
 For proxying constructors, F# does not allow any expressions, so you can also use a method called `CtorProxy`.
 
 If you would define a proxy for something that already has a proxy (either provided by `WebSharper.StdLib` or your own), if any member conflicts happen, you will get a compile-time error.
 However, you can extend existing proxies with new proxied members, with one rule: all new members must be translated to either JavaScript functions, or inlines.
-You can use `[<Prototype(false)>]` on the proxy extension to automatically convert instance members to JavaScript functions instead, while static members.
-Static methods will be translated to JavaScript functions anyways if there is no constructor or instance member.
+You can use `[<Prototype(false)>]` on the proxy extension to automatically convert instance members to JavaScript functions instead, while static members are translated to JavaScript functions anyway.
+Static methods will be translated to JavaScript functions anyway if there is no constructor or instance member.
 Constructors must be marked with `[<Inline>]` or `[<Direct>]` attributes.
 A proxy extension cannot contain a static constructor.
 
@@ -76,14 +76,14 @@ Below is a quick overview of the translation process for reference.
 
 - Source code is analyzed by FSharp.Compiler.Services or Microsoft.CodeAnalysis.CSharp respectively, client-facing code is read. Language-specific optimizations, like tail call elimination for F# are done.
 - Mappings from .NET to JavaScript names are calculated. WebSharper supports overloads and overrides by making sure JavaScript naming lines up semantically with the original source. The `[<Name>]` attribute can be used to override default JavaScript naming, if it would lead to an impossible to resolve scenario, a compile-time error is thrown.
-- Expressions like method calls are translated from their .NET information to their JavaScript equivalent. Also at this step, metaprogramming can be applied, to use type informatio to guide output, this functionality is called macros.
+- Expressions like method calls are translated from their .NET information to their JavaScript equivalent. Also at this step, metaprogramming can be applied, to use type information to guide output, this functionality is called macros.
 - The resulting code is optimized and transformed into proper JavaScript statements and expressions.
-- The code is down into files for every class or dead code eliminated for bundles and written to JavaScript.
+- The code is broken down into files for every class or dead code eliminated for bundles and written to JavaScript.
 
 First we look at these two final output modes.
 
 ### One class per file output
-This mode is intended for debugging, creating code for npm, or for bundling with external tool. This is the default output mode of WebSharper, unless `"preBundle": true` is set in `wsconfig.json`. One .NET class will create one output file. 
+This mode is intended for debugging, creating code for npm, or for bundling with an external tool. This is the default output mode of WebSharper, unless `"preBundle": true` is set in `wsconfig.json`. One .NET class will create one output file. 
 
 For website projects without `"preBundle": true` (for example for Debug mode), a `root.js` file is created that re-exports all code entry points needed for the website. This can be passed to tools like vite.
 
@@ -113,7 +113,7 @@ Below is an overview of how F# language features are transpiled to JavaScript.
 
 ### Code organization
 
-Websharper treats classes as units of code organization, .NET namespaces are erased in the code output except in the one class per file output file names.
+WebSharper treats classes as units of code organization, .NET namespaces are erased in the code output except in the one class per file output file names.
 
 F# modules containing module-level `let` bindings and functions yield two files, one for the static initializer and one for functions, this matches how F# modules are handled by the F# compiler.
 
@@ -285,7 +285,7 @@ export default class SubClass extends BaseClass {
 
 ### Interfaces
 
-To make interface methods uniquely identifyable, WebSharper gives them a long name that contains the interface type name. You can use the `Name` attribute to set shorter fixed translated names.
+To make interface methods uniquely identifiable, WebSharper gives them a long name that contains the interface type name. You can use the `Name` attribute to set shorter fixed translated names.
 
 F# code:
 ```fsharp
@@ -346,10 +346,10 @@ The following is an overview of all attributes provided by WebSharper to guide t
 - `Warn` - Gives a warning if annotated method is used from JavaScript code, but not for .NET calls.
 - `Macro` - used for metaprogramming, implement a subclass of `WebSharper.Core.Macro` type to translate calls based on compile-time type or other information.
 - `Generated` - used for metaprogramming, implement a subclass of `WebSharper.Core.Generator` type to emit contents of a function programmatically.
-- `Name` - used for setting translated name when applies.
+- `Name` - used for setting translated name when applicable.
 - `Proxy` - see above in proxies section.
 - `InternalProxy` - see above in proxies section.
-- `Stub` - marks a type be a stand-in for a JavaScript type with every member mapping to a member of the same name.
+- `Stub` - marks a type to be a stand-in for a JavaScript type with every member mapping to a member of the same name.
 - `OptionalField` - marks F# option fields for autoconversion from JavaScript undefined or existing value.
 - `Prototype` - marks a union/record/class to have a JavaScript class declaration, or `Prototype(false)` converts them into a plain object.
 

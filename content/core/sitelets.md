@@ -327,7 +327,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-  This is an alternative to specifying the query argument within an `EndPoint` attriubute, for example `[<EndPoint "/BlogArticle/?id={id}">]`, where the name in braces identifies the field that it gets bound to.
+  This is an alternative to specifying the query argument within an `EndPoint` attribute, for example `[<EndPoint "/BlogArticle/?id={id}">]`, where the name in braces identifies the field that it gets bound to.
 
 * You can of course mix Query and non-Query parameters.
 
@@ -467,7 +467,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-* `[<Wildcard>]` on a union case indicates that the last argument represents the remainder of the url's path. That argument can be a `list<'T>`, a `'T[]`, or a `string`.
+* `[<Wildcard>]` on a union case indicates that the last argument represents the remainder of the URL's path. That argument can be a `list<'T>`, a `'T[]`, or a `string`.
 
     ```fsharp
     type EndPoint =

@@ -2,9 +2,9 @@
 title: FsLexYacc with WebSharper
 ---
 
-FsLexYacc is a lexer+parser code generator from `fsy` and `fsl` files. The the official [FsYacc Overview](https://fsprojects.github.io/FsLexYacc/content/fsyacc.html) and [FsLex Overview](https://fsprojects.github.io/FsLexYacc/content/fslex.html). Also see the [JSON parser example](https://fsprojects.github.io/FsLexYacc/content/jsonParserExample.html) for getting to know the definition languages used.
+FsLexYacc is a lexer+parser code generator from `fsy` and `fsl` files. See the official [FsYacc Overview](https://fsprojects.github.io/FsLexYacc/content/fsyacc.html) and [FsLex Overview](https://fsprojects.github.io/FsLexYacc/content/fslex.html). Also see the [JSON parser example](https://fsprojects.github.io/FsLexYacc/content/jsonParserExample.html) for getting to know the definition languages used.
 
-If you start from a WebSharper project, to enable the FsLexYacc code generation, add the `FsLexYacc` version `11.2.0` nuget package to your project.
+If you start from a WebSharper project, to enable the FsLexYacc code generation, add the `FsLexYacc` version `11.2.0` NuGet package to your project.
 This will automatically add the build targets. Also include in your project file:
 
 ```xml
@@ -25,7 +25,7 @@ Create `Parser.fsy` and `Lexer.fsl` files to implement, the rest will be generat
 
 ## Enabling the lexer+parser for client-side use
 
-To also use the generated code from JavaScript-enabled code, add the `WebSharper.FsLexYacc` nuget package too.
+To also use the generated code from JavaScript-enabled code, add the `WebSharper.FsLexYacc` NuGet package too.
 It currently supports `FsLexYacc` version `11.2.0` exactly.
 The only remaining piece is to mark the `Parser.fs` and `Lexer.fs` files for JavaScript translation. Because these are generated files, they should not be modified as those changes would be lost. The solution that WebSharper provides is to mark files for compilation either through `wsconfig.json` with:
 

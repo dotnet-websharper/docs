@@ -28,7 +28,7 @@ This is useful for interoperability with hand-written JavaScript that you might 
 For `web` project type production-ready mode, [turn on the prebundling](wsconfig#prebundle) by setting `"prebundle": true` in your `wsconfig.json` file.
 Now the WebSharper compiler can generate JavaScript bundles.
 This is readable format code, possibly importing npm packages, so it needs a proper JavaScript bundler before serving.
-It is recommended that this output goes to a `build` folder, and then bundling can be set up in project file like this: 
+It is recommended that this output goes to a `build` folder, and then bundling can be set up in your project file like this: 
 
 ```xml
   <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile">
@@ -85,7 +85,7 @@ let HomePage ctx =
 ### Bundle fallbacks
     
 There is always a bundle called "all" that contains all client-side code that is discovered by the compiler, to serve as a fallback when the bundle to use is badly configured.
-This can happen when you use helper functions that invoke client-side content outside of a `Content.Page` functtion.
+This can happen when you use helper functions that invoke client-side content outside of a `Content.Page` function.
 This is when you can use the `Content.Bundle` and `Content.BundleScope` functions to mark those code pieces as part of a bundle too. For example:
 
 ```fsharp
@@ -95,9 +95,9 @@ This is when you can use the `Content.Bundle` and `Content.BundleScope` function
 
 ```
 
-If a `Web.Control` or a function with JavaScript-enabled parameter is used outside of such a bundle scope, it will be included in the all bundles automatically.
+If a `Web.Control` or a function with JavaScript-enabled parameter is used outside of such a bundle scope, it will be included in all bundles automatically.
 
-You can set a runtime setting to `appsettings.json` to log when a bundle was considered by the runtime, but discarded because of missing imports.
+You can set a runtime setting in `appsettings.json` to log when a bundle was considered by the runtime, but discarded because of missing imports.
 This will help identify which functions need to be marked with `BundleScope`/`BundleScopes`.
 This log will be a comment in the html response, right above the page initialization `<script>` block.
 
@@ -107,7 +107,7 @@ This log will be a comment in the html response, right above the page initializa
   }
 ```
 
-For offline sitelets, you add runtime settings to your sitelet with with the `Sitelet.WithSettings` helper:
+For offline sitelets, you add runtime settings to your sitelet with the `Sitelet.WithSettings` helper:
 
 ```fsharp
     MySitelet
@@ -131,8 +131,8 @@ This has an `Exports` method that returns a sequence of type+method pairs that w
 
 ## npm package export
 
-To create a library that can be used as an npm package, set `"dce": true` on a libray project and specify an [outputDir](wsconfig#outputdir).
-You might also want to set `"javascriptExport": true` to make the whole current project exported into the final output, otherwise only classes and methods marked with the `JavascriptExport` attribute will be available.
+To create a library that can be used as an npm package, set `"dce": true` on a library project and specify an [outputDir](wsconfig#outputdir).
+You might also want to set `"javascriptExport": true` to make the whole current project exported into the final output, otherwise only classes and methods marked with the `JavaScriptExport` attribute will be available.
 
 To package the output for npm set `"outputDir": "build"` and then you can add a section to your project file like this:
 

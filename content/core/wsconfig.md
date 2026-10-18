@@ -6,9 +6,9 @@ WebSharper's compiler can be customized by a number of settings. These are read 
 A `WebSharperConfigFile` property in the `.csproj` / `.fsproj` file can override this default name or location where WebSharper looks for configs.
 
 <a name="jsonConfiguration"></a>
-## Json configuration
+## JSON configuration
 
-The `wsconfig.json` file must consist of a single JSON object. Keys and values are all case-insensitive, but there is a recommended provided by the schema. Boolean values can be `true` of `false` literals or strings that can be parsed to a `bool`. Here is an example `wsconfig.json`:
+The `wsconfig.json` file must consist of a single JSON object. Keys and values are all case-insensitive, but there is a recommended casing provided by the schema. Boolean values can be `true` or `false` literals or strings that can be parsed to a `bool`. Here is an example `wsconfig.json`:
 
 ```json
 {
@@ -59,7 +59,7 @@ If the value is `false`, the WebSharper F# compiler service will not create a `w
 
 **Type**: bool (default is `false`)
 
-(Experimental feature in WebSharper 10+) If the value is `true`, a `.websharper` folder will be created in the project folder. It contains earlier builds which is automatically used for keeping changes made in the output by hand by 3-way merging it with the new output. See [Output merging](../metaprogramming/fsharp-code-generators#output-merging) for details.
+(Experimental feature in WebSharper 10+) If the value is `true`, a `.websharper` folder will be created in the project folder. It contains earlier builds which are automatically used for keeping changes made in the output by hand by 3-way merging it with the new output. See [Output merging](../metaprogramming/fsharp-code-generators#output-merging) for details.
 
 <a name="configurationName"></a>
 ## Configuration name (usually `"Debug"` or `"Release"`)
@@ -124,7 +124,7 @@ Alternatively, you can pass an array of strings, containing file or type names. 
 
 **Type**: string (relative or absolute folder path)
 
-Writes the generated `.js` code only, (usually one class per file) compiled output for current assembly to given location.
+Writes the generated `.js` code only, (usually one class per file) compiled output for the current assembly to the given location.
 
 <a name="outputDir"></a>
 ## "outputDir"
@@ -164,13 +164,13 @@ are listed below.
 
 The `library` project type is the default, it can be omitted. In this case the WebSharper compiler translates the found JavaScript scope, preparing the project to be used as a reference of other WebSharper projects.
 
-The `web`, `spa`, and `microservice` project types work as web projects. The WebSharper compiler creates pre-optimized runtime metadata for them for fast startup of WebSharper sitelets and remoting services. A `web` project supports full Sitelet functionality. An `spa` outputs a single `.js` file to be linked from a static `html` file. A `microservice` is geared towards using server-side functionality only.
+The `web`, `spa`, and `microservice` project types work as web projects. The WebSharper compiler creates pre-optimized runtime metadata for them for fast startup of WebSharper sitelets and remoting services. A `web` project supports full sitelet functionality. An `spa` outputs a single `.js` file to be linked from a static `html` file. A `microservice` is geared towards using server-side functionality only.
 
 A `bundleOnly` project mimics `spa` for the `.js` output, but skips .NET compilation for F# and embedding resources for C# for faster turnaround of client-only use cases.
 
-A `html` project outputs a multi-page website as static html with the necessary `.js` files linked also statically.
+A `html` project outputs a multi-page website as static HTML with the necessary `.js` files linked also statically.
 
-A `binding` project uses WebSharper Interface Generator, an concise F# DSL for defining the shapes of .NET types that would map to existing JavaScript code.
+A `binding` project uses WebSharper Interface Generator, a concise F# DSL for defining the shapes of .NET types that would map to existing JavaScript code.
 
 A `proxy` project takes code that is already translated as a .NET library without WebSharper and creates a library that won't contain the .NET types again but only the WebSharper translation information.
 
@@ -186,7 +186,7 @@ Only required for `proxy` projects. Specifies the assembly name of the original 
 
 **Type**: string (default is `"noexpressions"`)
 
-This is a rarely needed setting, only relevant if the site itself want to host the WebSharper compiler at runtime, for example generating JavaScript snippets on the fly. Then a larger set of information of WebSharper metadata is necessary for the runtime than usual.
+This is a rarely needed setting, only relevant if the site itself wants to host the WebSharper compiler at runtime, for example generating JavaScript snippets on the fly. Then a larger set of information of WebSharper metadata is necessary for the runtime than usual.
 
 **Possible values:**
 * `"inlines"` - keeps expressions for inlined values, needed for translating expressions that would use inlines.
@@ -236,5 +236,5 @@ If the value is `true`, for the JavaScript compilation a `JAVASCRIPT` conditiona
 
 **Type**: bool (default is `false`)
 
-If the value is `true`, all WebSharper compiler errors will be treated only as warnings. This can help finding and debugging non-translateable code, those expressions will show up as `$$ERROR$$` in output code.
+If the value is `true`, all WebSharper compiler errors will be treated only as warnings. This can help in finding and debugging non-translatable code, those expressions will show up as `$$ERROR$$` in output code.
 

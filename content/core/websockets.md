@@ -1,16 +1,16 @@
 ---
-title: Websockets
+title: WebSockets
 ---
 
-Websockets are a browser feature that allows for full-duplex communication channels over a single TCP connection.
+WebSockets are a browser feature that allows for full-duplex communication channels over a single TCP connection.
 They are particularly useful for real-time applications where you need to send and receive messages continuously without the overhead of HTTP requests.
 
-In WebSharper client side, it is possible to use a raw JavaScript WebSocket object `WebSharper.JavaScript.WebSocket` and set up event handlers to use websockets.
-However, there is a nuget package `WebSharper.AspNetCore.WebSockets` that provides a more convenient, F#-style API for working with websockets in WebSharper applications.
+On the WebSharper client side, it is possible to use a raw JavaScript WebSocket object `WebSharper.JavaScript.WebSocket` and set up event handlers to use WebSockets.
+However, there is a NuGet package `WebSharper.AspNetCore.WebSockets` that provides a more convenient, F#-style API for working with WebSockets in WebSharper applications.
 
 ## Setting up message types
 
-To use websockets in WebSharper, you need to define the types of messages that will be sent and received.
+To use WebSockets in WebSharper, you need to define the types of messages that will be sent and received.
 
 You can use F# discriminated unions to define these message types. For example:
 ```fsharp
@@ -28,7 +28,7 @@ type ServerToClient =
 ```
 
 These types will be serialized and deserialized automatically by the WebSharper framework when sending and receiving messages.
-See the [json documentation](json) for restrictions on the types that can be used.
+See the [JSON documentation](json) for restrictions on the types that can be used.
 
 ## Defining server agents
 
@@ -44,7 +44,7 @@ type CustomAgent<'S2C, 'C2S, 'Custom, 'State> = CustomWebSocketAgent<'S2C, 'C2S,
 
 The `Agent` type is the simplest form, where there is no state maintained between messages.
 This means that each message can be processed independently.
-The message handler function is expected to be returned wrapped in an `Async` computation, allowing for asynchronous operations before the websocket server goes live.
+The message handler function is expected to be returned wrapped in an `Async` computation, allowing for asynchronous operations before the WebSocket server goes live.
 
 For example:
 
@@ -68,7 +68,7 @@ let serverAgent() : Agent<ServerToClient, ClientToServer> =
         }
 ```
 
-By setting up the return type on the `serverAgent()`, code service can help you to end up with the right signature.
+By setting up the return type on the `serverAgent()`, code completion can help you to end up with the right signature.
 
 If the message processing itself requires asynchronous operations, you can use an `Async.Start` on it, but be aware that then the message processing will not be awaited for the next message processing to possibly begin.
 If the response contains some id that ties it back to the request, this can still be fine.
@@ -102,11 +102,11 @@ let statefulServerAgent() : Server.StatefulAgent<ServerToClient, ClientToServer,
         }
 ```
 
-Here after initialization, a starting state of `0` is and the message processing function is returned.
+Here after initialization, a starting state of `0` and the message processing function is returned.
 The message processing function takes the current state and returns a new state after processing the message, wrapped in an `Async` which allows the response computation to be awaited.
 In the background, stateful agent functions will be converted to an F# `MailboxProcessor`, ensuring that messages are processed in a single-threaded manner.
 
-Also note that the `PostAsync` method is used to send a response back to the client, which ensures the whole message is sent before moving on to processing next request.
+Also note that the `PostAsync` method is used to send a response back to the client, which ensures the whole message is sent before moving on to processing the next request.
 
 There is a third type of agent, `CustomAgent`, which provides an abstraction for the agent to reply to events happening on the server too.
 A third message type `'Custom` is needed, for example:
@@ -157,18 +157,18 @@ Also the message cases to process are of type `Server.CustomMessage`.
 
 On the `WebSocketClient` type (used from server-side code), there are several methods and properties available:
     
-* `Connection`: an `WebSocketConnection` instance that provides access to some of the functionality of the underlying `System.Net.WebSockets.WebSocket` instance, and also exposes events
+* `Connection`: a `WebSocketConnection` instance that provides access to some of the functionality of the underlying `System.Net.WebSockets.WebSocket` instance, and also exposes events
 * `JsonProvider`: the caching JSON de/serializer instance used for messaging
-* `Context`: the WebSharper context that can be used to access the current request url, user session, etc.
+* `Context`: the WebSharper context that can be used to access the current request URL, user session, etc.
 * `PostAsync`: post to client asynchronously
 * `Post`: post to client and do not await full sending of the message
 * `OnMessage`: an event that is triggered when a message is received from the client
-* `OnOpen`: an event that is triggered when the websocket connection is opened
-* `OnClose`: an event that is triggered when the websocket connection is closed
+* `OnOpen`: an event that is triggered when the WebSocket connection is opened
+* `OnClose`: an event that is triggered when the WebSocket connection is closed
 
 ## Starting the server
 
-Once you have defined your agent, you can start the websocket server with your WebSharper application in your startup code:
+Once you have defined your agent, you can start the WebSocket server with your WebSharper application in your startup code:
 
 ```fsharp
 app
@@ -182,7 +182,7 @@ app
     )
 ```
 
-The part "ws" defines the path where the websocket server will be available.
+The part "ws" defines the path where the WebSocket server will be available.
 Don't forget to add the `UseWebSockets()` middleware before using the WebSharper middleware.
 
 ## Defining client agents
@@ -197,7 +197,7 @@ type StatefulAgent<'S2C, 'C2S, 'State> = WebSocketServer<'S2C, 'C2S> -> Async<'S
 
 We can see that it closely resembles the server agent, but the first parameter is a `WebSocketServer` instead of a `WebSocketClient`. There is no `CustomAgent` type for client agents currently.
 
-However, from the client it is usually more convenient to start up the websocket connection without first defining an agent separately.
+However, from the client it is usually more convenient to start up the WebSocket connection without first defining an agent separately.
 The functions `Client.Connect` and `Client.ConnectStateful` do this for agents and stateful agents respectively.
 
 For example, to connect to a server agent defined above, you can do:
@@ -265,14 +265,14 @@ let statefulClientAgent() =
 
 ## The server object
 
-On the `WebSocketServer` type (used from client-side code), there only two members available:
+On the `WebSocketServer` type (used from client-side code), there are only two members available:
 
 * `Connection`: the underlying JavaScript `Websocket` instance
 * `Post`: post a message to the server
 
 ## Setting up the client endpoint
 
-We need endpoint to connect to, which a value of type `WebSocketEndpoint<ServerToClient, ClientToServer>`.
+We need an endpoint to connect to, which is a value of type `WebSocketEndpoint<ServerToClient, ClientToServer>`.
 Easiest is to just construct it with a relative path:
 
 ```fsharp

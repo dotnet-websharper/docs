@@ -42,7 +42,7 @@ will be sent to RemoteDev as:
 { "type": "Message1", "id": 42, "value": "Hello world!" }
 ```
 
-It will show up in the DevTools extension as labeled as a "Message1" action.
+It will show up in the DevTools extension labeled as a "Message1" action.
 
 ### Options
 

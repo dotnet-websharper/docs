@@ -9,7 +9,7 @@ Or show an entirely different sub-form based on a selection. Both are equally po
 
 ## Defining dependent forms
 
-The first design choice is to what value the final form should return, which should contain all information. This is can be done with records with optional fields or discriminated unions.
+The first design choice is to what value the final form should return, which should contain all information. This can be done with records with optional fields or discriminated unions.
 
 For example, consider a form where the user can select between two options, to enter information about a teacher or a student. Based on the selection, we will show a different sub-form.
 First we define our data type, and the form that chooses between the two options.
@@ -37,7 +37,7 @@ let StudentForm() =
     |> Form.Map (function Valid (y, _) -> y | _ -> 0) //  by this time, we have already filtered out non-valid values
 ```
 
-The `StudentForm` is already prepared to work with a `WebSharper.UI.Client.CheckedInput<int>` value internally which is produced by UI helpers to aid validating and parsing nubmer inputs.
+The `StudentForm` is already prepared to work with a `WebSharper.UI.Client.CheckedInput<int>` value internally which is produced by UI helpers to aid validating and parsing number inputs.
 Then if the value passes validators, it is safe to map it to an `int`.
 
 The next step is to take a look at the signatures of `TeacherForm` and `StudentForm` to see what arguments their render function takes.
@@ -96,7 +96,7 @@ We use `return!` to return a final form without an extra layer of dependent form
 
 ## Rendering dependent forms
 
-When rendering dependent forms, we can start with `Forms.Render` as with other forms.
+When rendering dependent forms, we can start with `Form.Render` as with other forms.
 The rendering function will get a value of type `Form.Dependent<_,_,_>`, which enables rendering the two sub-forms, called primary and dependent.
 
 ```fsharp

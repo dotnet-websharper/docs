@@ -70,7 +70,7 @@ The `WebSharper.Core.Macro` base class has the following members to override:
 
 ### Macro results
 
-The `TranslateCall` and `TranslateCtor` methods both should retunr a `MacroResult` value. This is a union that specifies how the translator should proceed. The cases are:
+The `TranslateCall` and `TranslateCtor` methods both should return a `MacroResult` value. This is a union that specifies how the translator should proceed. The cases are:
 
 * `MacroOk`: return an AST `Expression` as a successful result of the macro operation.
 * `MacroWarning`: this is a recursive case, adds a warning at current expression source position, but also returns some proper value.
@@ -104,12 +104,12 @@ open WebSharper.JavaScript
 let GetData() = X<string>
 ```
 
-It reads a file at compilation time and makes the annotated function returns the contents of that file from the generated JavaScript code.
+It reads a file at compilation time and makes the annotated function return the contents of that file from the generated JavaScript code.
 The file path is passed in as a parameter on the `Generated` attribute for flexibility.
 During a compilation, the working directory is set to be the project directory, so relative paths will be resolved accordingly.
 
 A generator must always return a function, not just the function body.
-Instead of `GeneratedAST`, the same function could be returned as three more possible ways:
+Instead of `GeneratedAST`, the same function could be returned in three more possible ways:
 * As an F# quotation: `GeneratedQuotation <@@ fun () -> contents @@>`
 * As a string: `GeneratedString ("function() { return '"  + contents.Replace("'", "\'") + "'}")`
 * As JavaScript syntax AST: `GeneratedJavaScript (S.Lambda (None, [], [ S.Return (Some (S.Constant (S.String contents))) ], false))` (using `module S = WebSharper.Core.JavaScript.Syntax`)
@@ -117,8 +117,8 @@ Instead of `GeneratedAST`, the same function could be returned as three more pos
 ### Generator implementation
 
 The `WebSharper.Core.Generator` base class has a single member to override:
-* `Generate`: This method is invoked once for each annotated member to generate it's translated body. Gets an object with relevant context of the call:
-  * `Member`: the member that contents is being generated for, it can be a constructor, method, or implementation method.
+* `Generate`: This method is invoked once for each annotated member to generate its translated body. Gets an object with relevant context of the call:
+  * `Member`: the member whose contents are being generated for, it can be a constructor, method, or implementation method.
   * `Parameter`: the optional parameter passed in to the `Generated` attribute.
   * `Compilation`: the [compilation object](#the-icompilation-interface).
   * `Expression`: if the member is annotated with `[<JavaScript>]`, the code contents of it. This allows making decorator-like functionality.
@@ -126,7 +126,7 @@ The `WebSharper.Core.Generator` base class has a single member to override:
 
 ### Generator results
 
-The `Generate` method both should retunr a `GeneratorResult` value. This is a union that specifies how the translator should proceed. The cases are:
+The `Generate` method should return a `GeneratorResult` value. This is a union that specifies how the translator should proceed. The cases are:
 
 * `GeneratedQuotation`: returns generator result as an F# quotation value.
 * `GeneratedAST`: returns generator result as a WebSharper AST `Expression` value.
@@ -134,7 +134,7 @@ The `Generate` method both should retunr a `GeneratorResult` value. This is a un
 * `GeneratedJavaScript`: returns generator result as a JavaScript AST (used by WebSharper for final step of writing code). This has to be converted back to WebSharper AST to interact with code bundling, so still only the syntax forms supported by `[<Inline>]` are accepted.
 * `GeneratorError`: the generator raises a compilation error.
 * `GeneratorWarning`: this is a recursive case, adds a warning at the member, but also returns some proper value.
-* `GeneratorCompiledMemberChange`: this is a recursive case, allows modifying how the member will be represented i n the compiled JavaScript code.
+* `GeneratorCompiledMemberChange`: this is a recursive case, allows modifying how the member will be represented in the compiled JavaScript code.
 
 ## The ICompilation interface
 
@@ -142,16 +142,16 @@ The `ICompilation` interface provides access to underlying F# and C# code inform
 
 The following methods are available to get information about and affect the current project's compilation:
 
-* `GetCustomTypeInfo`: Get information about an F# records, F# unions, delegates, enums, and structs.
+* `GetCustomTypeInfo`: Get information about F# records, F# unions, delegates, enums, and structs.
 * `GetInterfaceInfo`: Get information about an interface.
-* `GetClassInfo`: Get all information about a class, including what name and module file (address) it is translated.
+* `GetClassInfo`: Get all information about a class, including what name and module file (address) it is translated to.
 * `GetQuotation`: Get information about a translated quotation at a given source position.
 * `GetTypeAttributes`: Get the list of attributes on a type.
 * `GetFieldAttributes`: Get the list of attributes on a field.
 * `GetMethodAttributes`: Get the list of attributes on a method.
 * `GetConstructorAttributes`: Get the list of attributes on a constructor.
 * `GetJavaScriptClasses`: Gets a list of all classes with known JavaScript translations (including all referenced projects and current project).
-* `GetTSTypeOf`: Translates a .NET type information to its TypeScript equivalent.
+* `GetTSTypeOf`: Translates .NET type information to its TypeScript equivalent.
 * `ParseJSInline`: Parses a JavaScript string, to the extent of what WebSharper supports via the `[<Inline>]` attribute.
 * `NewGenerated`: Creates a unique location for generated function within a special `$Generated` module.
 * `NewGeneratedVar`: Creates a variable in the special `$Generated` module.
@@ -229,7 +229,7 @@ JavaScript-specific cases:
   * `ItemGet`: JavaScript object property get
   * `ItemSet`: JavaScript object property set
   * `JSThis`: JavaScript `this` value
-  * `Object`: JavaSript object
+  * `Object`: JavaScript object
   * `GlobalAccess`: A global or imported value
   * `SideeffectingImport`: An import statement with no value used
   * `GlobalAccessSet`: A global or imported value setter
@@ -315,7 +315,7 @@ JavaScript-specific cases:
 
 ## Using transformers and visitors
 
-Inherit from the `WebSharper.Core.AST.Transformer` type to create AST transformers to recursively modify AST values. It has overridable methods named `Transform...` for each AST form that recurses on each child expression/statement, as well as a `TransformExpression` and `TransformStatement` that matches all cases and calling their case transformer methods, and also a `TransformId` for identifiers. An example:
+Inherit from the `WebSharper.Core.AST.Transformer` type to create AST transformers to recursively modify AST values. It has overridable methods named `Transform...` for each AST form that recurses on each child expression/statement, as well as a `TransformExpression` and `TransformStatement` that match all cases and call their case transformer methods, and also a `TransformId` for identifiers. An example:
 
 ```fsharp
 type SubstituteId(fromId, toId) =

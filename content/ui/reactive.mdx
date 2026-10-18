@@ -146,14 +146,14 @@ The following are available from `WebSharper.UI.Client`:
 
     Plus varColor is bound to contain the selected color.
 
-More variants available in the `Doc.InputType` module are: `Color`, `Date`, `DateTimeLocal`, `Email`, `File`, `Month`, `Range`, `Search`, `Tel`, `Time`, `Url`, `Week`, .
+More variants available in the `Doc.InputType` module are: `Color`, `Date`, `DateTimeLocal`, `Email`, `File`, `Month`, `Range`, `Search`, `Tel`, `Time`, `Url`, `Week`.
 These all correspond to the HTML `<input>` element of the same type.
 
 ### Views
 
 The full power of WebSharper.UI's reactive layer comes with `View`s. A `View<'T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `'T`.
 
-One thing important to note is that the value of a View is not computed unless it is needed. For example, if you use `View.Map`, the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#inserting-views-in-the-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in functions like `View.Map`.
+One important thing to note is that the value of a View is not computed unless it is needed. For example, if you use `View.Map`, the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#inserting-views-in-the-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in functions like `View.Map`.
 
 In pseudo-code below, `[[x]]` notation is used to denote the value of the View `x` at every point in time, so that `[[x]]` = `[[y]]` means that the two views `x` and `y` are observationally equivalent.
 
@@ -184,7 +184,7 @@ You can create Views using the following functions and combinators from the `Vie
     // [[v2]] = String.length [[v1]]
     ```
 
-* `View.Map2` takes two existing Views and map their value through a function.
+* `View.Map2` takes two existing Views and maps their value through a function.
 
     ```fsharp
     let v1 : View<int> = // ...
@@ -194,7 +194,7 @@ You can create Views using the following functions and combinators from the `Vie
     // [[v3]] = [[v1]] + [[v2]]
     ```
 
-    Similarly, `View.Map3` takes three existing Views and map their value through a function.
+    Similarly, `View.Map3` takes three existing Views and maps their value through a function.
 
 * `View.MapAsync` is similar to `View.Map` but maps through an asynchronous function.
 
@@ -390,7 +390,7 @@ Each of these `View.MapSeqCached*` functions has a corresponding `Doc.BindSeqCac
 * `Doc.BindSeqCachedBy : ('T -> 'K) -> ('T -> #Doc) -> View<seq<'T>> -> Doc`
 * `Doc.BindSeqCachedViewBy : ('T -> 'K) -> ('K -> View<'T> -> #Doc) -> View<seq<'T>> -> Doc`
 
-These functions map each item of the sequence to a Doc and then concatenates them. They are basically equivalent to passing the result of the corresponding `View.MapSeqCached*` to `Doc.BindView Doc.Concat`, like we did in the examples above.
+These functions map each item of the sequence to a Doc and then concatenate them. They are basically equivalent to passing the result of the corresponding `View.MapSeqCached*` to `Doc.BindView Doc.Concat`, like we did in the examples above.
 
 Finally, all of the above functions are also available as extension methods on the `View<seq<'T>>` type. `.MapSeqCached()` overloads correspond to `View.MapSeqCached*` functions, and `.DocSeqCached()` overloads correspond to `Doc.BindSeqCached*` functions.
 
@@ -740,13 +740,13 @@ Once you have a ListModel, you can modify its contents like so:
     // myPeopleColl now contains John, The Real Ana.
     ```
 
-* `listModel.Lens` creates an `Var<'T>` that does not have its own separate storage, but is bound to the value for a given key.
+* `listModel.Lens` creates a `Var<'T>` that does not have its own separate storage, but is bound to the value for a given key.
 
     ```fsharp
     let john : Var<Person> = myPeople.Lens "johnny87"
     ```
 
-* `listModel.LensInto` creates an `Var<'T>` that does not have its own separate storage, but is bound to a part of the value for a given key. See [lenses](#vars-and-lensing) for more information.
+* `listModel.LensInto` creates a `Var<'T>` that does not have its own separate storage, but is bound to a part of the value for a given key. See [lenses](#vars-and-lensing) for more information.
 
     ```fsharp
     let varJohnsName : Var<string> =
@@ -839,7 +839,7 @@ The main purpose for using a ListModel is to be able to reactively observe it. H
 
     Note that in both cases, only the current state is kept in memory: if you remove an item and insert it again, the function will be called again.
 
-* `listModel.MapLens` is similar to the second `Map` method above, except that it passes an `Var<'T>` instead of a `View<'T>`. This makes it possible to edit list items within the mapping function.
+* `listModel.MapLens` is similar to the second `Map` method above, except that it passes a `Var<'T>` instead of a `View<'T>`. This makes it possible to edit list items within the mapping function.
 
     ```fsharp
         let myDoc =

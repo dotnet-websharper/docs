@@ -66,8 +66,8 @@ The following options are available:
 We recommend that you use one of the following development environments:
 
 * On Windows: [Visual Studio 2022](https://visualstudio.microsoft.com/vs/).
-* On all platforms: [Visual Studio Code](https://code.visualstudio.com/) with:
-  * `ms-dotnettools.csharp` (C# for VS Code)
+* On all platforms: [vscode](https://code.visualstudio.com/) with:
+  * `ms-dotnettools.csharp` (C# for vscode)
   * `ms-dotnettools.csdevkit` (C# Dev Kit)
   * `ionide-fsharp` (F# support)
 
@@ -92,7 +92,7 @@ To find where to add tests for your code, check the project structure below.
 
 ### Linux/WSL quick start
 
-If you’re on Linux (e.g., Ubuntu 24.04) or Windows using **WSL2**, here’s a minimal setup:
+If you're on Linux (e.g., Ubuntu 24.04) or Windows using **WSL2**, here's a minimal setup:
 
 ```bash
 # 1) Install .NET 9 SDK (Ubuntu 24.04)
@@ -128,7 +128,7 @@ dotnet run
 
 Did you encounter a WebSharper bug while working on your project, and want to implement a fix and try it locally? The easiest way is to create NuGet packages for WebSharper and use them locally.
 
-* In websharper, write your code fix and run `build ws-package`.
+* In WebSharper, write your code fix and run `build ws-package`.
 * In your project, add WebSharper's build folder as a NuGet source repository and update the packages:
 
   * If you're using Paket (for example if you're working on one of [WebSharper's libraries and extensions](https://github.com/dotnet-websharper)):

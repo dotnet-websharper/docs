@@ -42,7 +42,7 @@ Differences from F#:
   defTab="preview"
 />
 
-* The C# version sets `ClientLoad = FromDocument` in a HTML comment, for the templating code generator to use.
+* The C# version sets `ClientLoad = FromDocument` in an HTML comment, for the templating code generator to use.
 * The `ListModel` type requires a key for each element, so we use a C# tuple with named elements.
 * C# template holes do not automatically support the `.V` shorthand, so the `V.V` helper is used.
 
@@ -56,4 +56,4 @@ Differences from F#:
 />
 
 * The endpoints must be declared as a base class, and subclasses that are nested inside it. This enables `Router.Infer` to work.
-* Fullly qualified names are used for the `Router` and `Doc` types for disambiguation. This is intended to be improved in the future. See the [issue](https://github.com/dotnet-websharper/ui/issues/295).
+* Fully qualified names are used for the `Router` and `Doc` types for disambiguation. This is intended to be improved in the future. See the [issue](https://github.com/dotnet-websharper/ui/issues/295).

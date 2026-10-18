@@ -4,7 +4,7 @@ title: Sitelets in C#
 
 See the main documentation of sitelets in F# [here](../core/sitelets).
 
-However, there are also API dedicated for ease of use in C#. For example, there are `Task`-based versions of the F# `Async`-based methods.
+However, there are also APIs dedicated for ease of use in C#. For example, there are `Task`-based versions of the F# `Async`-based methods.
 
 Below is the C# equivalent of the minimal example:
 
@@ -95,7 +95,7 @@ public static Sitelet<object> MySampleWebsite =>
         .Install();
 ```
 
-The above sitelets accepts URLs with the following shape:
+The above sitelets accept URLs with the following shape:
 
 ```xml
 Accepted Request:    GET /Index
@@ -399,7 +399,7 @@ SiteletBuilder().With<PostArticle>(/* ... */)
 // Returned Content:    (determined by .With())
 ```
 
-* `[Wildcard]` on a field indicates that it represents the remainder of the url's path. That field can be a `T[]` or a `string`. If an endpoint type contains several `[Wildcard]` fields, a runtime error is thrown.
+* `[Wildcard]` on a field indicates that it represents the remainder of the URL's path. That field can be a `T[]` or a `string`. If an endpoint type contains several `[Wildcard]` fields, a runtime error is thrown.
 
 ```csharp
 [EndPoint("/articles/{id}")]

@@ -74,7 +74,7 @@ Let's break this down:
 
 So in total, the `PetForm` function describes a functionality of a form with two input fields and how they are initialized from and composed into a single `Pet` value. This functionality is reusable and can be rendered in different ways.
 
-However, this function is still generic, which will allow the type system to plug in the actual type of the rendered form. In this way, the form composition itself are not tied to a specific rendering implementation, like WebSharper.UI's `Doc`.
+However, this function is still generic, which will allow the type system to plug in the actual type of the rendered form. In this way, the form composition itself is not tied to a specific rendering implementation, like WebSharper.UI's `Doc`.
 
 We have now defined how a species and a name should be composed into a Pet, and how the name should be verified. Time to define how to render the corresponding reactive form.
 
@@ -104,7 +104,7 @@ let RenderPet species name =
 
 Here, `species` has type `Var<Species>`, and `name` has type `Var<string>`. So the type of `RenderPet` corresponds to the argument of the second type parameter of `PetForm`, with `'b` specialized to `Doc`.
 
-The functions `Doc.InputType.Radio` and `Doc.InputType.Input` come from WebSharper.UI, and create elements whose value is always synchronized with the `Var` they receive.
+The functions `Doc.InputType.Radio` and `Doc.InputType.Text` come from WebSharper.UI, and create elements whose value is always synchronized with the `Var` they receive.
 Here their attributes are empty, but you are free to enhance them with styling, for example:
 
 ```fsharp

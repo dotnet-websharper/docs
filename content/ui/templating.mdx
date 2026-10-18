@@ -285,7 +285,7 @@ You can add holes to your template that will be filled by F# code. Each hole has
 
 * The attribute `ws-anchor` marks an element to be exposed by the type provider under the `.Anchors` property of a `TemplateEvent` with the type `Dom.Element`. This can be used instead of `JS.Document.QuerySelector` to look up elements in a statically typed way that's tied to the template.
 
-* The attribute `ws-dom` is similar to `ws-anchor`, it also creates a property under `.Anchors`, hovewer with the type `Var<option<Dom.Element>>`. This `Var` can be used to dynamically access, remove, or set the element replacing the original.
+* The attribute `ws-dom` is similar to `ws-anchor`, it also creates a property under `.Anchors`, however with the type `Var<option<Dom.Element>>`. This `Var` can be used to dynamically access, remove, or set the element replacing the original.
 
 * The attribute `ws-preserve` marks the element to be exempt from WebSharper template parsing on the server side. This can be used to serve templates in HTML to be used by the client side.
 
@@ -595,7 +595,7 @@ Result after Client.Startup() has run:
 Templates allow you to access their "model", ie the set of all the reactive `Var`s that are bound to it, whether passed explicitly or automatically created for its `ws-var`s. It is accessible in two ways:
 
 * In event handlers, it is available as the `Vars` property of the handler argument.
-* From outside the template: instead of finishing the instanciation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with the properties: `.Doc`, which returns the template itself (also `.Elt` if the template is a single element), and `.Vars`, which contains the vars. This method is only available when instantiating the template from the client side.
+* From outside the template: instead of finishing the instantiation of a template with `.Doc()`, you can call `.Create()`. This will return a `TemplateInstance` with the properties: `.Doc`, which returns the template itself (also `.Elt` if the template is a single element), and `.Vars`, which contains the vars. This method is only available when instantiating the template from the client side.
 
     my-template.html:
 
@@ -641,7 +641,7 @@ Three special placeholders are provided to include client-side content in the pa
 * `meta` is replaced with a `<meta>` tag that contains initialization data for client-side controls. Usage: `<meta ws-replace="meta" />`
 
 The `scripts` hole is necessary for correct working of the served page if it contains any client-side WebSharper functionality.
-The other two are optional: if neither `styles` nor `meta` is provided explicilty, then they are included automatically above the content for `scripts`.
+The other two are optional: if neither `styles` nor `meta` is provided explicitly, then they are included automatically above the content for `scripts`.
 
 ### Dynamic templates
 

@@ -11,7 +11,7 @@ The handler is responsible for handling endpoints, by returning content (a synch
 The router component of a sitelet can be constructed in multiple ways. The main options are: 
 
 * Declaratively, using `Router.Infer` which is also used internally by `Sitelets.Infer`. The main advantage of creating a router value separately is that you can add a `[<JavaScript>]` attribute on it, so that the client can generate links from endpoint values too. `WebSharper.UI` contains functionality for client-side routing too, making it possible to handle all, or a subset of internal links without browser navigation. Sharing the router abstraction between client and server means that server can generate links that the client will handle and vice versa.
-* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want a URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e. g. for keeping compatibility with old links).
+* Manually, by using combinators to build up larger routers from elementary `Router` values or inferred ones. You can use this to further customize routing logic if you want a URL schema that is not fitting default inferred URL shapes, or add additional URLs to handle (e.g. for keeping compatibility with old links).
 * Implementing the `IRouter` interface directly or using the `Router.New` helper. This is the most universal way, but has less options for composition.
 
 The following example shows how you can create a router of type `WebSharper.Sitelets.IRouter<EndPoint>` by writing the two mappings manually:
@@ -124,22 +124,22 @@ The `WebSharper.Sitelets.RouterOperators` module exposes the following basic `Ro
 * `Router.Filter`: restricts a router to parse/write values only that are passing a check. Usage: `rInt |> Router.Filter (fun x -> x >= 0)`, which won't parse and write negative values.
 * `Router.Slice`: restricts a router to parse/write values only that can be mapped to a new value. Equivalent to using `Filter` first to restrict the set of values and then `Map` to convert to a type that is a better representation of the restricted values.
 * `Router.TryMap`: a combination of `Slice` and `Embed`, a mapping from a subset of source values to a subset of target values. Both the encode and decode functions must return `None` if there is no mapping to a value of the other type.
-* `Router.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which inclide primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
+* `Router.Query`: Modifies a router to parse from and write to a specific query argument instead of main URL segments. Usage: `rInt |> Router.Query "x"`, which will read/write query segments like `?x=42`. You should pass only a router that is always reading/writing a single segment, which include primitive routers, `Router.Nullable`, and `Sum`s and `Map`s of these.
 * `Router.QueryOption`: Modifies a router to read an optional query value as an F# option. Creates a `Router<option<'T>>`, same restrictions apply as to `Query`.
 * `Router.QueryNullable`: Modifies a router to read an optional query value as a `System.Nullable`. Creates a `Router<Nullable<'T>>`, same restrictions apply as to `Query`.
-* `Router.Box`: Converts a `Router<'T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `'T` so it can be passed to underlying router.
+* `Router.Box`: Converts a `Router<'T>` to a `Router<obj>`. When writing, it uses a type check to see if the object is of type `'T` so it can be passed to the underlying router.
 * `Router.Unbox`:  Converts a `Router<obj>` to a `Router<'T>`. When parsing, it uses a type check to see if the object is of type `'T` so that the parsed value can be represented in `'T`.
 * `Router.Array`: Creates an array parser/writer. The URL will contain the length and then the items, so for example `Router.Array rString` can handle `2/x/y`.
 * `Router.List`: Creates a list parser/writer. Similar to `Router.Array`, just uses F# lists as data type.
 * `Router.Option`: Creates an F# option parser/writer. Writes or reads `None` and `Some/x` segments.
-* `Router.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router. For 
+* `Router.Nullable`: Creates a `Nullable` value parser/writer. Writes or reads `null` for null or a value that is handled by the input router.
 * `Router.Infer`: Creates a router based on type shape. The attributes recognized are the same as `Sitelet.Infer` described in the [sitelets documentation](sitelets).
 * `Router.Table`: Creates a router mapping between a list of static endpoint values and paths.
-* `Router.Method`: Creates a router that only parses request with the inner router, it the HTTP method methes the given method argument. By default, routers ignore the method.
-* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If the will be used on the server side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
+* `Router.Method`: Creates a router that only parses request with the inner router, if the HTTP method matches the given method argument. By default, routers ignore the method.
+* `Router.Body` : Creates a router that parses and serializes any value to and from the request body with custom functions. If it will be used on the server side only to parse requests and generate links, the serialize function can return just a null or empty string. For example `Router.Body id id` just gets the request body as a string.
 * `Router.Json` creates a router that parses the request body by the JSON format derived from the type argument.
 * `Router.FormData` creates a router from an underlying router handling query arguments that parses query arguments from the request body of a form post instead of the URL.
-* `Router.Delay` can be used to construct routers for recursive data types. Takes a `unit -> Router<'T>` function, and evaluates it firsthe t time the router is used for parsing and writing (never just when combining them).
+* `Router.Delay` can be used to construct routers for recursive data types. Takes a `unit -> Router<'T>` function, and evaluates it the first time the router is used for parsing and writing (never just when combining them).
 
 ### Using the router
 

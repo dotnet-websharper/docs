@@ -69,7 +69,7 @@ public static void Main()
 }
 ```
 
-## Other Linq methods
+## Other LINQ methods
 
 WebSharper provides proxies for all `IEnumerable` extension methods from
 `System.Linq`, such as `.Concat()`, `.ToArray()` or `.ElementAt()`:
@@ -88,7 +88,7 @@ public static void Main()
 
 ## Using custom comparers
 
-Advanced uses of Linq methods are possible, such as custom comparers. Here is
+Advanced uses of LINQ methods are possible, such as custom comparers. Here is
 an example where we make a sequence's items distinct by their length using an
 `EqualityComparer`:
 
@@ -126,7 +126,7 @@ public class ByLength : EqualityComparer<string>
 
 ## Methods dealing with default values
 
-Some Linq methods use the default value of the element type. For example,
+Some LINQ methods use the default value of the element type. For example,
 `.FirstOrDefault()` returns the first element of the `IEnumerable`, or a
 default type if it is empty. This default value depends on the type: for
 example, if the element type is `int`, then the default value is `0`, whereas
@@ -157,4 +157,4 @@ public static T GetDefaultPerson<T>(IEnumerable<T> people)
 }
 ```
 
-In this case, you can add the `[Inline]` attribute to the method to make its content to be inserted at every call point, with all code generation needing known types to be resolved appropriately.
+In this case, you can add the `[Inline]` attribute to the method to make its content be inserted at every call point, with all code generation needing known types to be resolved appropriately.

@@ -82,7 +82,7 @@ The implementation of these functions relies on cookies and thus requires that t
 
 ## Sitelet Context
 
-For sitelets, the object is typed with the type of the endpoint, so you get an instance of `WebSharper.Web.Context<Endpoint>``. This provides a method for generating safe links.
+For sitelets, the object is typed with the type of the endpoint, so you get an instance of `WebSharper.Web.Context<Endpoint>`. This provides a method for generating safe links.
 
 * `Link : Endpoint -> string` generates a link to the given endpoint, ensuring that the link is safe and correctly formatted.
 

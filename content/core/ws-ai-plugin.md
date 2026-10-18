@@ -1,11 +1,11 @@
 ---
-title: Working with VS Code
-description: Offline, privacy-first AI code reviews for F# and WebSharper in VS Code.
+title: Working with vscode
+description: Offline, privacy-first AI code reviews for F# and WebSharper in vscode.
 ---
 
 ![Demo](/ws-ai-plugin/small-file-suggestion.gif)
 
-**WS Code Review** is a Visual Studio Code extension for **offline, privacy-first** AI code reviews tailored to **F#** and **WebSharper**.
+**WS Code Review** is a vscode extension for **offline, privacy-first** AI code reviews tailored to **F#** and **WebSharper**.
 
 * Runs entirely on your machine via **Ollama**.
 * Uses a local coder model (default: **`qwen2.5-coder:7b-instruct`**).

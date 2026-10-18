@@ -2,7 +2,7 @@
 title: Setting up WebSharper in ASP.NET Core
 ---
 
-To integrate WebSharper into your web application, use the `WebSharper.AspNetCore` nuget package. This documentation is for WebSharper version 9.1.3 and above. 
+To integrate WebSharper into your web application, use the `WebSharper.AspNetCore` NuGet package. This documentation is for WebSharper version 9.1.3 and above. 
 
 # Configuring options and startup
 
@@ -18,7 +18,7 @@ Configuring an ASP.NET Core application has two distinct stages: first setting u
     - `.AddRemotingHandler<THandler>()` to register a WebSharper remoting handler for instance-based remoting. This is a typed, service-level alternative to `WebSharper.Core.Remoting.AddHandler`. This method has 3 overloads, you can pass it a single type argument which will be instantiated, two type arguments where the first is the type of the handler and the second is the type of the implementation class, or one type argument and pass it an instance of that type.
     - `.AddMvc()` registers a scoped service to allow embedding WebSharper content into Razor pages.
     - `.AddSiteletRef(siteletRef)` registers a `ref<Sitelet<'T>>` to serve as a fallback if no static sitelet value is configured in the pipeline. This can be used to make a site where the sitelet is expanded dynamically.
-    - `.AddRuntimeRef(runtimeRef)` registers a reference to all objects needed for the WebSharper runtime, these are the sitelet value, runtime metadata, dependency graph, json serializer, and remoting server. This can be used to make fully dynamic WebSharper servers.
+    - `.AddRuntimeRef(runtimeRef)` registers a reference to all objects needed for the WebSharper runtime, these are the sitelet value, runtime metadata, dependency graph, JSON serializer, and remoting server. This can be used to make fully dynamic WebSharper servers.
 
 Additionally, these are the services you can directly configure with `.AddSingleton` or `.AddScoped`, overriding the defaults set by `AddWebSharper`/`AddWebSharperServices`:
 
@@ -26,7 +26,7 @@ Additionally, these are the services you can directly configure with `.AddSingle
 - `IWebSharperSiteletService`: provides a sitelet to serve as a fallback if no static instance is configured in the middleware. It is not set by default.
 - `IWebSharperMetadataService`: provides WebSharper runtime metadata (for example used for looking up sitelet bundles, remote functions, rendering page initialization code).
 - `IWebSharperRemotingServerService`: provides the WebSharper remoting server.
-- `IWebSharperJsonProviderService`: provides the WebSharper json serializer.
+- `IWebSharperJsonProviderService`: provides the WebSharper JSON serializer.
 - `ILogger<WebSharperInitializationService>`: the logger used by WebSharper initialization.
 - `ILogger<WebSharperSiteletMiddleware>`: the logger used by sitelets runtime.
 
@@ -37,17 +37,17 @@ WebSharper has two main middleware, one is for serving pages (sitelets), and the
 ## Configuring the pipeline
 
 - Add `app.UseWebSharper()` for a basic setup of both remoting and sitelets if configured. It has a builder parameter that can be used for additional configuration:
-  - `Sitetet` passes a sitelet instance to server.
+  - `Sitelet` passes a sitelet instance to the server.
   - `DiscoverSitelet` looks for a class property with the `[<Website>]` attribute to obtain the sitelet instance. This is now deprecated.
   - `UseSitelets(false)` turns off serving a sitelet entirely. `UseSitelets(true)` has no effect, it's the default.
   - `UseRemoting(false)` turns off using remoting entirely. `UseRemoting(true, headers)` can be used to define additional headers to return.
-  - `Use` registers an additional action will get the instance of `IWebSharperInitializationService`.
-  - `Logger` adds a logger for WebSharper startup, default to the discoverable `ILogger<IWebSharperService>` service. Alternatively you can also pass it an `ILoggerFactory`.
+  - `Use` registers an additional action that will get the instance of `IWebSharperInitializationService`.
+  - `Logger` adds a logger for WebSharper startup, defaults to the discoverable `ILogger<IWebSharperService>` service. Alternatively you can also pass it an `ILoggerFactory`.
 - The following options are also available in the builder, but usually not necessary to override defaults:
   - `SiteletAssembly` specifies which assembly contains the runtime metadata, defaults to the calling assembly having the startup code.
 - Add `app.UseWebSharperRemoting` as a shortcut to use remoting only. It also allows to define additional headers to return as a shortcut to using the builder.
 - Add `app.UseWebSharperSitelets` as a shortcut to use sitelets only.
-- Add `app.UseWebSharperScriptRedirect` to set up script redirection to a localhost server. If the `startVite` parameter is set to `true`, it starts up `vite` in a separate console window for local debugging. The `redirectUrlRoot` argument defines the local url to use, defaults to the `websharper:DebugScriptRedirectUrl` setting from config.
+- Add `app.UseWebSharperScriptRedirect` to set up script redirection to a localhost server. If the `startVite` parameter is set to `true`, it starts up `vite` in a separate console window for local debugging. The `redirectUrlRoot` argument defines the local URL to use, defaults to the `websharper:DebugScriptRedirectUrl` setting from config.
 
 ## Serving JavaScript files
 
@@ -114,7 +114,7 @@ For a small working example, check out https://github.com/dotnet-websharper/aspn
 
 ## Middleware for Giraffe/Saturn
 
-`WebSharper.AspNetCore` comes with two helpers to create http handlers for Giraffe/Saturn, these are `Sitelets.HttpHandler(sitelet)` and `Remoting.HttpHandler()`.
+`WebSharper.AspNetCore` comes with two helpers to create HTTP handlers for Giraffe/Saturn, these are `Sitelets.HttpHandler(sitelet)` and `Remoting.HttpHandler()`.
 Use them like this in Giraffe:
 
 ```fsharp

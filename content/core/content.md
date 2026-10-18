@@ -97,7 +97,7 @@ let sitelet = Sitelet.Infer <| fun context endpoint ->
 
 ### Content.MvcResult
 
-Marks an object to be handled as if from and MVC controller. This is useful if you want to use the MVC framework for rendering pages, but still want to use sitelets for routing.
+Marks an object to be handled as if from an MVC controller. This is useful if you want to use the MVC framework for rendering pages, but still want to use sitelets for routing.
 
 ### Content.Cors
 
@@ -134,7 +134,7 @@ let Website = Application.MultiPage (fun ctx endpoint ->
 ### Content.Bundle
     
 A helper for marking client-side code to be included in a specific bundle.
-This is useful when you want to create helper functions on the server that creates content that has client-side dependencies, but you do it outside of the `Content.Page` scope.
+This is useful when you want to create helper functions on the server that create content that has client-side dependencies, but you do it outside of the `Content.Page` scope.
 It takes a `WebSharper.Web.INode` sequence and a bundle name, and it will return a `WebSharper.Web.INode` sequence that also marks for the server-side rendering which bundle to use.
 This means you can drop the `Bundle ` argument in `Content.Page`.
 
@@ -146,7 +146,7 @@ However, for a page to find which bundle to use, you will still need to use the 
 
 ### Content.Custom
 
-`Content.Custom` can be used to output any type of content. It takes three optional named arguments that corresponds to the aforementioned elements of the response:
+`Content.Custom` can be used to output any type of content. It takes three optional named arguments that correspond to the aforementioned elements of the response:
 
 * `Status` is the HTTP status code. It can be created using the function `Http.Status.Custom`, or you can use one of the predefined statuses such as `Http.Status.Forbidden`.
 

@@ -3,7 +3,7 @@ title: Communicating with the server
 ---
 
 WebSharper supports remote procedure/function calls (RPCs) from the client (JavaScript) to the server (ASP.NET Core or other hosting environment).
-Remoting is designed to be safe and efficient while requiring as little boilerplate as possible, usually a simple `Remote` \ `Rpc` attribute on the server to mark a method to be RPC callable, and an asynchronous workflow on the client to call it.
+Remoting is designed to be safe and efficient while requiring as little boilerplate as possible, usually a simple `Remote` / `Rpc` attribute on the server to mark a method to be RPC callable, and an asynchronous workflow on the client to call it.
 
 Here is an example of a client-side and a server-side function
 pair that communicates via RPC:
@@ -30,7 +30,7 @@ module Client =
         |> Async.Start
 ```
 
-In the RPC model the client calls the server when necessary. To implement two-way communication, you can use [websockets](websockets).
+In the RPC model the client calls the server when necessary. To implement two-way communication, you can use [WebSockets](websockets).
 
 WebSharper remoting requires that remote methods are marked with the `[<Remote>]` attribute (or its `[<Rpc>]` alias), and assumes that:
   
@@ -138,7 +138,7 @@ follows:
 
 * The client sends a request to the server. The request
   contains information on which method to call, and its
-  JSON-serialized arguments (`0`)}
+  JSON-serialized arguments (`0`)
 
 * The client blocks the browser.
 
@@ -161,7 +161,7 @@ follows:
 Remote methods are exposed as HTTP endpoints, so any security measures have to be integrated into the method body itself.
 
 `WebSharper.Web.Remoting.GetContext().UserSession` exposes various utilities for tracking users.
-This uses `Microsoft.AspNetCore.Authentication` on the server and by default cookies in the browser. [See here](webcontext) for more information.
+This uses `Microsoft.AspNetCore.Authentication` on the server and by default uses cookies in the browser. [See here](webcontext) for more information.
 
 For instance, implementing user login might look like this:
 
@@ -205,7 +205,7 @@ let GetUserData () =
 You can also implement remote functions as instance methods.
 To do so, in your server-side, define a type with methods that you want to expose to the client.
 This type can be a class, a record, or an interface.
-By naming this type and placing it in a shared project, you can reference the server API from the client without a direct dependency on the server implementation, giving you more flexibility to organize your application code. This also allows to cut down on compilation time if you only make client-side changes.
+By naming this type and placing it in a shared project, you can reference the server API from the client without a direct dependency on the server implementation, giving you more flexibility to organize your application code. This also allows you to cut down on compilation time if you only make client-side changes.
 In either case, the remote methods should be annotated with the `Remote` / `Rpc` attribute and
 follow the same convention as ordinary `Remote`/`Rpc` functions.
 
@@ -343,7 +343,7 @@ type SafeRemotingProvider() =
         }
 ```
 
-Then all `[Remote]` methods that you also annotate with `[RemotingProvider(typeof<SafeRemotingProvider>)]` will send the request to `myserver.com` and also catch any exceptions are happening during the call and return `None` instead (same as a `null`).
+Then all `[Remote]` methods that you also annotate with `[RemotingProvider(typeof<SafeRemotingProvider>)]` will send the request to `myserver.com` and also catch any exceptions happening during the call and return `None` instead (same as a `null`).
 If all your such remote methods are returning `Option`s, this will be a valid value.
 
 ## Server-side customization
@@ -359,7 +359,7 @@ The request body will contain the JSON-serialized arguments of the method, and t
 CORS and CSRF protection are supported by default.
 `WebSharper.Web.Remoting` module provides the following functions to configure CORS and CSRF:
 
-* `SetAllowedOrigins` to set full list of allowed origins.
+* `SetAllowedOrigins` to set the full list of allowed origins.
 * `AddAllowedOrigin` to add a single allowed origin.
 * `RemoveAllowedOrigin` to remove a single allowed origin.
 * `DisableCsrfProtection` to disable CSRF protection (it is enabled by default).

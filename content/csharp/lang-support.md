@@ -4,7 +4,7 @@ title: C# language support
 
 WebSharper supports a subset of C# syntax and features, allowing you to write C# code that compiles to JavaScript.
 Furthermore, WebSharper provides interoperability between C# and F#, enabling you to use both languages in a single solution.
-The standard .NET interoperability between the two languages can be used, and WebSharper extends this by a (set of helper functions)[interoperability-with-f].
+The standard .NET interoperability between the two languages can be used, and WebSharper extends this with a [set of helper functions](interoperability-with-f).
 
 ## Supported C# syntax
 
@@ -44,7 +44,7 @@ These features and fixes are planned for later release.
 
 ### C# keywords not available for JavaScript
 
-These keywords are used for interoperability with unmanaged code or in multi-threaded environment which is not supported by WebSharper:
+These keywords are used for interoperability with unmanaged code or in a multi-threaded environment which is not supported by WebSharper:
 
 * `typeof`
 * `sizeof`
@@ -62,7 +62,7 @@ These conversions work both on server and client side.
 The `WebSharper.FSharpConvert` static class contains static members to create values used commonly in F#.
 
 * `FSharpConvert.Fun` overloads create curried F# functions for 1-8 arguments from `System.Action` and `System.Func` delegate values.
-* `FSharpConvert.Option` overloads create an `FSharpOption<T>` value from a value of a .NET reference type or `Nullable` value type. (To create a 1)
+* `FSharpConvert.Option` overloads create an `FSharpOption<T>` value from a value of a .NET reference type or `Nullable` value type.
 * `FSharpConvert.List` overloads create an `FSharpList`.
 * `FSharpConvert.Async` overloads create an `FSharpAsync<TResult>` from a `Task` or `Task<TResult>`.
 * `FSharpConvert.Ref` overloads create an `FSharpRef` object with specified initial value or default value for a type.
@@ -76,4 +76,4 @@ Everything works as in .NET, there are no extra helpers provided by WebSharper.
 * Create F# union values using the `.New...` static method in the union type (or property for a union case with no fields).
 * Create F# record values by using its constructor.
 * Separate union cases by using the `Is...` methods, or the `Tag` property. Whenever a union has `null` as possible value, these methods are static.
-* For the `FSharpOption` type, you can use `x?.Value`) to get the value or null.
+* For the `FSharpOption` type, you can use `x?.Value` to get the value or null.

@@ -18,7 +18,7 @@ type Result<'T> =
 ### ErrorMessage type
 A type containing an error message associated with a specific form element identified by `Id` containing message `Text`.
 
-It is automatically created by validation failures, see below. The `Id` property also do not need to be checked manually, 
+It is automatically created by validation failures, see below. The `Id` property also does not need to be checked manually, 
 instead, the `.Through` extension method can be used on a `View<Result<...>>` to filter for error messages arising from a given `Var` or `Form`.
 
 ### Form type
@@ -51,7 +51,7 @@ Represents a collection of forms for managing multiple items, including renderin
 * `.View: View<Result<seq<'T>>>`: A view on the resulting collection.
 * `.Render: (Form.Many.ItemOperations -> 'V) -> Doc`: Render the item collection inside this form with the provided rendering function.
 * `.Add: 'T -> unit`: Adds a new item to the collection.
-* `.RenderAdder: 'Y -> Doc`: Render the form that creates new items to be inserted the collection.
+* `.RenderAdder: 'Y -> Doc`: Render the form that creates new items to be inserted into the collection.
 
 ### Form.Many.CollectionWithDefault type
 A collection where new items are added with a default value, to be edited in their subforms after adding them.
@@ -85,10 +85,10 @@ A type for forms that depend on previous values, enabling dynamic form structure
 * `Form.TransmitViewMap: ('T -> 'U) -> Form<'T, 'R -> View<Result<'U>> -> 'D> -> Form<'T, 'R -> 'D>`: Pass a mapped view on the result of a form to its render function.
 * `Form.TransmitViewMapResult: (Result<'T> -> 'U) -> Form<'T, 'R -> View<'U> -> 'D> -> Form<'T, 'R -> 'D>`: Pass a mapped view on the result (including validation errors) of a form to its render function.
 * `Form.Map: ('T -> 'U) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form.
-* `Form.MapToResult: ('T -> Result<'U>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form, potentially adding adding validation errors.
+* `Form.MapToResult: ('T -> Result<'U>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form, potentially adding validation errors.
 * `Form.MapResult: (Result<'T> -> Result<'U>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form, with full validation result included.
 * `Form.MapAsync: ('T -> Async<'U>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form asynchronously.
-* `Form.MapToAsyncResult: ('T -> Async<Result<'U>>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form asynchronously, potentially adding adding validation errors.
+* `Form.MapToAsyncResult: ('T -> Async<Result<'U>>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>`: Map the result of a form asynchronously, potentially adding validation errors.
 * `Form.MapAsyncResult: (Result<'T> -> Async<Result<'U>>) -> Form<'T, 'R -> 'D> -> Form<'U, 'R -> 'D>` Map the result of a form asynchronously, with full validation result included.
 * `Form.MapRenderArgs: 'R1 -> Form<'T, 'R1 -> 'R2> -> Form<'T, ('R2 -> 'D) -> 'D>`: Map the arguments passed to the render function of a form.
 * `Form.FlushErrors: Form<'T, 'R -> 'D> -> Form<'T, 'R -> 'D>`: Map any failing result to a failure with no error messages.
@@ -107,7 +107,7 @@ A type for forms that depend on previous values, enabling dynamic form structure
 * `Validation.Is: ('T -> bool) -> string -> Form<'T, 'R -> 'D> -> Form<'T, 'R -> 'D>`: If the form value passes the predicate, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsNotEmpty: string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value is not an empty string, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsMatch: string -> string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value matches the given regexp, it is passed on; else, `Failwith msg` is passed on.
-* `Validatiaon.MapValidCheckedInput: string -> Form<CheckedInput<'T>, 'R -> 'D> -> Form<'T, 'R -> 'D>`: Creates a validation based on a WebSharper.UI `CheckedInput` status.
+* `Validation.MapValidCheckedInput: string -> Form<CheckedInput<'T>, 'R -> 'D> -> Form<'T, 'R -> 'D>`: Creates a validation based on a WebSharper.UI `CheckedInput` status.
 
 ### Computation expression syntax
 

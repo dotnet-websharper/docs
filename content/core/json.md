@@ -233,7 +233,7 @@ Content.Json
 
 Unnamed fields receive the names `Item1`, `Item2`, etc.
 
-Missing the attribute, the case name would be not stored in a readable form:
+Without the attribute, the case name would not be stored in a readable form:
 
 ```fsharp
 type Contact =

@@ -119,7 +119,7 @@ Additional functions in the `Doc` can create or combine Docs:
     <p>WebSharper.UI is a library providing ...</p>
     ```
 
-For the mathematically enclined, the functions `Doc.Empty` and `Doc.Append` make Docs a monoid.
+For the mathematically inclined, the functions `Doc.Empty` and `Doc.Append` make Docs a monoid.
 
 * `Doc.Concat` generalizes `Append` by concatenating a sequence of Docs.
 
@@ -219,7 +219,7 @@ Result:
 <div class="main">...</div>
 ```
 
-HTML5 also defines any attribute whose names starts with `data-` as a valid custom attribute. You can create such an attribute using the function `data-` from module `attr` (backquoted since it contains a non-standard character).
+HTML5 also defines any attribute whose name starts with `data-` as a valid custom attribute. You can create such an attribute using the function `data-` from module `attr` (backquoted since it contains a non-standard character).
 
 ```fsharp
 let myEltWithData =

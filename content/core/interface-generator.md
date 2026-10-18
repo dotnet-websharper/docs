@@ -6,7 +6,7 @@ The WebSharper Interface Generator (WIG) is a tool (build task) for generating
 WebSharper bindings to JavaScript libraries.  Bindings allow
 developers to access these libraries from typed F# code that gets
 compiled to JavaScript by WebSharper.  While it is possible to create
-bindings manually, WIG allows to write the binding definitions in F#,
+bindings manually, WIG allows you to write the binding definitions in F#,
 making full use of the language to streamline repetitive tasks.
 
 Simply put, WIG takes an F# value
@@ -52,7 +52,7 @@ type definitions in current WIG project.
 
 Adding members or attributes to a type declaration is mutable and returns the
 type declaration for chaining.
-However, all operators and helper functions work non-desctructively on member,
+However, all operators and helper functions work non-destructively on member,
 attribute, and resource definitions.
 This allows mutual recursion between types:
 
@@ -61,11 +61,11 @@ This allows mutual recursion between types:
 
     A |+> Instance [
         "getB" => T<unit> ^-> B
-    ] |> ignore // "GetB" method was addded to method list of A
+    ] |> ignore // "GetB" method was added to method list of A
 
     B |+> Instance [
         "getA" => T<unit> ^-> A
-    ] |> ignore // "GetA" method was addded to method list of B
+    ] |> ignore // "GetA" method was added to method list of B
 
 Example for immutability of members:
 
@@ -106,7 +106,7 @@ If you want to define the type `(A * B) * C`, you must use `Type.Tuple [ A * B; 
 * When defining functions like `A * B ^-> C`, the tuple on the left hand side is
 automatically converted to a `Type.Parameters` which creates multiple arguments
 from the tuple elements.
-If you want to describe a JavaScript function that do take a single 2-length array
+If you want to describe a JavaScript function that does take a single 2-length array
 as argument, you must convert it to a single parameter explicitly:
 `(A * B).Parameter ^-> C`.
 
@@ -133,12 +133,12 @@ arrays, tuples, function types, and generic instantiations.
 
     T<System.Collections.Generic.Dictionary<_,_>>.[T<int>, MyTypeDef]
         // adding type parameters to a generic type
-        // compile-time error if number of parameters do not match
+        // compile-time error if number of parameters does not match
 
 In addition, delegate types can be formed.  WebSharper treats delegate
-types specially: their are compiled to JavaScript functions accepting
+types specially: they are compiled to JavaScript functions accepting
 the first argument through the implicit `this` parameter. For example
-when this can be helpful, consider following JavaScript function:
+when this can be helpful, consider the following JavaScript function:
 
     function iterate(callback, array) {
         for (var i = 0; i < array.length; i++) {
@@ -270,7 +270,7 @@ If you define a custom inline, use `$index` to refer to the index parameter.
 
 ### Constructors
 
-Constructors definitions are similar to methods but do not carry a
+Constructor definitions are similar to methods but do not carry a
 return type.  Examples:
 
     let constructors =
@@ -390,7 +390,7 @@ This syntax can produce up to 4 type parameters.
 To have more, the `Generic -` helper can be nested, or
 use `GenericN n - fun [t1; t2; .. tN] ->`.
 Although this gives an incomplete pattern match warning, there will be no
-runtime errors if the matching the list for the provided length `n`.
+runtime errors if the list matches for the provided length `n`.
 
 #### Generic Methods
 
@@ -448,14 +448,14 @@ You can use `$import` in inlines to refer to the imported value to further custo
 
 The `ImportDefault` helper is an alias for `Import "default"`, and will use the default export of the module.
 
-The `ImportFile` helper marks a file as a sideeffecting import, for including resources like css.
+The `ImportFile` helper marks a file as a side-effecting import, for including resources like CSS.
 
 ### Inline Transformations
 
 #### Functions
 
 The `FSharpFunc<'TArg, 'TRes>` type (which is used for lambdas by the F# compiler)
-always take one parameter (which can be a tuple).
+always takes one parameter (which can be a tuple).
 In WebSharper translation, these become JavaScript functions taking a single
 fixed-length array (although curried functions only used in local scope are optimized).
 However, it is often required that we pass functions defined in F# to a JavaScript
@@ -469,7 +469,7 @@ but also `Union` typed properties or method return types when the cases can be
 distinguished in JavaScript using the `typeof`, `Array.isArray` and the
 `arr.length` functions.
 In F# this means either at most one array case or possibly multiple tuple cases
-with all different length, at most one number type (including `DateTime` and
+with all different lengths, at most one number type (including `DateTime` and
 `TimeSpan`, which are proxied as a Number), `string`, `bool`, and at most one other
 object type.
 If there are cases which can't be separated, the type will default to `obj`.
@@ -511,7 +511,7 @@ transformations from a `Type.Type` value.
 
 #### Custom Names
 
-The simplest form of customization allows to decouple the .NET name of
+The simplest form of customization allows you to decouple the .NET name of
 a member from the name used by the inline generation process.  This is
 done by the `WithSourceName` function.  For example:
 
@@ -544,16 +544,16 @@ For example, defining an `on` event setter with function argument detupling:
     "onChange" => (T<int> * T<obj> ^-> T<unit>)?callback ^-> T<unit>
     |> WithInteropInline (fun tr -> "$this.on('change', " + tr "callback" + ")"
 
-Similar helpers exists for property getters and setters:
+Similar helpers exist for property getters and setters:
 `WithInteropGetterInline` and `WithInteropSetterInline`.
-For getters, provided function is only usable for transforming `"index"`
+For getters, the provided function is only usable for transforming `"index"`
 in the case of an indexed property, and for setters transforming `"value"` or `"index"`.
 
 #### Obsoleted Members and Types
 
-Use the `Obsolate` helper to mark a type or member definition with
+Use the `Obsolete` helper to mark a type or member definition with
 `System.ObsoleteAttribute`.
-`ObsolateWithMessage` also sets a custom warning message.
+`ObsoleteWithMessage` also sets a custom warning message.
 
 #### WebSharper warnings
 
@@ -578,10 +578,9 @@ patterns are pre-defined in the standard library.
 ### Configuration Class Patterns
 
 These patterns for constructing member lists are useful for describing
-JavaScript configuarion objects.
+JavaScript configuration objects.
 Configuration objects typically are simple collections of fields, most
-of them optional, that are used to describe how another object it to
-be constructed or operate.  Let us take a simple example:
+of them optional, that are used to describe how another object is to be constructed or operated.  Let us take a simple example:
 
     let MyConfig : Class =
         Class "classname"
@@ -593,13 +592,13 @@ be constructed or operate.  Let us take a simple example:
                 "height", T<int>
             ]
 
-This definition would produce a class useable from F# that would
+This definition would produce a class usable from F# that would
 compile to simple JavaScript object literals:
 
     MyConfig("Alpha", Width=140)
 
 The `Width` property is write-only, but there is also a `WidthOpt`
-property generated which allow access to the optional field typed as
+property generated which allows access to the optional field typed as
 an F# `option` value.
 
 `Pattern.ObsoleteFields` can be used similarly, to create a list of
@@ -609,9 +608,9 @@ properties with the `Obsolete` attribute.
 
 JavaScript functions often accept only a fixed set of constants, such
 as strings.  Typing such parameters with `string` would be misleading
-to the user.  The enumeration pattern allows to generate a type that
+to the user.  The enumeration pattern allows generating a type that
 is limited to a specific set of constants, specified as either inlines
-or strings literals.  See `Pattern.EnumInlines` and
+or string literals.  See `Pattern.EnumInlines` and
 `Pattern.EnumStrings`, both of which generate `Class` values.
 
 ## Assembly and Namespaces

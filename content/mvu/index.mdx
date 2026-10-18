@@ -105,12 +105,12 @@ Here is a small application that demonstrates this.
   defTab="preview"
 />
 
-Create a paged application by using `App.CreatePaged` or `App.CreateSimplePaged`. They are constrained in only that the `Render` function must return a `Page` value.  
+Create a paged application by using `App.CreatePaged` or `App.CreateSimplePaged`. They are constrained only in that the `Render` function must return a `Page` value.  
 
 The pages are created as singleton values. This is important so that the MVU framework can keep track of renderings and reuse them when the page is revisited.
-Page identity is will also determine when to apply transition animations if you add css for it.
+Page identity will also determine when to apply transition animations if you add CSS for it.
 
-The example uses css classes `home-page` and `entry-page` and to create the transition effect when switching between the two pages. Switch to the HTML tab to see the CSS code.
+The example uses CSS classes `home-page` and `entry-page` to create the transition effect when switching between the two pages. Switch to the HTML tab to see the CSS code.
 
 Create pages by one of the following methods:
 * `Page.Single`: A single instance of the page is created lazily, the first time it's needed then reused.

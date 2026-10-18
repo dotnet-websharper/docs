@@ -15,7 +15,7 @@ If you want to write methods that will be shared between the server and the clie
 
 #### Docs
 
-Every HTML element has a dedicated method, such as `div` or `p`, which takes a any number of `object` parameters, which can represent attributes or child elements. The following parameter values are accepted:
+Every HTML element has a dedicated method, such as `div` or `p`, which takes any number of `object` parameters, which can represent attributes or child elements. The following parameter values are accepted:
 
 Both on the server and the client:
 
@@ -27,7 +27,7 @@ Both on the server and the client:
 Additionally, on the server:
 
 * an object implementing `WebSharper.INode`, which exposes a method to write to the response content directly.
-* a Linq expression of type `Expr<IControlBody>`, which creates a placeholder in the returned HTML, to be replaced by client-side code.
+* a LINQ expression of type `Expr<IControlBody>`, which creates a placeholder in the returned HTML, to be replaced by client-side code.
 * any other object will be converted to a string with its `ToString` function and included as a text node.
 
 On the client:
@@ -64,7 +64,7 @@ var myDoc =
 ```
 
 Some HTML tags, such as `var`, collide with keyword names and are therefore only located in the `Tags` nested class.
-Some other tags like `option` collide in F#, so they are only inside `Tags` too having the organization consistent between the two languages.
+Some other tags like `option` collide in F#, so they are only inside `Tags` too, having the organization consistent between the two languages.
 
 ```csharp
 var myText =
@@ -78,7 +78,7 @@ var myText =
 One thing to note is that the tag functions described above actually return a value of type `Elt`, which is a subtype of `Doc` that is guaranteed to always consist of exactly one element and provides additional APIs such as the `.Dom` property to get the underlying `Dom.Element`.
 
 Additional functions in the `Doc` static class can create or combine Docs, similar to the [F# implementation](../ui/html#constructing-html).
-An additional helper is the `Doc.ConcatMixed` method that can similarly take mixed arguments as HTML element constructors, but does not wrap them in an element, but returns a `Doc` that contains the given content as consecutive nodes.
+An additional helper is the `Doc.ConcatMixed` method that can similarly take mixed arguments as HTML element constructors, but does not wrap them in an element, but instead returns a `Doc` that contains the given content as consecutive nodes.
 The short alias for this is `doc`.
 
 <a name="attr"></a>
@@ -115,7 +115,7 @@ var myMain =
 // <div class="main">...</div>
 ```
 
-HTML5 also defines any attribute whose names starts with `data-` as a valid custom attribute. You can create such an attribute using the function `data` from module `attr`.
+HTML5 also defines any attribute whose name starts with `data-` as a valid custom attribute. You can create such an attribute using the function `data` from module `attr`.
 
 ```csharp
 var myEltWithData =
@@ -124,7 +124,7 @@ var myEltWithData =
 // <div data-uid="myDiv">...</div>
 ```
 
-Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. Similar functions are available as in F# to [combine attibutes](../ui/html#attrs).
+Like `Doc`, a value of type `Attr` can represent zero, one or more attributes. Similar functions are available as in F# to [combine attributes](../ui/html#attrs).
 
 #### Event handlers
 
@@ -186,7 +186,7 @@ Each of these methods has two overloads: one directly taking a `Dom.Element` or 
 
 * `.RunBefore` inserts the Doc as the previous sibling(s) of the given DOM node.
 
-* `Doc.RunReplace` inserts the Doc repacing the given DOM node.
+* `Doc.RunReplace` inserts the Doc replacing the given DOM node.
 
 ### HTML on the server
 
@@ -219,7 +219,7 @@ However, the mechanism is different, F# uses type providers, while C# uses a cod
 
 ### Setup
 
-To generate code based on a HTML file, include the `.html` as a `AdditionalFiles` element in your project.
+To generate code based on a HTML file, include the `.html` as an `AdditionalFiles` element in your project.
 The `WebSharper.UI.CSharp.Templating.Generator` code generator then creates a `.g.cs` file with the same name.
 The recommended setup is to let the code generator write the generated files into disk for development, and then exclude them for not running into duplicated code errors.
 The way to do this is to add the following to your `.csproj` file, which is already included in WebSharper templates:
@@ -261,7 +261,7 @@ Note that the template doesn't have to be a full HTML document, but can simply b
 
 ### Controlling the loading of templates
 
-The code generator can be parameterized to control how its contents are loaded both on the server and the client by special comments on top of the html file. For example:
+The code generator can be parameterized to control how its contents are loaded both on the server and the client by special comments on top of the HTML file. For example:
 
 ```html
 <!-- ClientLoad = Inline 

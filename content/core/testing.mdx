@@ -20,8 +20,8 @@ when referring to being server-side code.
 
 Creates a definition for a single named test category.
 You can think of it as similar to F#'s `lazy` keyword: the code body inside it is not executed immediately,
-but when only when it will be passed to `Runner.RunTests`.
-So the returned value (of type `TestCategory`) need to be assigned to local or module variable if you want to run it later in your project.
+but only when it will be passed to `Runner.RunTests`.
+So the returned value (of type `TestCategory`) needs to be assigned to a local or module variable if you want to run it later in your project.
 
 #### Example:
 
@@ -61,7 +61,7 @@ These all have four versions for optionally naming it and/or using it with an as
 ### Skipped, todo, and conditional tests
 
 Use the `Skip` function instead of `Test` to skip a test case.
-This is useful alternative to commenting out the test code, to still have it visible in the test runner.
+This is a useful alternative to commenting out the test code, to still have it visible in the test runner.
 
 You can also use `Todo` to mark a test as not fully passing yet.
 QUnit will show it as passing until there is at least one assertion failing or there is an exception.
@@ -278,7 +278,7 @@ The negated version of the above, fails if the difference of the two values is `
 Checks that the expression argument is raising any exception, passes test if it does.
 Note that actual value arguments are always implicitly enclosed within a lambda function,
 so don't need to pass a function explicitly to make sure that the value is only evaluated
-when the test are running.
+when the tests are running.
 
 #### Example:
 
@@ -329,7 +329,7 @@ run synchronously for optimal performance.
 ### Do
 
 Using `Do` is very similar to using `Test "Name"`, it is a computation expression builder, enabling the same custom operations.
-The difference is that it is not named, and also by itself does not registers tests,
+The difference is that it is not named, and also by itself does not register tests,
 as it's intended use is to create sub-tests, that can be executed inside a named test when doing property testing.
 
 #### Example:
@@ -347,7 +347,7 @@ let SubTest x =
 Auto-generates 100 random values based on a type and runs a sub-test with all of them.
 Supported types are `int`, `float`, `bool`, `string`, `unit`, `obj` and also 
 tuples, lists, arrays, options, `seq` and `ResizeArray` made from these.
-Using the `obj` type results in values from mix of various types.
+Using the `obj` type results in values from a mix of various types.
 When using a non-supported type, it results in a compile-time error.
 
 #### Example:
@@ -476,7 +476,7 @@ to create from a given array or explicit or inferred generators.
 <a name="random-generator-constructors"></a>
 ### Random generator constructors
 
-The following values and function produce simple `RandomValues.Generator` values:
+The following values and functions produce simple `RandomValues.Generator` values:
 
 * `RandomValues.StandardUniform`: Standard uniform distribution sampler.
 * `RandomValues.Exponential`: Exponential distribution sampler.
@@ -498,7 +498,7 @@ The following values and function produce simple `RandomValues.Generator` values
 
 * `RandomValues.Map mapping gen`: Maps a function over a generator.
 * `RandomValues.SuchThat predicate gen`: Filter the values of a generator by a predicate.
-* `RandomValues.ArrayOf gen`: Generates arrays (up to lengh 100), getting the items from the given generator.
+* `RandomValues.ArrayOf gen`: Generates arrays (up to length 100), getting the items from the given generator.
 * `RandomValues.ResizeArrayOf gen`: Similar to as above, generates `ResizeArray`s.
 * `RandomValues.ListOf gen`: Similar to as above, generates `List`s.
 * `RandomValues.Tuple2Of (a, b)`: Generates a 2-tuple, getting the items from the given generators.
