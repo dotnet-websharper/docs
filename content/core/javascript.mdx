@@ -84,7 +84,7 @@ For proxying constructors, F# does not allow any expressions, so you can also us
 
 Below is a quick overview of the translation process for reference.
 
-- Source code is analyzed by FSharp.Compiler.Services or Microsoft.CodeAnalysis.CSharp respectively, client-facing code is read. Language-specific optimizations, like tail call elimination for F#, are done.
+- Source code is analyzed by `FSharp.Compiler.Services` or `Microsoft.CodeAnalysis.CSharp` respectively, client-facing code is read. Language-specific optimizations, like tail call elimination for F#, are done.
 - Mappings from .NET to JavaScript names are calculated. WebSharper supports overloads and overrides by making sure JavaScript naming lines up semantically with the original source. The `[<Name>]` attribute can be used to override default JavaScript naming; if it would lead to an impossible to resolve scenario, a compile-time error is thrown.
 - Expressions like method calls are translated from their .NET information to their JavaScript equivalent. Also at this step, metaprogramming can be applied, to use type information to guide output; this functionality is called macros.
 - The resulting code is optimized and transformed into proper JavaScript statements and expressions.

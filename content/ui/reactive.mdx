@@ -4,7 +4,7 @@ title: Reactive programming
 
 import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
 
-WebSharper.UI's reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
+`WebSharper.UI`'s reactive layer helps represent user inputs and other time-varying values, and define how they depend on one another.
 
 ### Vars
 
@@ -151,7 +151,7 @@ These all correspond to the HTML `<input>` element of the same type.
 
 ### Views
 
-The full power of WebSharper.UI's reactive layer comes with `View`s. A `View<'T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `'T`.
+The full power of `WebSharper.UI`'s reactive layer comes with `View`s. A `View<'T>` is a time-varying value computed from Vars and from other Views. At any point in time the view has a certain value of type `'T`.
 
 One important thing to note is that the value of a View is not computed unless it is needed. For example, if you use `View.Map`, the function passed to it will only be called if the result is needed. It will only be run while the resulting View is included in the document using [one of these methods](#inserting-views-in-the-doc). This means that you generally don't have to worry about expensive computations being performed unnecessarily. However it also means that you should avoid relying on side-effects performed in functions like `View.Map`.
 
@@ -399,8 +399,8 @@ Finally, all of the above functions are also available as extension methods on t
 This sample demonstrates:
 
 * Creating Vars for state.
-* Composing views with View.Map2.
-* Two-way binding via events and Doc.TextView for reactive display.
+* Composing views with `View.Map2`.
+* Two-way binding via events and `Doc.TextView` for reactive display.
 
 <FSharpSnippetTabs
   snippet="Vars"
@@ -414,7 +414,7 @@ This sample demonstrates:
 
 The `Var<'T>` type is actually an abstract class, this makes it possible to create instances with an implementation different from `Var.Create`. The main example of this are **lenses**.
 
-In WebSharper.UI, a lens is a `Var` without its own storage cell that "focuses" on a sub-part of an existing `Var`. For example, given the following:
+In `WebSharper.UI`, a lens is a `Var` without its own storage cell that "focuses" on a sub-part of an existing `Var`. For example, given the following:
 
 ```fsharp
 type Person = { FirstName : string; LastName : string }
@@ -644,13 +644,13 @@ This sample demonstrates:
 
 This is equivalent to the `Var` sample but with a cleaner approach for combining and displaying values.
 
-### ListModels
+### `ListModels`
 
 `ListModel<'K, 'T>` is a convenient type to store an observable collection of items of type `'T`. Items can be accessed using an identifier, or key, of type `'K`.
 
 ListModels are to dictionaries as Vars are to refs: a type with similar capabilities, but with the additional capability to be reactively observed, and therefore to have your UI automatically change according to changes in the stored content.
 
-#### Creating ListModels
+#### Creating `ListModels`
 
 You can create ListModels with the following functions:
 
@@ -673,7 +673,7 @@ You can create ListModels with the following functions:
 
 Every following example will assume the above `Person` type and `myPeopleColl` model.
 
-#### Modifying ListModels
+#### Modifying `ListModels`
 
 Once you have a ListModel, you can modify its contents like so:
 
@@ -756,7 +756,7 @@ Once you have a ListModel, you can modify its contents like so:
     let editJohnsName = Doc.InputType.Text [] varJohnsName
     ```
 
-#### Reactively observing ListModels
+#### Reactively observing `ListModels`
 
 The main purpose for using a ListModel is to be able to reactively observe it. Here are the ways to do so:
 

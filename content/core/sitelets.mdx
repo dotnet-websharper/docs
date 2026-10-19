@@ -72,7 +72,7 @@ Two helpers exist for creating a sitelet with a trivial router that only handles
 * `Application.SinglePage` takes a `Context<_> -> Async<Content<_>>` function and creates a sitelet that serves the returned content.
 
 <a name="sitelet-infer"></a>
-### Sitelet.Infer
+### `Sitelet.Infer`
 
 The easiest way to create a more complex sitelet is to automatically generate URLs from the shape of your endpoint type using `Sitelet.Infer`, also aliased as `Application.MultiPage`. This function parses slash-separated path segments into the corresponding `EndPoint` value, and lets you match this endpoint and return the appropriate content. Here is an example sitelet using `Infer`:
 
@@ -219,7 +219,7 @@ The following types are accepted by `Sitelet.Infer`:
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-### Customizing Sitelet.Infer
+### Customizing `Sitelet.Infer`
 
 It is possible to annotate your endpoint type with attributes to customize `Sitelet.Infer`'s request inference. Here are the available attributes:
 
@@ -505,7 +505,7 @@ It is possible to annotate your endpoint type with attributes to customize `Site
     // Returned Content:    (determined by Sitelet.Infer)
     ```
 
-### Catching wrong requests with Sitelet.InferWithCustomErrors
+### Catching wrong requests with `Sitelet.InferWithCustomErrors`
 
 By default, `Sitelet.Infer` ignores requests that it fails to parse, in order to give potential other middleware a chance to respond to the request. However, if you want to send a custom response for badly-formatted requests, you can use `Sitelet.InferWithCustomErrors` instead. This function wraps the parsed request in the `ParseRequestResult<'EndPoint>` union. Here are the cases you can match against:
 

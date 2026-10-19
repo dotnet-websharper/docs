@@ -2,7 +2,7 @@
 title: UI in C#
 ---
 
-WebSharper.UI, [documented here](../ui/html) for F#, has a companion library for C# API in the NuGet package [WebSharper.UI.CSharp](https://www.nuget.org/packages/websharper.ui.csharp).
+`WebSharper.UI`, [documented here](../ui/html) for F#, has a companion library for C# API in the NuGet package [`WebSharper.UI.CSharp`](https://www.nuget.org/packages/websharper.ui.csharp).
 
 <a name="html"></a>
 ## Constructing HTML

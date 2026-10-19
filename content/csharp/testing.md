@@ -8,7 +8,7 @@ Test categories are classes, cases are marked with attributes, and a code genera
 
 ## Categories and tests
 
-### TestCategory
+### `TestCategory`
 
 `TestCategory` is a class which you can inherit from to create a class that houses a number of tests.
 It has many methods that you can use in your test methods to define assertions.
@@ -26,7 +26,7 @@ public class MyTests : TestCategory {
 }
 ```
 
-### Test
+### `Test`
 
 The `Test` attribute can be used on methods too, to mark them as a test case.
 Optionally, you can provide a string argument to name the test (default name is the method's name).
@@ -61,7 +61,7 @@ public class MyTests : TestCategory {
 }
 ```
 
-### TestGenerator
+### `TestGenerator`
 
 You must include a method like this in one of your classes:
 
@@ -107,7 +107,7 @@ Main differences are:
 
 ### Examples
 
-#### Expect
+#### `Expect`
 
 Using `Expect` to specify the number of tests, including `Expect(0)`:
 
@@ -132,7 +132,7 @@ public class MyTests : TestCategory {
 }
 ```
 
-#### IsTrue and IsFalse
+#### `isTrue` and `isFalse`
 
 Using `IsTrue` and `IsFalse` to check boolean expressions:
 
@@ -150,7 +150,7 @@ Using `IsTrue` and `IsFalse` to check boolean expressions:
     }
 ```
 
-#### Equal and JsEqual
+#### `equal` and `jsEqual`
 
 `Equal` checks that correspond to the `==` operator in C#.
 While `JsEqual` checks that correspond to the `==` operator in JavaScript.
@@ -174,7 +174,7 @@ While `JsEqual` checks that correspond to the `==` operator in JavaScript.
     }
 ```
 
-#### Raises
+#### `Raises`
 
 `Raises` takes a lambda expression so that it can check if it throws an exception.
 

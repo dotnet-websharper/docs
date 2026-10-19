@@ -4,7 +4,7 @@ title: Introduction
 
 import { FSharpSnippetTabs } from "@/lib/components/FSharpSnippetTabs";
 
-The WebSharper.Forms library, [available on NuGet](https://www.nuget.org/packages/websharper.forms), provides a high-level abstraction for working with web forms and constructing interactive user interfaces.
+The `WebSharper.Forms` library, [available on NuGet](https://www.nuget.org/packages/websharper.forms), provides a high-level abstraction for working with web forms and constructing interactive user interfaces.
 It can declaratively describe user data input such as forms, including data validation and feedback.
 It allows for a separation of concerns between the data model and the rendering of the form, while the two are connected in a type-safe manner.
 
@@ -12,9 +12,9 @@ Additional benefits are composability and reusability of form components, as wel
 i.e. the type and appearance of input fields in part of the form dynamically depends on user input in previous fields.
 
 Using forms is easier than it looks. Users might find the type signatures complex, so this guide explains the meaning of all elements that compose a form.
-In addition, introductory examples will be presented to get the user acquainted with WebSharper.Forms.
+In addition, introductory examples will be presented to get the user acquainted with `WebSharper.Forms`.
 
-WebSharper.Forms is based on [WebSharper UI](../ui/reactive). Therefore, familiarity with concepts such as `Var`, `View` and the `Doc` type for HTML is necessary to work with it.
+`WebSharper.Forms` is based on [WebSharper UI](../ui/reactive). Therefore, familiarity with concepts such as `Var`, `View` and the `Doc` type for HTML is necessary to work with it.
 
 See the bottom of this page for a complete working example.
 
@@ -74,7 +74,7 @@ Let's break this down:
 
 So in total, the `PetForm` function describes a functionality of a form with two input fields and how they are initialized from and composed into a single `Pet` value. This functionality is reusable and can be rendered in different ways.
 
-However, this function is still generic, which will allow the type system to plug in the actual type of the rendered form. In this way, the form composition itself is not tied to a specific rendering implementation, like WebSharper.UI's `Doc`.
+However, this function is still generic, which will allow the type system to plug in the actual type of the rendered form. In this way, the form composition itself is not tied to a specific rendering implementation, like `WebSharper.UI`'s `Doc`.
 
 We have now defined how a species and a name should be composed into a Pet, and how the name should be verified. Time to define how to render the corresponding reactive form.
 
@@ -104,7 +104,7 @@ let RenderPet species name =
 
 Here, `species` has type `Var<Species>`, and `name` has type `Var<string>`. So the type of `RenderPet` corresponds to the argument of the second type parameter of `PetForm`, with `'b` specialized to `Doc`.
 
-The functions `Doc.InputType.Radio` and `Doc.InputType.Text` come from WebSharper.UI, and create elements whose value is always synchronized with the `Var` they receive.
+The functions `Doc.InputType.Radio` and `Doc.InputType.Text` come from `WebSharper.UI`, and create elements whose value is always synchronized with the `Var` they receive.
 Here their attributes are empty, but you are free to enhance them with styling, for example:
 
 ```fsharp

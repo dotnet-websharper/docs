@@ -6,7 +6,7 @@ Content describes the response to send back to the client: its HTTP status, head
 
 ## Content constructors
 
-### Content.Text
+### `Content.Text`
 
 The simplest response is plain text content, created by passing a string to `Content.Text`.
 
@@ -15,7 +15,7 @@ let simpleResponse =
     Content.Text "This is the response body."
 ```
 
-### Content.File
+### `Content.File`
 
 You can serve files using `Content.File`. Optionally, you can set the content type returned for the file response and whether file access is allowed outside of the web root:
 
@@ -26,7 +26,7 @@ let fileResponse: Async<Content<EndPoint>> =
     Content.File("../Main.fs", AllowOutsideRootFolder=true, ContentType="text/plain")
 ```
 
-### Content.Page
+### `Content.Page`
 
 You can return full HTML pages, with managed dependencies using `Content.Page`. Here is a simple example:
 
@@ -50,7 +50,7 @@ For easy construction of HTML, you can use `WebSharper.UI.Html` module, which pr
 The `Bundle` argument can be used to specify a bundle name for production-ready mode, that will be used for creating a JavaScript bundle for the page.
 Any `Web.Control` instantiations or quoted code (for example with the `client` helper) that is defined within the `Content.Page` expression will be automatically included in the bundle.
 
-### Content.PageFromFile
+### `Content.PageFromFile`
 
 An implementation of a simple form of templating, `PageFromFile` allows you to use a static HTML file as a template for your page and insert some startup code.
 
@@ -67,7 +67,7 @@ let IndexPage : Async<Content<EndPoint>> =
 </Callout>
 
 <a name="json-response"></a>
-### Content.Json
+### `Content.Json`
 
 If you are creating a web API, then sitelets can automatically generate JSON content for you based on the type of your data. Simply pass your value to `Content.Json`, and WebSharper will serialize it. The format is the same as when parsing requests. [See here for more information about the JSON format.](json)
 
@@ -99,11 +99,11 @@ let sitelet = Sitelet.Infer <| fun context endpoint ->
 // Returned Content:    {"id": 1423, "slug": "some-blog-article", "title": "Some blog article!"}
 ```
 
-### Content.MvcResult
+### `Content.MvcResult`
 
 Marks an object to be handled as if from an MVC controller. This is useful if you want to use the MVC framework for rendering pages, but still want to use sitelets for routing.
 
-### Content.Cors
+### `Content.Cors`
 
 Used to enable CORS (Cross-Origin Resource Sharing) checks for a sitelet.
 Wrap the endpoint with `Sitelet.Cors` type, and then the `Content.Cors` function can be used to specify the response, including setting allowed origins, headers, and methods.
@@ -134,20 +134,20 @@ let Website = Application.MultiPage (fun ctx endpoint ->
 )
 ```
 
-### Content.Bundle
+### `Content.Bundle`
 
 A helper for marking client-side code to be included in a specific bundle.
 This is useful when you want to create helper functions on the server that create content that has client-side dependencies, but you do it outside of the `Content.Page` scope.
 It takes a `WebSharper.Web.INode` sequence and a bundle name, and it will return a `WebSharper.Web.INode` sequence that also marks for the server-side rendering which bundle to use.
 This means you can drop the `Bundle` argument in `Content.Page`.
 
-### Content.BundleScope
+### `Content.BundleScope`
 
 A general helper for marking client-side code to be included in a specific bundle that works for any type.
 Also `BundleScopes` accepts a list of bundle names, code in scope will go to all bundles specified.
 However, for a page to find which bundle to use, you will still need to use the `Bundle` argument in `Content.Page`.
 
-### Content.Custom
+### `Content.Custom`
 
 `Content.Custom` can be used to output any type of content. It takes three optional named arguments that correspond to the aforementioned elements of the response:
 

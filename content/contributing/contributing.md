@@ -73,7 +73,7 @@ We recommend that you use one of the following development environments:
 
 ### Running the tests
 
-WebSharper defines and uses its own test framework, WebSharper.Testing. It runs on the client side and is backed by [QUnit](https://qunitjs.com/). So running the WebSharper test suite consists in running a web application which looks like this:
+WebSharper defines and uses its own test framework, `WebSharper.Testing`. It runs on the client side and is backed by [QUnit](https://qunitjs.com/). So running the WebSharper test suite consists in running a web application which looks like this:
 
 ![Unit testing screenshot](https://github.com/dotnet-websharper/core/raw/master/docs/qunit.png)
 

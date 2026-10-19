@@ -62,7 +62,7 @@ public class BlogArticle
 }
 ```
 
-### SiteletBuilder
+### `SiteletBuilder`
 
 A handy way to create a sitelet is by using the `SiteletBuilder` class. It functions conceptually similar to `StringBuilder`, you can chain methods to assemble a final value:
 * First, create an instance of `SiteletBuilder()`;

@@ -2,7 +2,7 @@
 title: Redux DevTools integration
 ---
 
-WebSharper.Mvu integrates seamlessly with [Redux DevTools](https://github.com/reduxjs/redux-devtools).
+`WebSharper.Mvu` integrates seamlessly with [Redux DevTools](https://github.com/reduxjs/redux-devtools).
 This browser extension allows you to inspect the successive messages and states of your model, and even to replay old states and see the effect on your view.
 
 ## Installation
@@ -20,7 +20,7 @@ let Main() =
     |> App.Run
 ```
 
-This integration uses [WebSharper.Json](../core/json) serialization to communicate with RemoteDev.
+This integration uses [`WebSharper.Json`](../core/json) serialization to communicate with RemoteDev.
 The tool expects message values to be objects with a `"type"` field on messages. Therefore, you should use as `Message` type a discriminated union annotated like follows:
 
 ```fsharp

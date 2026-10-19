@@ -15,7 +15,7 @@ type Result<'T> =
   | Failure of list<ErrorMessage>
 ```
 
-### ErrorMessage type
+### `ErrorMessage` type
 A type containing an error message associated with a specific form element identified by `Id` containing message `Text`.
 
 It is automatically created by validation failures, see below. The `Id` property also does not need to be checked manually, 
@@ -34,18 +34,18 @@ This module provides utility functions for working with the `Result<'T>` type, e
 * `Result.Bind: ('T -> Result<'U>) -> Result<'T> -> Result<'U>`: Pass a result through a function if it is successful, also able to introduce new failure points.
 * `Result.FailWith: string * ?string -> Result<'T>`: Create a failing result with a single error message, with an optional `Id` included, tying it to a `Var` or `Form`.
 
-### Form.Many.ItemOperations type
+### `Form.Many.ItemOperations` type
 Operations for managing individual items within a collection form.
 
 * `.Delete: unit -> unit`: Delete the current item from the collection.
 * `.MoveUp: Submitter<Result<bool>>`: Move the current item up one step in the collection.
 * `.MoveDown: Submitter<Result<bool>>`: Move the current item down one step in the collection.
 
-A `Submitter<'T>` is a type defined by WebSharper.UI that updates the value on an output view (`.View` property) when its `.Trigger()` method is called.
+A `Submitter<'T>` is a type defined by `WebSharper.UI` that updates the value on an output view (`.View` property) when its `.Trigger()` method is called.
 In this case the `Result<bool>` value will hold a `Failure []` state if the item is not movable in the given direction, and `Success true` otherwise.
 This can be tied into a `Doc.ButtonValidate` helper to render a button that's enabled if the submitter is in valid state.
 
-### Form.Many.Collection type
+### `Form.Many.Collection` type
 Represents a collection of forms for managing multiple items, including rendering and addition capabilities. Used in conjunction with `Form.Many` to handle dynamic list, which has an additional form part to create a new item before inserting.
 
 * `.View: View<Result<seq<'T>>>`: A view on the resulting collection.
@@ -53,12 +53,12 @@ Represents a collection of forms for managing multiple items, including renderin
 * `.Add: 'T -> unit`: Adds a new item to the collection.
 * `.RenderAdder: 'Y -> Doc`: Render the form that creates new items to be inserted into the collection.
 
-### Form.Many.CollectionWithDefault type
+### `Form.Many.CollectionWithDefault` type
 A collection where new items are added with a default value, to be edited in their subforms after adding them.
 
 * `.Add: unit -> unit`: Adds a new item with default value to the collection.
 
-### Form.Dependent type
+### `Form.Dependent` type
 A type for forms that depend on previous values, enabling dynamic form structures where subsequent fields or validations depend on prior inputs. This supports conditional rendering and validation.
 
 * `.View: View<Result<'TResult>>`: A view on the result of the dependent form.
@@ -107,7 +107,7 @@ A type for forms that depend on previous values, enabling dynamic form structure
 * `Validation.Is: ('T -> bool) -> string -> Form<'T, 'R -> 'D> -> Form<'T, 'R -> 'D>`: If the form value passes the predicate, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsNotEmpty: string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value is not an empty string, it is passed on; else, `Failwith msg` is passed on.
 * `Validation.IsMatch: string -> string -> Form<string, 'R -> 'D> -> Form<string, 'R -> 'D>`: If the form value matches the given regexp, it is passed on; else, `Failwith msg` is passed on.
-* `Validation.MapValidCheckedInput: string -> Form<CheckedInput<'T>, 'R -> 'D> -> Form<'T, 'R -> 'D>`: Creates a validation based on a WebSharper.UI `CheckedInput` status.
+* `Validation.MapValidCheckedInput: string -> Form<CheckedInput<'T>, 'R -> 'D> -> Form<'T, 'R -> 'D>`: Creates a validation based on a `WebSharper.UI` `CheckedInput` status.
 
 ### Computation expression syntax
 

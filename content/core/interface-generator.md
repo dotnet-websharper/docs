@@ -30,7 +30,7 @@ You get a small example in the `Main.fs` file, which ends in this:
     type Extension() =
         interface IExtension with
             member ext.Assembly =
-                Definition.Assembly
+                `Definition.Assembly`
 
     [<assembly: Extension(typeof<Extension>)>]
     do ()
@@ -120,13 +120,13 @@ External types can be defined by using the `T` type function, for example
 Simpler types can be combined to form more complex types, including
 arrays, tuples, function types, and generic instantiations.
 
-    Type.ArrayOf T<int>
+    `Type.ArrayOf` T<int>
         // array, equivalent to T<int[]>
         // alternate syntax: !| T<int>
 
     T<int> * T<float> * T<string>
         // tuple, equivalent to T<int * float * string>
-        // alternate syntax: Type.Tuple [T<int>; T<float>; T<string>]
+        // alternate syntax: `Type.Tuple` [T<int>; T<float>; T<string>]
 
     T<int> ^-> T<unit>
         // function, equivalent to T<int -> unit>
@@ -153,7 +153,7 @@ array index passed through the first parameter.  This can be achieved
 thus:
 
     let callbackType = T<obj> -* T<int> ^-> T<unit>
-    let iterateType  = callbackType * Type.ArrayOf T<obj> ^-> T<unit>
+    let iterateType  = callbackType * `Type.ArrayOf` T<obj> ^-> T<unit>
 
 
 The type of the callback is then compiled to a delegate type in F#,
@@ -584,10 +584,10 @@ of them optional, that are used to describe how another object is to be construc
 
     let MyConfig : Class =
         Class "classname"
-        |+> Pattern.RequiredFields [
+        |+> `Pattern.RequiredFields` [
                 "name", T<string>
             ]
-        |+> Pattern.OptionalFields [
+        |+> `Pattern.OptionalFields` [
                 "width", T<int>
                 "height", T<int>
             ]
@@ -634,7 +634,7 @@ You can define WebSharper resource classes using the `Resource` function.
 Pass it to `AssemblyWide` to make the resource loaded if anything from the
 currently created assembly is used.
 
-    Namespace "WebSharper.JQuery.Resources" [
+    Namespace "`WebSharper.JQuery.Resources`" [
         Resource "JQuery" "http://code.jquery.com/jquery-1.11.2.min.js"
         |> AssemblyWide
     ]

@@ -16,7 +16,7 @@ when referring to being server-side code.
 ## Categories and tests
 
 <a name="testcategory"></a>
-### TestCategory
+### `TestCategory`
 
 Creates a definition for a single named test category.
 You can think of it as similar to F#'s `lazy` keyword: the code body inside it is not executed immediately,
@@ -34,7 +34,7 @@ let MyTests =
     }
 ```
 <a name="test"></a>
-### Test
+### `Test`
 
 Creates a definition for a single named test.
 Similar to `TestCategory`, it delays the execution of its content.
@@ -71,7 +71,7 @@ All the test builders have an `...If` variant that also takes a boolean conditio
 When the condition is `false`, the test is fully skipped.
 
 <a name="runnerruntests"></a>
-### Runner.RunTests
+### `Runner.RunTests`
 
 Takes an array of `TestCategory` values
 Returns an `IControlBody`, which can be used inside the `client <@ ... @>` helper to serve a page that runs the given tests,
@@ -96,7 +96,7 @@ Later, in server-side code, serve this on a [sitelet](sitelets) endpoint:
 ```
 
 <a name="expect"></a>
-### Expect
+### `Expect`
 
 Tells the testing framework how many test cases are expected to be registered for this category.
 If the category would register no tests, `QUnit` reports it as a failed test case, unless you add `expect 0`.
@@ -131,7 +131,7 @@ let MyTests =
 ## Assertions
 
 <a name="istrue"></a>
-### isTrue
+### `isTrue`
 
 Checks if a single argument expression evaluates to `true`.
 
@@ -147,7 +147,7 @@ Checks if a single argument expression evaluates to `true`.
 ```
 
 <a name="isfalse"></a>
-### isFalse
+### `isFalse`
 
 The negated versions of the above, the test passes if the expression evaluates to `false`.
 
@@ -173,7 +173,7 @@ The negated versions of the above, the test passes if the expression evaluates t
 ## Equality checks
 
 <a name="equal"></a>
-### equal
+### `equal`
 
 Checks if the two expressions evaluate to equal values as tested with WebSharper's equality.
 This is the same as using the `=` operator from F# code, unions and records have structural equality
@@ -191,12 +191,12 @@ and overrides on `Equals` method or implementing `IEquatable` is respected.
 ```
 
 <a name="notequal"></a>
-### notEqual
+### `notEqual`
 
 The negated version of the above, fails if values are equal with WebSharper's equality.
 
 <a name="jsequal"></a>
-### jsEqual
+### `jsEqual`
 
 Checks if the two expressions evaluate to equal values as tested with JavaScript's `==` operator.
 This is the same as using the `==.` operator in F# code (available with `open WebSharper.JavaScript`),
@@ -214,51 +214,51 @@ which is directly translated to `==` in JavaScript.
 ```
 
 <a name="notjsequal"></a>
-### notJsEqual
+### `notJsEqual`
 
 The negated version of the above, fails if values are equal with JavaScript's `==` operator.
 
 <a name="strictequal"></a>
-### strictEqual
+### `strictEqual`
 
 Checks if the two expressions evaluate to equal values as tested with JavaScript's `===` operator.
 This is the same as using the `===.` operator in F# code (available with `open WebSharper.JavaScript`),
 which is directly translated to `===` in JavaScript.
 
 <a name="notstrictequal"></a>
-### notStrictEqual
+### `notStrictEqual`
 
 The negated version of the above, fails if values are equal with JavaScript's `===` operator.
 
 <a name="deepequal"></a>
-### deepEqual
+### `deepEqual`
 
 Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `deepEqual` function
 which is a deep recursive comparison, working on primitive types, arrays, objects, regular expressions, dates and functions.
 
 <a name="notdeepequal"></a>
-### notDeepEqual
+### `notDeepEqual`
 
 The negated version of the above, uses `QUnit`'s `notDeepEqual` function instead.
 
 <a name="propequal"></a>
-### propEqual
+### `propEqual`
 
 Checks if the two expressions evaluate to equal values as tested with `QUnit`'s `propEqual` function
 which compares just the direct properties on an object with strict equality (`===`).
 
 <a name="notpropequal"></a>
-### notPropEqual
+### `notPropEqual`
 
 The negated version of the above, uses `QUnit`'s `notPropEqual` function instead.
 
 <a name="approxequal"></a>
-### approxEqual
+### `approxEqual`
 
 Compares floating point numbers, where a difference of `< 0.0001` is accepted.
 
 <a name="notapproxequal"></a>
-### notApproxEqual
+### `notApproxEqual`
 
 The negated version of the above, fails if the difference of the two values is `< 0.0001`.
 
@@ -273,7 +273,7 @@ The negated version of the above, fails if the difference of the two values is `
 ## Exception testing
 
 <a name="raises"></a>
-### raises
+### `raises`
 
 Checks that the expression argument is raising any exception, passes test if it does.
 Note that actual value arguments are always implicitly enclosed within a lambda function,
@@ -326,7 +326,7 @@ run synchronously for optimal performance.
 ## Property testing
 
 <a name="do"></a>
-### Do
+### `Do`
 
 Using `Do` is very similar to using `Test "Name"`, it is a computation expression builder, enabling the same custom operations.
 The difference is that it is not named, and also by itself does not register tests,
@@ -342,7 +342,7 @@ let SubTest x =
 ```
 
 <a name="property"></a>
-### property
+### `property`
 
 Auto-generates 100 random values based on a type and runs a sub-test with all of them.
 Supported types are `int`, `float`, `bool`, `string`, `unit`, `obj` and also 
@@ -363,7 +363,7 @@ When using a non-supported type, it results in a compile-time error.
 ```
 
 <a name="propertywith"></a>
-### propertyWith
+### `propertyWith`
 
 Similar to above, but the generator logic is not inferred from type, but passed to the operation.
 It takes as first argument a record value of type `RandomValues.Generator`, which is [described here](#randomvaluesgenerator).
@@ -384,10 +384,10 @@ allowing easier composition of complex testing values.
 ```
 
 <a name="propertywithsample"></a>
-### propertyWithSample
+### `propertyWithSample`
 
 Similar to above, but the argument is an exact sample on which the property is tested.
-See [RandomValues.Sample](#randomvaluessample) below.
+See [`RandomValues.Sample`](#randomvaluessample) below.
 
 #### Example:
 
@@ -412,7 +412,7 @@ See [RandomValues.Sample](#randomvaluessample) below.
 ## Looping
 
 <a name="foreach"></a>
-### forEach
+### `forEach`
 
 You cannot use a regular `for` loop inside a `Test` computation expression, but you can emulate it with the `forEach` operation.
 Its use is similar to property testing, you can use `Do` to define the body of the loop.
@@ -440,7 +440,7 @@ Its use is similar to property testing, you can use `Do` to define the body of t
 ## Sample value generators
 
 <a name="randomvaluesgenerator"></a>
-### RandomValues.Generator
+### `RandomValues.Generator`
 
 A generator is a record that can hold an array of static values to always test against,
 and a function that can return additional values to be tested dynamically.
@@ -458,7 +458,7 @@ type Generator<'T> =
 ```
 
 <a name="randomvaluessample"></a>
-### RandomValues.Sample
+### `RandomValues.Sample`
 
 The `RandomValues.Sample` type is a thin wrapper around an array of values, exposing multiple constructors
 to create from a given array or explicit or inferred generators. 

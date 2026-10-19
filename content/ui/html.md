@@ -2,7 +2,7 @@
 title: Functional Reactive Programming and HTML
 ---
 
-WebSharper.UI is a library providing a novel, practical, and user-friendly approach to UI reactivity. It includes:
+`WebSharper.UI` is a library providing a novel, practical, and user-friendly approach to UI reactivity. It includes:
 
 * An [HTML library](#constructing-html) usable on both server and client sides, allowing you to build HTML pages either by calling F# functions to create elements or by using template HTML files.
 * A [reactive layer](reactive) for expressing user inputs and values computed from them as time-varying values, related to Functional Reactive Programming (FRP). 
@@ -11,13 +11,13 @@ WebSharper.UI is a library providing a novel, practical, and user-friendly appro
   The main difference is that these inputs are nodes of the reactive system, not a single state value associated with the component.
 * Client-side [routing](routing) using the same endpoint type declaration as [WebSharper server-side routing](../core/routing).
 
-This page is an overview of the capabilities of WebSharper.UI.
+This page is an overview of the capabilities of `WebSharper.UI`.
 
-Get the package from NuGet: [WebSharper.UI](https://www.nuget.org/packages/websharper.ui).
+Get the package from NuGet: [`WebSharper.UI`](https://www.nuget.org/packages/websharper.ui).
 
 ## Using HTML
 
-WebSharper.UI's core type for HTML construction is `Doc`. A Doc can represent a single DOM node (element, text), but it can also be a sequence of zero or more nodes. This allows you to treat equally any HTML snippet that you want to insert into a document, whether it consists of a single element or not.
+`WebSharper.UI`'s core type for HTML construction is `Doc`. A Doc can represent a single DOM node (element, text), but it can also be a sequence of zero or more nodes. This allows you to treat equally any HTML snippet that you want to insert into a document, whether it consists of a single element or not.
 
 Additionally, client-side Docs can be reactive. A same Doc can consist of different elements at different moments in time, depending on user input or other variables. See [the reactive page](reactive) to learn more about this.
 
