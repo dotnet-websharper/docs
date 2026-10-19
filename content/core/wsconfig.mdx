@@ -22,14 +22,43 @@ The `wsconfig.json` file must consist of a single JSON object. Keys and values a
 }
 ```
 
-# Available settings
+## Available settings
 
 Below is a list of all settings ordered alphabetically.
 
-<a name="analyzeClosures"></a>
-## "analyzeClosures"
+<div className="ws-settings" style={{ columnCount: 2, columnGap: '2rem', marginBlock: '1.25rem' }}>
 
-**Type**: bool or `"moveToTop"` (default is `false`)
+- [`"analyzeClosures"`](#analyzeClosures)
+- [`"buildService"`](#buildService)
+- [`"buildServiceLogging"`](#buildServiceLogging)
+- [`"changeTracking"`](#changeTracking)
+- [Configuration name](#configurationName)
+- [`"dce"`](#dce)
+- [`"downloadResources"`](#downloadResources)
+- [`"dts"`](#dts)
+- [`"javascript"`](#javascript)
+- [`"javascriptExport"`](#javascriptExport)
+- [`"jsOutput"`](#jsOutput)
+- [`"outputDir"`](#outputDir)
+- [`"prebundle"`](#prebundle)
+- [`"project"`](#project)
+- [`"proxyTargetName"`](#proxyTargetName)
+- [`"runtimeMetadata"`](#runtimeMetadata)
+- [`"scriptBaseUrl"`](#scriptBaseUrl)
+- [`"singleNoJSErrors"`](#singleNoJSErrors)
+- [`"sourceMap"`](#sourceMap)
+- [`"stubInterfaces"`](#stubInterfaces)
+- [`"useJavaScriptSymbol"`](#useJavaScriptSymbol)
+- [`"warnOnly"`](#warnOnly)
+
+</div>
+
+<a name="analyzeClosures"></a>
+### "analyzeClosures"
+
+<Callout title="Type">
+  `bool` or `"moveToTop"` — default `false`
+</Callout>
 
 There is an inconvenient source of memory leaks in most JavaScript engines which is
 [described here](http://point.davidglasser.net/2013/06/27/surprising-javascript-memory-leak.html).
@@ -37,53 +66,68 @@ There is an inconvenient source of memory leaks in most JavaScript engines which
 This setting can enable warnings on these kinds of captures, helping to eliminate memory leaks.
 
 **Possible values:**
-* `true` - Turns warnings on.
-* `"moveToTop"` - Moves all non-capturing lambdas to top level automatically (experimental).
-* `false` - Default setting, no JS closure analysis.
+
+| Value | Description |
+| --- | --- |
+| `true` | Turns warnings on. |
+| `"moveToTop"` | Moves all non-capturing lambdas to top level automatically (experimental). |
+| `false` | Default setting, no JS closure analysis. |
 
 <a name="buildService"></a>
-## "buildService"
+### "buildService"
 
-**Type**: bool (default is `true` except if `WebSharperBuildService` environment variable is set to `false`)
+<Callout title="Type">
+  `bool` — default `true` except if the `WebSharperBuildService` environment variable is set to `false`
+</Callout>
 
 If the value is `false`, the WebSharper F# compiler will not use a backend process for faster compilation speeds. If set to `true`, it will use backend process even if `WebSharperBuildService` environment variable is `false`.
 
 <a name="buildServiceLogging"></a>
-## "buildServiceLogging"
+### "buildServiceLogging"
 
-**Type**: bool (default is `true` except if `WebSharperBuildServiceLogging` environment variable is set to `false`)
+<Callout title="Type">
+  `bool` — default `true` except if the `WebSharperBuildServiceLogging` environment variable is set to `false`
+</Callout>
 
 If the value is `false`, the WebSharper F# compiler service will not create a `websharper.log` file. If set to `true`, it will use logging even if `WebSharperBuildServiceLogging` environment variable is `false`.
 
-## "changeTracking"
+<a name="changeTracking"></a>
+### "changeTracking"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
 (Experimental feature in WebSharper 10+) If the value is `true`, a `.websharper` folder will be created in the project folder. It contains earlier builds which are automatically used for keeping changes made in the output by hand by 3-way merging it with the new output. See [Output merging](../metaprogramming/fsharp-code-generators#output-merging) for details.
 
 <a name="configurationName"></a>
-## Configuration name (usually `"Debug"` or `"Release"`)
+### Configuration name (usually `"Debug"` or `"Release"`)
 
-**Type**: JSON object
+<Callout title="Type">
+  JSON object
+</Callout>
 
 Allows overriding configuration values based on project configuration. For example, a "WebSharper 8 Client-Server Application" template project uses this to set [prebundle](#prebundle) for Release mode and use `esbuild` on the output, while Debug mode uses `vite`.
 
 <a name="dce"></a>
-## "dce"
+### "dce"
 
-**Type**: bool (default is `true` for Bundle/BundleOnly projects, `false` for library projects)
+<Callout title="Type">
+  `bool` — default `true` for Bundle/BundleOnly projects, `false` for library projects
+</Callout>
 
 An `spa` or `bundleOnly` project uses dead code elimination to have a minimal size `.js` output. If you run into any errors with missing code, please [report as a bug](https://github.com/dotnet-websharper/core/issues). As a quick workaround you can set `"dce": false` to see if that resolves your problem.
 
 The other use case for dead code elimination is producing npm-facing library code. See the [Bundling and exporting](bundling#npm-package-export) docs.
 
 <a name="downloadResources"></a>
-## "downloadResources"
+### "downloadResources"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
-Set to `true` to have WebSharper download all 
-remote `js`/`css` resources defined in the current project and all references. This is possible only for direct script resources, all npm imports you have to manage with running an `npm install` command.
+Set to `true` to have WebSharper download all remote `js`/`css` resources defined in the current project and all references. This is possible only for direct script resources, all npm imports you have to manage with running an `npm install` command.
 
 When using this setting, you must also add this to your `appsettings.json` so that WebSharper runtime will insert the links to downloaded files in your pages instead of online resources:
 
@@ -94,16 +138,20 @@ When using this setting, you must also add this to your `appsettings.json` so th
 ```
 
 <a name="dts"></a>
-## "dts"
+### "dts"
 
-**Type**: bool (default is `true`)
+<Callout title="Type">
+  `bool` — default `true`
+</Callout>
 
 Turns on the generation or unpacking of TypeScript declaration files. This is available for all project types except `html`, and `web` with `prebundle` set to true.
 
 <a name="javascript"></a>
-## "javascript"
+### "javascript"
 
-**Type**: bool or array of strings (default is `false`)
+<Callout title="Type">
+  `bool` or array of strings — default `false`
+</Callout>
 
 Setting this to `true` is equivalent to having a `JavaScript` attribute on the assembly level: it marks the entire assembly for JavaScript compilation.
 You can still exclude types by using the `JavaScript(false)` attribute in your code.
@@ -111,56 +159,64 @@ You can still exclude types by using the `JavaScript(false)` attribute in your c
 Alternatively, you can pass an array of strings, containing file or type names. This is marking the given files or types for JavaScript compilation.
 
 <a name="javascriptExport"></a>
-## "javascriptExport"
+### "javascriptExport"
 
-**Type**: bool or array of strings (default is `false`)
+<Callout title="Type">
+  `bool` or array of strings — default `false`
+</Callout>
 
 Setting this to `true` is equivalent to having a `JavaScriptExport` attribute on the assembly level: it marks the entire assembly for JavaScript compilation and makes sure all the code in current assembly are exported as entry points.
 
 Alternatively, you can pass an array of strings, containing file or type names. This is marking the given files or types for JavaScript compilation and export.
 
 <a name="jsOutput"></a>
-## "jsOutput"
+### "jsOutput"
 
-**Type**: string (relative or absolute folder path)
+<Callout title="Type">
+  string (relative or absolute folder path)
+</Callout>
 
 Writes the generated `.js` code only, (usually one class per file) compiled output for the current assembly to the given location.
 
 <a name="outputDir"></a>
-## "outputDir"
+### "outputDir"
 
-Obligatory if [project](#project) is `web`; optional otherwise.
-
-**Type**: string (relative or absolute folder path)
+<Callout title="Type">
+  string (relative or absolute folder path) — required if [project](#project) is `web`, optional otherwise
+</Callout>
 
 Specifies the path of the compilation output directory relative to the project file. Default folder is `./Content` for SPAs and `./bin/html` for HTML apps.
 
 <a name="prebundle"></a>
-## "prebundle"
+### "prebundle"
 
-**Type**: bool (default `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
-Only for `web` projects, turns on production-ready mode: for all pages of a multi-page application a JavaScript file is created. 
+Only for `web` projects, turns on production-ready mode: for all pages of a multi-page application a JavaScript file is created.
 See the [Bundling and exporting](bundling#bundling-in-multi-page-sitelet-applications) docs for more details.
 
 <a name="project"></a>
-## "project"
+### "project"
 
-**Type**: string (see below)
+<Callout title="Type">
+  string (see below)
+</Callout>
 
 Specifies the WebSharper project type. The valid values and their corresponding project types
 are listed below.
 
-|Project type|"project" setting value|
-|-|-|
-|Library|`library`|
-|Client-Server Application|`web`|
-|Single Page Application|`spa`|
-|Web Service|`microservice`|
-|Single Page Application without .NET compilation|`bundleOnly`|
-|HTML Application|`html`|
-|JavaScript Binding|`binding`|
-|Proxy Project|`proxy`|
+| Project type | `"project"` setting value |
+| --- | --- |
+| Library | `library` |
+| Client-Server Application | `web` |
+| Single Page Application | `spa` |
+| Web Service | `microservice` |
+| Single Page Application without .NET compilation | `bundleOnly` |
+| HTML Application | `html` |
+| JavaScript Binding | `binding` |
+| Proxy Project | `proxy` |
 
 The `library` project type is the default, it can be omitted. In this case the WebSharper compiler translates the found JavaScript scope, preparing the project to be used as a reference of other WebSharper projects.
 
@@ -175,66 +231,84 @@ A `binding` project uses WebSharper Interface Generator, a concise F# DSL for de
 A `proxy` project takes code that is already translated as a .NET library without WebSharper and creates a library that won't contain the .NET types again but only the WebSharper translation information.
 
 <a name="proxyTargetName"></a>
-## "proxyTargetName"
+### "proxyTargetName"
 
-**Type**: string
+<Callout title="Type">
+  string
+</Callout>
 
 Only required for `proxy` projects. Specifies the assembly name of the original library current project will act as a proxy against. The usual use case is that you have a library that has no WebSharper references, and its proxy will be another project file that links in the very same source files, use `"project": "proxy"` and `"proxyTargetName": "originalAssemblyName"`. Then from a WebSharper project, you must reference the original library for the .NET types and the WebSharper proxy library for the JavaScript translation.
 
 <a name="runtimeMetadata"></a>
-## "runtimeMetadata"
+### "runtimeMetadata"
 
-**Type**: string (default is `"noexpressions"`)
+<Callout title="Type">
+  string — default `"noexpressions"`
+</Callout>
 
 This is a rarely needed setting, only relevant if the site itself wants to host the WebSharper compiler at runtime, for example generating JavaScript snippets on the fly. Then a larger set of information of WebSharper metadata is necessary for the runtime than usual.
 
 **Possible values:**
-* `"inlines"` - keeps expressions for inlined values, needed for translating expressions that would use inlines.
-* `"notinlines"` - keeps expressions for already translated functions.
-* `"full"` - full WebSharper metadata.
-* `"noexpressions"` - default setting, when no on-the-fly compilation is needed.
+
+| Value | Description |
+| --- | --- |
+| `"inlines"` | Keeps expressions for inlined values, needed for translating expressions that would use inlines. |
+| `"notinlines"` | Keeps expressions for already translated functions. |
+| `"full"` | Full WebSharper metadata. |
+| `"noexpressions"` | Default setting, when no on-the-fly compilation is needed. |
 
 <a name="scriptBaseUrl"></a>
-## "scriptBaseUrl"
+### "scriptBaseUrl"
 
-**Type**: string (default `"Content"`)
+<Callout title="Type">
+  string — default `"Content"`
+</Callout>
 
 Only needed if an `spa` or `bundleonly` project uses direct script references to non-module-based JavaScript. WebSharper will load these scripts via a `LoadScript` helper, which needs the root URL to where these extra scripts are located.
 
 Current recommended approach is to use npm packages only for referencing external code and then this setting is unnecessary.
 
 <a name="singleNoJSErrors"></a>
-## "singleNoJSErrors"
+### "singleNoJSErrors"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
 If the value is `true`, WebSharper errors for not finding a type or method in JavaScript scope will show up only once per type/method, where it's first encountered.
 
 <a name="sourceMap"></a>
-## "sourceMap"
+### "sourceMap"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
 Enable source maps for the generated JavaScript code. This is useful for debugging purposes, as it allows you to see the original F#/C# code in the browser's developer tools instead of the compiled JavaScript. This is currently available for non-[prebundle](#prebundle) `web` projects and `spa` projects.
 
 <a name="stubInterfaces"></a>
-## "stubInterfaces"
+### "stubInterfaces"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
 If the value is `true`, WebSharper treats all interfaces in current project as if marked by the `Stub` attribute. This has the effect that interfaces act as easy interop tools with JavaScript, all method names are kept as is. By default, WebSharper creates longer unique names, so that .NET semantics can be used for interfaces, where a class can implement methods of the same name and signature from multiple interfaces.
 
 <a name="useJavaScriptSymbol"></a>
-## "useJavaScriptSymbol"
+### "useJavaScriptSymbol"
 
-**Type**: bool (default is `true` for `proxy` projects, `false` otherwise)
+<Callout title="Type">
+  `bool` — default `true` for `proxy` projects, `false` otherwise
+</Callout>
 
 If the value is `true`, for the JavaScript compilation a `JAVASCRIPT` conditional compilation symbol is added.
 
 <a name="warnOnly"></a>
-## "warnOnly"
+### "warnOnly"
 
-**Type**: bool (default is `false`)
+<Callout title="Type">
+  `bool` — default `false`
+</Callout>
 
 If the value is `true`, all WebSharper compiler errors will be treated only as warnings. This can help in finding and debugging non-translatable code, those expressions will show up as `$$ERROR$$` in output code.
-

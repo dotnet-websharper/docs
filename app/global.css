@@ -20,6 +20,17 @@
   --color-fd-popover: #0f172a;
 }
 
+/* The wsconfig "Available settings" quick list uses a multi-column wrapper. The inner
+   list's own vertical margin would otherwise sit inside the column flow and offset the
+   first column relative to the rest, so move that spacing onto the wrapper instead. */
+.ws-settings ul {
+  margin-block: 0;
+}
+
+.ws-settings ul > li:first-child {
+  margin-block-start: 0;
+}
+
 /* The sidebar collapse toggle lives in the top menu bar (lib/components/menuBar.tsx),
    so hide Fumadocs' built-in trigger (and its now-empty header row) plus its floating
    fallback control. */
