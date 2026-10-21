@@ -25,6 +25,11 @@ export const baseOptions: BaseLayoutProps = {
       external: true,
     },
     {
+      text: 'Examples',
+      url: 'https://websharper.com/examples',
+      external: true,
+    },
+    {
       text: 'Docs',
       url: '/',
       active: 'nested-url',
