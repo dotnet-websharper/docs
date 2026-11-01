@@ -83,6 +83,7 @@ export function MenuBar({ collapsible = false }: { collapsible?: boolean }) {
             <li key={l.text}>
               <Link
                 href={l.url}
+                external={false}
                 className="font-bold text-gray-700 transition-colors duration-300 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"
               >
                 {l.text}

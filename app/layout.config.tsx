@@ -22,12 +22,12 @@ export const baseOptions: BaseLayoutProps = {
     {
       text: 'Home',
       url: 'https://websharper.com',
-      external: true,
+      external: false,
     },
     {
       text: 'Examples',
       url: 'https://websharper.com/examples',
-      external: true,
+      external: false,
     },
     {
       text: 'Docs',
@@ -37,22 +37,22 @@ export const baseOptions: BaseLayoutProps = {
     {
       text: 'Features',
       url: 'https://websharper.com/features',
-      external: true,
+      external: false,
     },
     {
       text: 'OCaml',
       url: 'https://websharper.com/ocaml',
-      external: true,
+      external: false,
     },
     {
       text: 'Warp',
       url: 'https://websharper.com/warp',
-      external: true,
+      external: false,
     },
     {
       text: 'Support',
       url: 'https://websharper.com/support',
-      external: true,
+      external: false,
     },
     {
       text: 'NuGet',
