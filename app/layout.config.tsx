@@ -30,6 +30,11 @@ export const baseOptions: BaseLayoutProps = {
       external: false,
     },
     {
+      text: 'Bindings',
+      url: 'https://websharper.com/bindings',
+      external: false,
+    },
+    {
       text: 'Docs',
       url: '/',
       active: 'nested-url',

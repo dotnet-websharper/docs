@@ -9,6 +9,7 @@ import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
 const links = [
   { text: 'Home', url: 'https://websharper.com' },
   { text: 'Examples', url: 'https://websharper.com/examples' },
+  { text: 'Bindings', url: 'https://websharper.com/bindings' },
   { text: 'Docs', url: '/' },
   { text: 'Features', url: 'https://websharper.com/features' },
   { text: 'OCaml', url: 'https://websharper.com/ocaml' },
