@@ -1,0 +1,3 @@
+# Paket regenerates this file with CRLF on restore; pin it to LF so the
+# line-ending churn never shows up as a change.
+snippets/.paket/Paket.Restore.targets text eol=lf
